@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+ newmonsa_app:
+  env_file: .env
+  build:
+   args:
+    user: ${USER}
+    uid: ${UID}
+   context: ./
+   dockerfile: Dockerfile
+  image: newmonsa
+  container_name: newmonsa-app
+  restart: unless-stopped
+  working_dir: /usr/share/nginx/html
+  volumes:
+    - ${WORK_DIR_SRC}:/usr/share/nginx/html
+  networks:
+    - newmonsa
+
+ newmonsa_db:
+  image: mariadb
+  container_name: newmonsa-db
+  restart: unless-stopped
+  environment:
+    MYSQL_DATABASE: newmonsadb
+    MYSQL_ROOT_PASSWORD: 123123
+    MYSQL_PASSWORD: 123123
+    MYSQL_USER: root
+  ports: # Agregamos este bloque para mapear el puerto de la base de datos al host
+  - "3310:3306"
+  volumes:
+  - newmonsadata:/var/lib/mysq
+  ports: # Agregamos este bloque para mapear el puerto de la base de datos al host
+  - "3310:3306"  
+  networks:
+  - newmonsa
+
+ nginx_newmonsa:
+  image: nginx
+  env_file: .env
+  volumes:
+  - ${WORK_DIR_SRC}:/usr/share/nginx/html
+  - ${WORK_DIR}:/etc/nginx/conf.d
+  ports:
+  -  "8899:80"
+  networks:
+  - newmonsa
+
+networks:
+  newmonsa:
+    driver: bridge
+
+volumes:
+ newmonsadata:
+   name: newmonsadata
+   external: true
