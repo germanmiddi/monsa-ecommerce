@@ -130,59 +130,40 @@
     <section>
         <div class="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
             <div class="absolute inset-0">
-            <div class="bg-white h-1/3 sm:h-2/3" />
-            </div>
-            <div class="relative max-w-7xl mx-auto">
-            <div class="text-center">
-                <h2 class="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">Novedades</h2>
-                <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa libero labore natus atque, ducimus sed.</p>
-            </div>
-            <div class="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
-                <div v-for="post in posts" :key="post.title" class="flex flex-col rounded-lg shadow-lg overflow-hidden">
-                <div class="flex-shrink-0">
-                    <img class="h-48 w-full object-cover" :src="post.imageUrl" alt="" />
+                <div class="bg-white h-1/3 sm:h-2/3" />
                 </div>
-                <div class="flex-1 bg-white p-6 flex flex-col justify-between">
-                    <div class="flex-1">
-                    <p class="text-sm font-medium text-monsa-dark">
-                        <a :href="post.category.href" class="hover:underline">
-                        {{ post.category.name }}
-                        </a>
-                    </p>
-                    <a :href="post.href" class="block mt-2">
-                        <p class="text-xl font-semibold text-gray-900">
-                        {{ post.title }}
-                        </p>
-                        <p class="mt-3 text-base text-gray-500">
-                        {{ post.description }}
-                        </p>
-                    </a>
+                <div class="relative max-w-7xl mx-auto">
+                    <div class="text-center">
+                        <h2 class="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl">Novedades</h2>
+                        <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa libero labore natus atque, ducimus sed.</p>
                     </div>
-                    <!-- <div class="mt-6 flex items-center">
+                    <div class="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+                        <div v-for="post in posts" :key="post.title" class="flex flex-col rounded-lg shadow-lg overflow-hidden">
                         <div class="flex-shrink-0">
-                            <a :href="post.author.href">
-                            <span class="sr-only">{{ post.author.name }}</span>
-                            <img class="h-10 w-10 rounded-full" :src="post.author.imageUrl" alt="" />
-                            </a>
+                            <img class="h-48 w-full object-cover" :src="`storage/${post.image}`"  alt="" />
                         </div>
-                        <div class="ml-3">
-                            <p class="text-sm font-medium text-gray-900">
-                            <a :href="post.author.href" class="hover:underline">
-                                {{ post.author.name }}
-                            </a>
-                            </p>
-                            <div class="flex space-x-1 text-sm text-gray-500">
-                            <time :datetime="post.datetime">
-                                {{ post.date }}
-                            </time>
-                            <span aria-hidden="true"> &middot; </span>
-                            <span> {{ post.readingTime }} read </span>
+                        <div class="flex-1 bg-white p-6 flex flex-col justify-between">
+                            <div class="flex-1">
+                                <!-- <p class="text-sm font-medium text-monsa-dark">{{ post.post_category.name }}</p> -->
+                                <a :href="route('blog.single', post.slug)" class="block mt-2">
+                                    <p class="text-xl font-semibold text-gray-900">{{ post.title }}</p>
+                                    
+                                    <p class="mt-3 text-base text-gray-500" v-html="truncateContent(post.content)"></p>
+                                </a>
+                            </div>
+                            <div class="mt-6">
+                                <div class="flex items-center justify-between ">
+                                    <div class="bg-monsa-yellow text-sm text-gray-800 px-2 py-1 rounded-sm ">
+                                        <span>{{ post.post_category.name}}</span>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        {{ post.date_published }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
-                </div>
-            </div>
             </div>
         </div>
 
@@ -192,7 +173,7 @@
 
 <script>
 
-const posts = [
+const old_posts = [
   {
     title: 'Architecto accusantium praesentium eius',
     href: '#',
@@ -282,18 +263,32 @@ const trendingProducts = [
 	]
     
 export default {
+    props:{
+        posts: Object
+    },
     setup() {
         return {
             trendingProducts,
-            posts,
-
         }
 	},
+    methods:{
+        truncateContent(htmlContent) {
+            const div = document.createElement("div");
+            div.innerHTML = htmlContent;
+            let textContent = div.textContent || div.innerText || "";
+
+            // Trunca a 200 caracteres y agrega elipsis si el contenido es más largo
+            if (textContent.length > 200) {
+                textContent = textContent.substr(0, 150) + "...";
+            }
+
+            // Opcional: Convertir texto truncado de nuevo a HTML si es necesario
+            // En este caso, solo estamos retornando texto, por lo que no es necesario
+            return textContent;
+        },
+    },
 
     layout: 'LayoutWeb' // Define the layout for this page
 }
 </script>
 
-<style>
-
-</style>

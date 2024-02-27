@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
 
+use App\Http\Controllers\Web\Client\ClientController;
+use App\Http\Controllers\Web\Order\OrderController;
+
 class CheckoutController extends Controller
 {
     /**
@@ -31,10 +34,36 @@ class CheckoutController extends Controller
 
     //fix the payment method to receive the request
 
+    public function process(Request $request)
+    {
+
+        $clientController = new ClientController();
+        $client = $clientController->store($request->customerDetails);
+
+        if(!$client){
+            return response()->json(['message' => 'Error creating client'], 500);
+        }
+        
+        $orderController = new OrderController();
+        $order = $orderController->store($client->id, $request->totalPrice, $request->cartItems);
+
+        if(!$order){
+            return response()->json(['message' => 'Error creating order'], 500);
+        }
+
+        $payment = $this->payment($request);
+
+        return response()->json(['message'  => 'Payment processed', 
+                                 'response' => $payment ]);
+
+    }
+
     public function payment(Request $request)
     {        
+        
         $params = $this->_buildPaymentData($request->all());
-        dd($params);
+        // dd($params);
+
         $get_token_url = 'https://homoservices.apinaranja.com/security-ms/api/security/auth0/b2b/m2ms';
 
         $http_token = Http::post($get_token_url, 
@@ -55,11 +84,9 @@ class CheckoutController extends Controller
                            ->post($url, $params);
 
         $response = json_decode($http_post);
-
-        return response()->json(['message'  => 'Payment processed', 
-                                 'response' => $response,
-                                //  'url'      => $response->data->checkout_url
-                                ]);        
+        
+        return $response;
+                         
     }
     
     private function _buildPaymentData($request)
@@ -67,19 +94,36 @@ class CheckoutController extends Controller
         // dd($request);
         $cartItems = $request['cartItems'];
 
+
         $items = array_map(function($i){
             return[
-                "id" => $i['_id'],
+                // "id" => $i['_id'],
+                "id" => "883627",
                 "name" => $i['nombre'],
                 "description" => $i['modelo'],
-                "quantity" => 1,
-                "unit_price" => [
+                "quantity"    => 1,
+                "unit_price"  => [
                     "currency" => "ARS",
-                    "value" => $i['precio']
+                    "value"    => $i['precio']
+                    // "value"    => "299.00"
                 ]
             ];
         }, $cartItems);
 
+        // $items = [
+        //             [
+        //                 "id" => "883627",
+        //                 "name" => "Café con Leche",
+        //                 "description" => "Café con Leche",
+        //                 "quantity" => 2,
+        //                 "unit_price" => [
+        //                     "currency" => "ARS",
+        //                     "value" => "299.00"
+        //                 ]
+        //             ]
+        //         ];        
+
+        // dd($otro, $items);
 
         return [
                     "store_id" => "YqzLxzVobkr6Xqk7JGZmzZsHqmTOAL37",
@@ -90,20 +134,19 @@ class CheckoutController extends Controller
                     "payment_request" => [
                         "transactions" => [
                             [
-                                // "products" => $items
-                                "products" =>
-                                [
-                                    [
-                                        "id" => "883627",
-                                        "name" => "Café con Leche",
-                                        "description" => "Café con Leche",
-                                        "quantity" => 2,
-                                        "unit_price" => [
-                                            "currency" => "ARS",
-                                            "value" => "299.00"
-                                        ]
-                                    ]
-                                ],
+                                "products" => $items,
+                                // "products" =>   [
+                                //                     [
+                                //                         "id" => "883627",
+                                //                         "name" => "Café con Leche",
+                                //                         "description" => "Café con Leche",
+                                //                         "quantity" => 2,
+                                //                         "unit_price" => [
+                                //                             "currency" => "ARS",
+                                //                             "value" => "299.00"
+                                //                         ]
+                                //                     ]
+                                //                 ],
                                 "amount" => 
                                 [
                                     "currency" => "ARS",
@@ -113,20 +156,21 @@ class CheckoutController extends Controller
                         ],
                         "buyer" => 
                             [
-                                "user_id" => "nacho@naranjax.com",
+                                "user_id" => $request['customerDetails']['email'],
                                 "doc_type" => "DNI",
                                 "doc_number" => "N/A",
-                                "user_email" => "nacho@naranjax.com",
+                                "user_email" => $request['customerDetails']['email'],
                                 "name" => "N/A",
                                 "phone" => "N/A",
                                 "billing_address" => 
                                     [
-                                        "street_1" => "Cliente",
+                                        "street_1" => $request['customerDetails']['address'],
                                         "street_2" => "N/A",
                                         "city" => "1",
+                                        // "region" => $request['customerDetails']['state'],
                                         "region" => "Buenos Aires",
                                         "country" => "AR",
-                                        "zipcode" => "5000"
+                                        "zipcode" => "1234"
                                     ]
                             ]
                         ]

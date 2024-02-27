@@ -109,8 +109,12 @@
                                     <div class="col-span-6 sm:col-span-6">
                                         <label for="content"
                                             class="block text-sm font-medium text-gray-700 mb-1">Contenido</label>
-                                        <Tinymce ref="editor-content" v-model="form.content" :height="400" :toolbar="toolbar">
-                                        </Tinymce>
+                                        <!-- <Tinymce ref="editor-content" v-model="form.content" :height="400" :toolbar="toolbar"></Tinymce> -->
+                                        
+                                        <div class="quill-editor-container mb-10">
+                                            <quill-editor ref="editor-content" v-model="form.content" :options="editorOptions"></quill-editor>
+                                        </div>
+
                                     </div>
 
                                 </div>
@@ -138,7 +142,7 @@ const toolbar = ['bold italic underline alignleft aligncenter alignright outdent
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
-
+import { quillEditor } from 'vue3-quill';
 
 export default defineComponent({
     props: {
@@ -152,6 +156,7 @@ export default defineComponent({
         Inertia,
         Tinymce,
         VueDatePicker,
+        quillEditor
     },
 
     data() {
@@ -164,6 +169,9 @@ export default defineComponent({
             toolbar,
             postingDate: null,
             loading: false,
+            editorOptions: {
+
+            },
         }
 
     },
@@ -215,4 +223,16 @@ export default defineComponent({
     }
 })
 </script>
-    
+
+<style scoped>
+    .ql-container {
+        height: 450px;
+    }
+    .quill-editor-container {
+        height: 500px; /* O cualquier otra altura que se ajuste a tu diseño */
+    }
+    .ql-editor {
+        height: 300px;
+    }   
+
+</style>

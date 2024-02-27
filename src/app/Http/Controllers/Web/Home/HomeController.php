@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Web\Home;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Post;
+use App\Models\PostCategory;
 
 class HomeController extends Controller
 {
@@ -16,10 +18,14 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+
+        $post = Post::with('post_category')->get()->toArray();
+
         // Add your logic here
-        return  Inertia::render('Web/Index');
-        
+        return  Inertia::render('Web/Index', [
+            'posts' => $post
+        ]);
     }
     
-    // Add more methods as needed
+
 }

@@ -109,10 +109,21 @@
                                     <div class="col-span-6 sm:col-span-6">
                                         <label for="content"
                                             class="block text-sm font-medium text-gray-700 mb-1">Contenido</label>
-                                        <Tinymce ref="editor-content" v-model="form.content" :height="400" :toolbar="toolbar" :value="form.content">
-                                        </Tinymce>
-                                    </div>
+                                        <!-- <Tinymce ref="editor-content" v-model="form.content" :height="400" :toolbar="toolbar" :value="form.content"></Tinymce> -->
+                                        <div class="quill-editor-container mb-10">
+                                            <quill-editor 
+                                                 :value="form.content"
+                                                v-model:content="form.content" 
+                                                @change="onEditorChange($event)">
+                                            </quill-editor>
+                                            <!-- <quill-editor 
+                                                 :value="content"
+                                                v-model:content="content" 
+                                                @change="onEditorChange($event)">
+                                            </quill-editor> -->
 
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -128,16 +139,15 @@
     
 <script>
 
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue';
 import Icons from '@/Layouts/Components/Icons.vue'
 import Toast from '@/Layouts/Components/Toast.vue'
 import { ChevronLeftIcon } from '@heroicons/vue/24/outline'
 import { Inertia } from '@inertiajs/inertia';
-import Tinymce from '@/Layouts/Components/Tinymce/Tinymce.vue'
-const toolbar = ['bold italic underline alignleft aligncenter alignright outdent indent  blockquote undo redo', 'hr bullist numlist link preview table forecolor backcolor ']
+// import Tinymce from '@/Layouts/Components/Tinymce/Tinymce.vue'
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-
+import { quillEditor } from 'vue3-quill';
 
 
 export default defineComponent({
@@ -150,8 +160,8 @@ export default defineComponent({
         Toast,
         ChevronLeftIcon,
         Inertia,
-        Tinymce,
         VueDatePicker,
+        quillEditor        
     },
 
     data() {
@@ -168,24 +178,16 @@ export default defineComponent({
         return {
             form: this.$inertia.form(data),
             url: this.post.image ? '/storage/' + this.post.image : "",
-            toolbar
+            toolbar,
+            // content: this.post.content,
+            editorOption: {
+                theme: 'snow'
+            }            
         }
-
-
-
-        // return {
-        //     form: {
-        //         content: ""
-        //     },
-        //     toastMessage: "",
-        //     url: null,
-        //     toolbar,
-        //     postingDate: null,
-        //     loading: false,
-        // }
-
     },
+
     setup() {
+        const quillEditorRef = ref(null);
 
         const format = (date) => {
             const day = date.getDate();
@@ -228,11 +230,29 @@ export default defineComponent({
             this.form.image = ""
             this.url = ""
             this.form.imageChanged = true
-        }        
+        },
+        onEditorChange({ quill, html, text }) {
+            // alert(this.content)
+            // console.log('editor change!', quill, html, text)
+            this.form.content = html
+        }                  
     },
     created() {
         //this.getCity()
     }
 })
 </script>
-    
+
+
+<style scoped>
+    .ql-container {
+        height: 450px;
+    }
+    .quill-editor-container {
+        height: 500px; /* O cualquier otra altura que se ajuste a tu diseño */
+    }
+    .ql-editor {
+        height: 300px;
+    }   
+
+</style>

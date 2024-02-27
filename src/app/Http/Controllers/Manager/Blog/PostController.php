@@ -28,7 +28,7 @@ class PostController extends Controller
                                 ->withQueryString()
                                 ->through(fn ($post) => [
                                         'id'          => $post->id,
-                                        'post_category_id' => $post->postCategory()->first()->name,
+                                        'post_category_id' => $post->post_category()->first()->name,
                                         'title'       => $post->title,
                                         'date_published' => $post->date_published,
                                         'post_status_id' => $post->postStatus()->first()->name,
@@ -135,6 +135,10 @@ class PostController extends Controller
         try{
             $img_aux = $post->image;
             
+            $date_published = $request->date_published;
+            $request->date_published = date('Y-m-d', strtotime(str_replace('/', '-', $date_published)));
+            // dd($request->date_published);
+
             $post->update($request->all());
     
             if($request->input('imageChanged')){
