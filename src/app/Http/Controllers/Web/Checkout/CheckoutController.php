@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Web\Client\ClientController;
 use App\Http\Controllers\Web\Order\OrderController;
 
+use App\Models\Order;
+
 class CheckoutController extends Controller
 {
     /**
@@ -27,8 +29,26 @@ class CheckoutController extends Controller
 
     public function confirmation(Request $request)
     {
-        // Add your logic here
-        return  Inertia::render('Web/Checkout/Confirmation');
+        
+        // Asumiendo que has obtenido el token de la URL
+        $token = $request->token;
+
+        $secretKey = env('SECRET_KEY');
+        $cipher = "aes-256-cbc";
+        
+        // Separar el contenido cifrado del IV
+        list($encrypted_data, $iv) = explode(':', $token);
+        $iv = base64_decode($iv);
+
+        $order_id = openssl_decrypt($encrypted_data, $cipher, $secretKey, 0, $iv);
+        // dd($order_id);
+
+        return  Inertia::render('Web/Checkout/Confirmation',[ 
+                                    'order' => Order::where('id', $order_id)
+                                                     ->with('items', 'client', 'items.product')
+                                                     ->first()
+                                                     ->toArray()
+                                ]);
         
     }
 
@@ -51,19 +71,16 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Error creating order'], 500);
         }
 
-        $payment = $this->payment($request);
+        $payment = $this->payment($request, $order->id);
 
         return response()->json(['message'  => 'Payment processed', 
                                  'response' => $payment ]);
 
     }
 
-    public function payment(Request $request)
+    public function payment(Request $request, $order_id)
     {        
         
-        $params = $this->_buildPaymentData($request->all());
-        // dd($params);
-
         $get_token_url = 'https://homoservices.apinaranja.com/security-ms/api/security/auth0/b2b/m2ms';
 
         $http_token = Http::post($get_token_url, 
@@ -74,79 +91,36 @@ class CheckoutController extends Controller
         
         $token = json_decode($http_token)->access_token;
 
-        // dd($token);
         $url    = 'https://e3-api.ranty.io/ecommerce/payment_request/external';
 
-        $params = $this->_buildPaymentData($request->all());
+        $params = $this->_buildPaymentData($request->all(), $order_id);
         
         $http_post = Http::withHeaders([ 'Authorization' => 'Bearer ' . $token,
                                          'Content-Type'  => 'application/json'])
                            ->post($url, $params);
-
+        
         $response = json_decode($http_post);
         
         return $response;
                          
     }
     
-    private function _buildPaymentData($request)
+    private function _buildPaymentData($request, $order_id)
     {
-        // dd($request);
-        $cartItems = $request['cartItems'];
 
-
-        $items = array_map(function($i){
-            return[
-                // "id" => $i['_id'],
-                "id" => "883627",
-                "name" => $i['nombre'],
-                "description" => $i['modelo'],
-                "quantity"    => 1,
-                "unit_price"  => [
-                    "currency" => "ARS",
-                    "value"    => $i['precio']
-                    // "value"    => "299.00"
-                ]
-            ];
-        }, $cartItems);
-
-        // $items = [
-        //             [
-        //                 "id" => "883627",
-        //                 "name" => "Café con Leche",
-        //                 "description" => "Café con Leche",
-        //                 "quantity" => 2,
-        //                 "unit_price" => [
-        //                     "currency" => "ARS",
-        //                     "value" => "299.00"
-        //                 ]
-        //             ]
-        //         ];        
-
-        // dd($otro, $items);
+        $items = $this->_generateItems($request['cartItems']);
+        $callback_url = $this->_generateCallbackUrl($order_id);
 
         return [
                     "store_id" => "YqzLxzVobkr6Xqk7JGZmzZsHqmTOAL37",
                     "platform" => "monsa_srl",
-                    "callback_url" => "https://www.monsasrl.com.ar/view/result/order/9546", // Corregido aquí
-                    "order_id" => 100310692,
+                    "callback_url" => $callback_url,
+                    "order_id" => $order_id,
                     "mobile" => false,
                     "payment_request" => [
                         "transactions" => [
                             [
                                 "products" => $items,
-                                // "products" =>   [
-                                //                     [
-                                //                         "id" => "883627",
-                                //                         "name" => "Café con Leche",
-                                //                         "description" => "Café con Leche",
-                                //                         "quantity" => 2,
-                                //                         "unit_price" => [
-                                //                             "currency" => "ARS",
-                                //                             "value" => "299.00"
-                                //                         ]
-                                //                     ]
-                                //                 ],
                                 "amount" => 
                                 [
                                     "currency" => "ARS",
@@ -167,7 +141,6 @@ class CheckoutController extends Controller
                                         "street_1" => $request['customerDetails']['address'],
                                         "street_2" => "N/A",
                                         "city" => "1",
-                                        // "region" => $request['customerDetails']['state'],
                                         "region" => "Buenos Aires",
                                         "country" => "AR",
                                         "zipcode" => "1234"
@@ -177,5 +150,46 @@ class CheckoutController extends Controller
                 ];
 
     }
-    // Add more methods as needed
+
+    public function _generateItems($cartItems){
+
+        $items = array_map(function($i){
+            return[
+                // "id" => $i['_id'],
+                "id" => "883627",
+                "name" => $i['nombre'],
+                "description" => $i['modelo'],
+                "quantity"    => 1,
+                "unit_price"  => [
+                    "currency" => "ARS",
+                    "value"    => $i['precio'] . ".00"
+                    // "value"    => "299.00"
+                ]
+            ];
+        }, $cartItems);
+        
+        return $items;
+    }
+
+    public function _generateCallbackUrl($order_id)
+    {
+        $base_url = env('BASE_URL');
+
+        $secretKey = env('SECRET_KEY');
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        
+        // Cifrar el order_id
+        $order_id = $order_id; // El order_id que quieres cifrar
+        $cipher = "aes-256-cbc";
+        $encrypted = openssl_encrypt($order_id, $cipher, $secretKey, 0, $iv);
+        $encrypted = $encrypted . ':' . base64_encode($iv); // Concatenar IV al mensaje cifrado porque se necesitará para descifrar
+        
+        // Tokenizado para enviar en URL
+        $token = urlencode($encrypted);
+        
+        $callback_url = $base_url . "checkout/confirmation?token={$token}";
+        
+        return $callback_url;
+     
+    }
 }

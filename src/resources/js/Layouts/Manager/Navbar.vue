@@ -89,9 +89,9 @@
   const navigation = [
     { name: 'Dashboard', href: 'dashboard', current: false },
     { name: 'Novedades', href: 'posts.list', current: false },
-    // { name: 'Viajes', href: 'services', current: false },
-    // { name: 'Clientes', href: 'client', current: false },
-    // { name: 'Choferes', href: 'drivers', current: false },
+    { name: 'Ordenes',   href: 'orders', current: false },
+    { name: 'Clientes',  href: 'clients', current: false },
+    { name: 'Productos', href: 'products', current: false },
     // { name: 'Servicios', href: 'client', current: false },
     // { name: 'Reportes', href: 'client', current: false },
     // { name: 'Configuración', href: 'setting', current: false },

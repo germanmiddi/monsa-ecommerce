@@ -48,18 +48,6 @@ class OrderController extends Controller
             return $e->getMessage();
         }
     }
-}
-    // {
-        // DB::beginTransaction();
-        // try {
 
-            // $order = Order::create($request->all());
-            // DB::commit();
-            // 
-        // } catch (\Exception $e) {
-            // DB::rollback();
-            // return false;
-        // }
-        // 
-    // }
-// }
+}
+

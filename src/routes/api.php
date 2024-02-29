@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Se pasa esta ruta al web.php para hacer uso del CSRF, y evitar exponer la ruta de pago sin seguridad
-
+// https://a34c-180-200-236-215.ngrok-free.app/api/payment/update
 // Route::post('/checkout/payment',[CheckoutController::class, 'payment'])->name('checkout_payment');
 // Route::post('/payment', [OrdersController::class, 'payment']);
 // Route::post('/payment', [CheckoutController::class, 'payment'])->name('checkout_payment');

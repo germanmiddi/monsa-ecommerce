@@ -30,7 +30,7 @@ class Order extends Model
 
     public function items()
     {
-        return $this->hasMany(OrderItem::class, 'order_id');
+        return $this->hasMany(OrderItem::class, 'orderitems_order_id');
     }
 
     public function status()

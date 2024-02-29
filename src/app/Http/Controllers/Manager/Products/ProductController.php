@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Manager\Products;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+
 
 class ProductController extends Controller
 {
@@ -14,9 +17,19 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        return  Inertia::render('Manager/Product/Index');
+        // return inertia('Manager/Products/Index');
     }
 
+    public function list()
+    {
+        $result = Product::query();
+
+        return $result->with('family', 'brand')
+                        ->orderBy('created_at', 'desc')
+                      ->paginate(20)
+                      ->withQueryString();
+    }
     /**
      * Show the form for creating a new resource.
      *

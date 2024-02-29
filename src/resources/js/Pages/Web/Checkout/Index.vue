@@ -34,7 +34,7 @@
         class="bg-gray-50 pt-16 pb-10 px-4 sm:px-6 lg:px-0 lg:pb-16 lg:bg-transparent lg:row-start-1 lg:col-start-2">
         <div class="max-w-lg mx-auto lg:max-w-none">
           <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Resumen de la orden</h2>
-
+          
           <ul role="list" class="text-sm font-medium text-gray-900 divide-y divide-gray-200">
             <li v-for="product in items" :key="product.id" class="flex items-start py-6 space-x-4">
               <img :src="product.imageSrc" :alt="product.imageAlt"
@@ -241,20 +241,6 @@ const steps = [
   { name: 'Pago', href: '#', status: 'upcoming' },
   { name: 'Confirmacion', href: '#', status: 'upcoming' },
 ]
-const products = [
-  {
-    id: 1,
-    name: 'CASCOS AGV K1 SOLID BLACK ML',
-    href: '#',
-    price: '$ 219.186',
-    color: '',
-    size: 'ML',
-    imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_matt_black1.jpg',
-    imageAlt:
-      'Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps.',
-  },
-  // More products...
-]
 
 export default {
   components: {
@@ -293,11 +279,12 @@ export default {
 
       console.log(response.data.response.data.checkout_url)
       
-      // if (response.data.response.data.checkout_url) {
-      //   window.location.href = response.data.response.data.checkout_url
-      // }
+      if (response.data.response.data.checkout_url) {
+        window.location.href = response.data.response.data.checkout_url
+      }
 
-      return
+      console.log(response.data)
+      return 
 
     }
 
@@ -319,7 +306,6 @@ export default {
     return {
       items: cart.items,
       steps,
-      products,
       totalPrice,
       formattedPrice,
       submitCheckout,

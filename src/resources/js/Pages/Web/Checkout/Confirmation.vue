@@ -22,57 +22,51 @@
             <p class="mt-2 text-base text-gray-500">Agradecemos su pedido, actualmente lo estamos procesando. Así que manténgase tranquilo y le enviaremos la confirmación muy pronto."</p>
             <dl class="mt-16 text-sm font-medium">
               <dt class="text-gray-500">Número de seguimiento</dt>
-              <dd class="mt-2 monsa-dark-light">51547878755545848512</dd>
+              <dd class="mt-2 monsa-dark-light">XXXXXX-XXXXXXXX-XX</dd>
             </dl>
-  
+            
             <ul role="list" class="mt-6 text-sm font-medium text-gray-500 border-t border-gray-200 divide-y divide-gray-200">
               <li v-for="product in products" :key="product.id" class="flex py-6 space-x-6">
+                <!-- <pre> {{ product }} </pre> -->
                 <img :src="product.imageSrc" :alt="product.imageAlt" class="flex-none w-24 h-24 bg-gray-100 rounded-md object-center object-cover" />
                 <div class="flex-auto space-y-1">
                   <h3 class="text-gray-900">
-                    <a :href="product.href">{{ product.name }}</a>
+                    <a href="#">{{ product.product.nombre }}</a>
                   </h3>
-                  <p>{{ product.color }}</p>
-                  <p>{{ product.size }}</p>
                 </div>
-                <p class="flex-none font-medium text-gray-900">{{ product.price }}</p>
+
+                <p class="flex-none font-medium text-gray-900">{{ formattedPrice( Number(product.price) ) }}</p>
+                <!-- <p class="flex-none font-medium text-gray-900">$ {{ product.price.toLocaleString('es-AR', {
+                  style: 'currency',
+                  currency: 'ARS',
+                  minimumFractionDigits: 2, // Para incluir siempre dos dígitos decimales
+                }) }}</p> -->
               </li>
             </ul>
   
             <dl class="text-sm font-medium text-gray-500 space-y-6 border-t border-gray-200 pt-6">
               <div class="flex justify-between">
-                <dt>Subtotal</dt>
-                <dd class="text-gray-900">$72.00</dd>
+                <dt>Envío</dt>
+                <dd class="text-gray-900">$ {{ order.delivery_amount }}</dd>
               </div>
-  
-              <div class="flex justify-between">
-                <dt>Shipping</dt>
-                <dd class="text-gray-900">$8.00</dd>
-              </div>
-  
-              <div class="flex justify-between">
-                <dt>Taxes</dt>
-                <dd class="text-gray-900">$6.40</dd>
-              </div>
-  
               <div class="flex items-center justify-between border-t border-gray-200 text-gray-900 pt-6">
                 <dt class="text-base">Total</dt>
-                <dd class="text-base">$86.40</dd>
+                <dd class="text-base">{{ formattedPrice( Number(order.total) ) }}</dd>
               </div>
             </dl>
   
             <dl class="mt-16 grid grid-cols-2 gap-x-4 text-sm text-gray-600">
               <div>
-                <dt class="font-medium text-gray-900">Shipping Address</dt>
+                <dt class="font-medium text-gray-900">Dirección de Envío</dt>
                 <dd class="mt-2">
                   <address class="not-italic">
-                    <span class="block">Kristin Watson</span>
-                    <span class="block">7363 Cynthia Pass</span>
-                    <span class="block">Toronto, ON N3Y 4H8</span>
+                    <span class="block">{{order.client.fullname}}</span>
+                    <span class="block">{{ order.client.address }}</span>
+                    <span class="block">{{ `${order.client.city} ${order.client.zip} - ${order.client.state}`}}</span>
                   </address>
                 </dd>
               </div>
-              <div>
+              <!-- <div>
                 <dt class="font-medium text-gray-900">Payment Information</dt>
                 <dd class="mt-2 space-y-2 sm:flex sm:space-y-0 sm:space-x-4">
                   <div class="flex-none">
@@ -87,11 +81,11 @@
                     <p>Expires 12 / 21</p>
                   </div>
                 </dd>
-              </div>
+              </div> -->
             </dl>
-  
+            
             <div class="mt-16 border-t border-gray-200 py-6 text-right">
-              <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Continue Shopping<span aria-hidden="true"> &rarr;</span></a>
+              <a href="/tienda" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Volver a la tienda<span aria-hidden="true"> &rarr;</span></a>
             </div>
           </div>
         </div>
@@ -100,25 +94,29 @@
   </template>
   
   <script>
-  const products = [
-    {
-      id: 1,
-      name: 'CASCOS AGV SPEED 46 TOP',
-      href: '#',
-      price: '$306.860',
-      color: 'Charcoal',
-      size: 'L',
-      imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/captura-de-pantalla-2023-04-12-082323.png',
-      imageAlt: "Model wearing men's charcoal basic tee in large.",
-    },
-    // More products...
-  ]
-  
+ import { useFormatPrice } from '@/composables/useFormatPrice.js';
+
   export default {
-    setup() {
+    components: {
+      useFormatPrice
+    },
+    props: {
+      order: {
+        type: Object
+      },
+    },
+    data() {
       return {
-        products,
+        products: this.order.items
       }
     },
+    setup() {
+
+      const formattedPrice = (price) => useFormatPrice(price);
+      
+      return { 
+        formattedPrice 
+      }
+    }
   }
   </script>
