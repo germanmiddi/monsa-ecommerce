@@ -12,7 +12,7 @@ class ClientController extends Controller
     public function store($data)
     {
         DB::beginTransaction();
-        try {
+        try {            
             $client = Client::firstOrCreate([
                 'email' => $data['email']
             ], [

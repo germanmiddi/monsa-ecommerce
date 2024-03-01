@@ -62,7 +62,9 @@
         <main class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="relative z-10 flex items-baseline justify-between pt-12 pb-6 border-b border-gray-200">
             <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Tienda</h1>
-            
+            <div class="w-1/2">  
+              <input type="text" class="border-2 border-gray-200 rounded-md p-2 w-full" placeholder="Buscar producto, marcas, y más ..." />
+            </div>
             <div class="flex items-center">
               <Menu as="div" class="relative inline-block text-left">
                 <div>
@@ -111,11 +113,11 @@
                   </li>
                 </ul>
   
-                <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-b border-gray-200 py-6" v-slot="{ open }">
+                <Disclosure as="div" class="border-b border-gray-200 py-6" v-slot="{ open }">
                   <h3 class="-my-3 flow-root">
                     <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
                       <span class="font-medium text-gray-900">
-                        {{ section.name }}
+                        Marcas
                       </span>
                       <span class="ml-6 flex items-center">
                         <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true" />
@@ -125,15 +127,39 @@
                   </h3>
                   <DisclosurePanel class="pt-6">
                     <div class="space-y-4">
-                      <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
-                        <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value" type="checkbox" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
-                        <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">
-                          {{ option.label }}
+                      <div v-for="(option, optionIdx) in brands" :key="option.id" class="flex items-center">
+                        <input :id="`filter-brand-${option.id}`" :name="`brand-${option.nombre}`" :value="option.nombre" type="checkbox" :checked="false" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
+                        <label :for="`filter-brand-${option.id}`" class="ml-3 text-sm text-gray-600">
+                          {{ option.nombre }}
                         </label>
                       </div>
                     </div>
                   </DisclosurePanel>
-                </Disclosure>
+                </Disclosure>    
+
+                <Disclosure as="div" class="border-b border-gray-200 py-6" v-slot="{ open }">
+                  <h3 class="-my-3 flow-root">
+                    <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
+                      <span class="font-medium text-gray-900">
+                        Familia
+                      </span>
+                      <span class="ml-6 flex items-center">
+                        <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true" />
+                        <MinusIcon v-else class="h-5 w-5" aria-hidden="true" />
+                      </span>
+                    </DisclosureButton>
+                  </h3>
+                  <DisclosurePanel class="pt-6">
+                    <div class="space-y-4">
+                      <div v-for="(option, optionIdx) in families" :key="option.id" class="flex items-center">
+                        <input :id="`filter-family-${option.id}`" :name="`family-${option.nombre}`" :value="option.nombre" type="checkbox" :checked="false" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
+                        <label :for="`filter-family-${option.id}`" class="ml-3 text-sm text-gray-600">
+                          {{ option.nombre }}
+                        </label>
+                      </div>
+                    </div>
+                  </DisclosurePanel>
+                </Disclosure>                
               </form>
   
               <!-- Product grid -->
@@ -232,6 +258,8 @@ export default {
   props:{
     families: Object,
     products: Object,
+    brands: Object,
+
   },
 
   components: {

@@ -1,6 +1,6 @@
 <template>
   
-  <div class="min-h-screen bg-gray-100">
+  <div class="min-h-screen bg-gray-100 font-roboto">
 
     <Navbar />
 
@@ -44,3 +44,9 @@
         }        
     }
 </script>
+<style>
+	.font-roboto{
+		font-family: "Roboto", sans-serif;
+	}
+
+</style>

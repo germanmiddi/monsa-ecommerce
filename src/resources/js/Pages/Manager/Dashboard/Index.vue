@@ -12,9 +12,9 @@
                           <CalendarIcon class="w-10 h-10 mx-4 text-indigo-500" />
                       </div>    
                       <div class="flex-grow flex flex-col px-2">
-                          <div class="text-sm text-gray-500">Solicitudes</div>
+                          <div class="text-sm text-gray-500">Ordenes</div>
                           <div class="flex items-center justify-between">
-                              <div class="font-bold text-2xl">100</div>
+                              <div class="font-bold text-2xl">47</div>
                               <span class="text-green-600 text-sm font-bold bg-green-100 py-1 px-2 rounded-xl"> 30%</span>
                           </div>
                       </div>   
@@ -29,18 +29,18 @@
               <div class="col-span-2 md:col-span-1 card rounded-xl shadow">
                   <div class="card-body px-2 py-5 flex items-center" >
                       <div class="">
-                          <Icons name="file" class="w-10 h-10 mx-4 text-sky-500"></Icons>
+                          <TruckIcon class="w-10 h-10 mx-4 text-blue-500" />
                       </div>    
                       <div class="flex-grow flex flex-col px-2">
-                          <div class="text-sm text-gray-500">Viajes Realizados</div>
+                          <div class="text-sm text-gray-500">Envios Realizados</div>
                           <div class="flex items-center justify-between">
-                              <div class="font-bold text-2xl">80</div>
+                              <div class="font-bold text-2xl">35</div>
                               <span class="text-green-600 text-sm font-bold bg-green-100 py-1 px-2 rounded-xl"> 20%</span>
                           </div>
                       </div>   
                   </div>
                   <div class="card-footer bg-gray-50 px-2  py-3 text-sm rounded-b-xl ">
-                      <div class="mx-4 text-sky-500 font-bold">
+                      <div class="mx-4 text-blue-500 font-bold">
                           <a href="#">Ver todo</a>
                       </div>    
                   </div>
@@ -49,12 +49,12 @@
               <div class="col-span-2 md:col-span-1 card rounded-xl shadow">
                   <div class="card-body px-2 py-5 flex items-center" >
                       <div class="">
-                          <Icons name="mapmarkertime" class="w-10 h-10 mx-4 text-blue-500"></Icons>
+                          <UserIcon name="mapmarkertime" class="w-10 h-10 mx-4 text-blue-500" />
                       </div>    
                       <div class="flex-grow flex flex-col px-2">
-                          <div class="text-sm text-gray-500">Excursiones</div>
+                          <div class="text-sm text-gray-500">Nuevos Clientes</div>
                           <div class="flex items-center justify-between">
-                              <div class="font-bold text-2xl">36</div>
+                              <div class="font-bold text-2xl">45</div>
                               <span class="text-green-600 text-sm font-bold bg-green-100 py-1 px-2 rounded-xl"> 10%</span>
                           </div>
                       </div>   
@@ -69,13 +69,13 @@
               <div class="col-span-2 md:col-span-1 card rounded-xl shadow">
                   <div class="card-body px-2 py-5 flex items-center" >
                       <div class="">
-                          <Icons name="tranfer" class="w-10 h-10 mx-4 text-blue-500"></Icons>
+                          <ShoppingCartIcon class="w-10 h-10 mx-4 text-red-500" />
                       </div>    
                       <div class="flex-grow flex flex-col px-2">
-                          <div class="text-sm text-gray-500">Traslados</div>
+                          <div class="text-sm text-gray-500">Ordenes Abandonadas</div>
                           <div class="flex items-center justify-between">
-                              <div class="font-bold text-2xl">44</div>
-                              <span class="text-red-600 text-sm font-bold bg-red-100 py-1 px-2 rounded-xl"> -5%</span>
+                              <div class="font-bold text-2xl">21</div>
+                              <span class="text-red-600 text-sm font-bold bg-red-100 py-1 px-2 rounded-xl"> 12%</span>
                           </div>
                       </div>   
                   </div>
@@ -96,7 +96,10 @@
   import store from '@/store.js'
   import { Bars3Icon,
            XMarkIcon,
-           CalendarIcon
+           CalendarIcon,
+           TruckIcon,
+           UserIcon,
+           ShoppingCartIcon
           } from '@heroicons/vue/24/outline'
 
   export default {
@@ -105,7 +108,10 @@
       },
       components: {
           Bars3Icon,
-          CalendarIcon     
+          CalendarIcon,
+          TruckIcon,
+          UserIcon,
+          ShoppingCartIcon
       },
   
       setup(){

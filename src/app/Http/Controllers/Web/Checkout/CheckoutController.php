@@ -56,12 +56,12 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
-
+        
         $clientController = new ClientController();
         $client = $clientController->store($request->customerDetails);
 
-        if(!$client){
-            return response()->json(['message' => 'Error creating client'], 500);
+        if(!isset($client->id)){
+            return response()->json(['message' => 'Error creating client', 'response' => $client], 500);
         }
         
         $orderController = new OrderController();
@@ -73,7 +73,7 @@ class CheckoutController extends Controller
 
         $payment = $this->payment($request, $order->id);
 
-        return response()->json(['message'  => 'Payment processed', 
+        return response()->json(['message'  => 'Proceso finalizado', 
                                  'response' => $payment ]);
 
     }
@@ -84,12 +84,16 @@ class CheckoutController extends Controller
         $get_token_url = 'https://homoservices.apinaranja.com/security-ms/api/security/auth0/b2b/m2ms';
 
         $http_token = Http::post($get_token_url, 
-                                [ 'client_id'     => "YqzLxzVobkr6Xqk7JGZmzZsHqmTOAL37",
-                                  'client_secret' => "jB8SQ3rfrvnn9JeeLktg3YQ6yWyp-Vzl7nxtUJE50TthNAKwOdl1lV1X4d7hVOoZ",
+                                [ 'client_id'     => env('NUBE_CLIENT_ID'),
+                                  'client_secret' => env('NUBE_CLIENT_SECRET'),
                                   'audience'      => "https://naranja.com/ranty/merchants/api" ]);
                                 
-        
-        $token = json_decode($http_token)->access_token;
+        if($http_token->status() != 200){
+            return response()->json(['message' => 'Error getting token', 'response' => $http_token], 500);
+        }
+
+        $response_token = json_decode($http_token);
+        $token = $response_token->access_token;
 
         $url    = 'https://e3-api.ranty.io/ecommerce/payment_request/external';
 
@@ -99,6 +103,10 @@ class CheckoutController extends Controller
                                          'Content-Type'  => 'application/json'])
                            ->post($url, $params);
         
+        if($http_post->status() != 200){
+            return response()->json(['message' => 'Error getting token', 'response' => $http_token], 500);
+        }
+
         $response = json_decode($http_post);
         
         return $response;

@@ -6,7 +6,8 @@
         <div class="flex justify-between h-16">
           <div class="flex">
             <div class="flex-shrink-0 flex items-center">
-              <img src="/images/logo-knar.png" class="w-28" alt="">
+              <div class="font-exo text-xl">MONSA</div>
+              <!-- <img src="/images/logo-knar.png" class="w-28" alt=""> -->
               <!-- <RocketLaunchIcon class="text-gray-600 w-8"  /> -->
             </div>
             <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">

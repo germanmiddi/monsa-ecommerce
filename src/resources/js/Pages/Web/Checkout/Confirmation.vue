@@ -22,13 +22,15 @@
             <p class="mt-2 text-base text-gray-500">Agradecemos su pedido, actualmente lo estamos procesando. Así que manténgase tranquilo y le enviaremos la confirmación muy pronto."</p>
             <dl class="mt-16 text-sm font-medium">
               <dt class="text-gray-500">Número de seguimiento</dt>
-              <dd class="mt-2 monsa-dark-light">XXXXXX-XXXXXXXX-XX</dd>
+              <dd class="mt-2 monsa-dark-light">
+                <a href="https://app.zippin.com.ar/track/947967464abf8b8533eefe8c9e860f72abff449c">01hqw65k9tpc3r5k029tpy60pk</a>
+              </dd>
             </dl>
             
             <ul role="list" class="mt-6 text-sm font-medium text-gray-500 border-t border-gray-200 divide-y divide-gray-200">
               <li v-for="product in products" :key="product.id" class="flex py-6 space-x-6">
                 <!-- <pre> {{ product }} </pre> -->
-                <img :src="product.imageSrc" :alt="product.imageAlt" class="flex-none w-24 h-24 bg-gray-100 rounded-md object-center object-cover" />
+                <img :src="imageSrc" :alt="product.imageAlt" class="flex-none w-24 h-24 bg-gray-100 rounded-md object-center object-cover" />
                 <div class="flex-auto space-y-1">
                   <h3 class="text-gray-900">
                     <a href="#">{{ product.product.nombre }}</a>
@@ -95,6 +97,7 @@
   
   <script>
  import { useFormatPrice } from '@/composables/useFormatPrice.js';
+ import { useCartStore } from '../../../Stores/useCartStore'
 
   export default {
     components: {
@@ -107,15 +110,20 @@
     },
     data() {
       return {
-        products: this.order.items
+        products: this.order.items,
+        imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_black_ml1.jpg'
       }
     },
+    
     setup() {
 
       const formattedPrice = (price) => useFormatPrice(price);
       
+      const cart = useCartStore();
+      cart.clearCart();
+
       return { 
-        formattedPrice 
+        formattedPrice,
       }
     }
   }

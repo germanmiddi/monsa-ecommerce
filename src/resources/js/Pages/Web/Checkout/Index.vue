@@ -37,8 +37,7 @@
           
           <ul role="list" class="text-sm font-medium text-gray-900 divide-y divide-gray-200">
             <li v-for="product in items" :key="product.id" class="flex items-start py-6 space-x-4">
-              <img :src="product.imageSrc" :alt="product.imageAlt"
-                class="flex-none w-20 h-20 rounded-md object-center object-cover" />
+              <img :src="imageSrc" class="flex-none w-20 h-20 rounded-md object-center object-cover" />
               <div class="flex-auto space-y-1">
                 <h3>{{ product.nombre }}</h3>
                 <button
@@ -59,7 +58,7 @@
 
             <div class="flex items-center justify-between">
               <dt class="text-gray-600">Envío</dt>
-              <dd>$ 1.500</dd>
+              <dd>$ 3.500</dd>
             </div>
 
             <div class="flex items-center justify-between border-t border-gray-200 pt-6">
@@ -101,7 +100,7 @@
 
                       <div class="flex items-center justify-between">
                         <dt class="text-gray-600">Envio</dt>
-                        <dd>$ 1.500</dd>
+                        <dd>$ 3.500</dd>
                       </div>
 
                       <!-- <div class="flex items-center justify-between">
@@ -214,7 +213,9 @@
                                           text-monsa-dark-light hover:bg-monsa-dark-light hover:text-monsa-yellow
                                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 
                                           focus:ring-monsa-yellow sm:ml-6 sm:order-last sm:w-auto">
-              Continuar</button>
+                                          <Icons v-if="loading" name="loading" class="w-5 h-5"> </Icons>
+                                          <label v-else>Continuar</label> 
+            </button>
             <p class="mt-4 text-center text-sm text-gray-500 sm:mt-0 sm:text-left">Será redirigido a la ventana del pago.
             </p>
           </div>
@@ -231,8 +232,8 @@ import { ChevronRightIcon, ChevronUpIcon } from '@heroicons/vue/24/solid'
 import { TrashIcon } from '@heroicons/vue/24/outline'
 import { Popover, PopoverButton, PopoverOverlay, PopoverPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useCartStore } from '../../../Stores/useCartStore'
-import { useFormatPrice } from '@/composables/useFormatPrice.js';
-
+import { useFormatPrice } from '@/composables/useFormatPrice.js'
+import Icons from '@/Layouts/Components/Icons.vue'
 // const formattedPrice = useFormatPrice(price);
 
 const steps = [
@@ -252,7 +253,8 @@ export default {
     TransitionRoot,
     ChevronRightIcon,
     ChevronUpIcon,
-    TrashIcon
+    TrashIcon,
+    Icons
   },
   setup() {
 
@@ -260,30 +262,35 @@ export default {
     const totalPrice = computed(() => cart.totalPrice);
 
     const formattedPrice = (price) => useFormatPrice(price);
+    const loading = ref(false)
 
     const submitCheckout = async () => {
+      loading.value = true
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
       const url = route('checkout_process')
 
-      let response = await axios.post(url, {
-        customerDetails: form.value,
-        cartItems: cart.items,
-        totalPrice: totalPrice.value
-      },
-        {
-          headers: {
-            'X-CSRF-TOKEN': csrfToken // Asegúrate de que la solicitud incluya el token CSRF
-          }
-        })
+      let response = await axios.post(url, {  customerDetails: form.value,
+                                              cartItems: cart.items,
+                                              totalPrice: totalPrice.value
+                                            },
+                                            {
+                                              headers: {
+                                                        'X-CSRF-TOKEN': csrfToken // Asegúrate de que la solicitud incluya el token CSRF
+                                                      }
+                                            })
 
-      console.log(response.data.response.data.checkout_url)
+      // console.log(response.data.response.data.checkout_url)
       
-      if (response.data.response.data.checkout_url) {
-        window.location.href = response.data.response.data.checkout_url
-      }
+      // if (response.data.response.data.checkout_url) {
+      //   window.location.href = response.data.response.data.checkout_url
+      // }
+      
+      window.location.href = "http://localhost:8899/checkout/confirmation?token=Gf1QkuOybbFGiUr%2BrmyyOg%3D%3D%3AYfuGhUBEO41o0s%2BcM1OzwA%3D%3D"
+      
+      // console.log(response.data)
+      // loading.value = false
 
-      console.log(response.data)
       return 
 
     }
@@ -302,6 +309,7 @@ export default {
       zip: '',
       addressNro: ''
     })
+    const imageSrc = 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_black_ml1.jpg'
 
     return {
       items: cart.items,
@@ -310,7 +318,9 @@ export default {
       formattedPrice,
       submitCheckout,
       form,
-      removeCart
+      removeCart,
+      imageSrc,
+      loading
     }
   },
   template: 'none'

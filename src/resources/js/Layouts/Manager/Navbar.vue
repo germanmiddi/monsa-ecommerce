@@ -6,7 +6,8 @@
           <div class="flex justify-between h-16">
             <div class="flex">
               <div class="flex-shrink-0 flex items-center">
-                <img src="/images/logo-knar.png" class="w-28" alt="">
+                <div class="font-exo text-xl font-bold">MONSA</div>
+                <!-- <img src="/images/logo-knar.png" class="w-28" alt=""> -->
                 <!-- <RocketLaunchIcon class="text-gray-600 w-8"  /> -->
               </div>
               <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
@@ -92,9 +93,9 @@
     { name: 'Ordenes',   href: 'orders', current: false },
     { name: 'Clientes',  href: 'clients', current: false },
     { name: 'Productos', href: 'products', current: false },
-    // { name: 'Servicios', href: 'client', current: false },
+    { name: 'Contenido', href: 'content', current: false },
     // { name: 'Reportes', href: 'client', current: false },
-    // { name: 'Configuración', href: 'setting', current: false },
+    { name: 'Configuración', href: '/', current: false },
   ]
   const userNavigation = [
     { name: 'Your Profile', href: '#' },

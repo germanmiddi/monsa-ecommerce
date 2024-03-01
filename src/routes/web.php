@@ -10,16 +10,19 @@ use App\Http\Controllers\Web\Product\ProductController;
 use App\Http\Controllers\Web\Cart\CartController;
 use App\Http\Controllers\Web\Checkout\CheckoutController;
 use App\Http\Controllers\Web\Blog\BlogController;
+use App\Http\Controllers\Web\Aboutus\AboutusController;
 
 use App\Http\Controllers\Manager\Dashboard\DashboardController;
 use App\Http\Controllers\Manager\Blog\PostController;
 use App\Http\Controllers\Manager\Orders\OrderController;
 use App\Http\Controllers\Manager\Clients\ClientController;
 use App\Http\Controllers\Manager\Products\ProductController as ManagerProductController;
-
+use App\Http\Controllers\Manager\Content\ContentController;
 
 /* Frontoffice */
 Route::get('/',[HomeController::class, 'index'])->name('home');
+
+Route::get('/nosotros',[AboutusController::class, 'index'])->name('aboutus');
 
 Route::get('/blog',[BlogController::class, 'list'])->name('blog.list');
 Route::get('/blog/{slug}',[BlogController::class, 'single'])->name('blog.single');
@@ -52,6 +55,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/novedades/{id}/edit',   [PostController::class, 'edit'])->name('posts.edit');
         Route::post('/novedades/store', [PostController::class, 'store'])->name('posts.store');
         Route::post('/novedades/update/{post}', [PostController::class, 'update'])->name('posts.update');
+
+        Route::get('/contenido', [ContentController::class, 'index'])->name('content');
+
+
     });
 });
 

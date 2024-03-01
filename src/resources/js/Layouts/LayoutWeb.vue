@@ -316,8 +316,8 @@
 			{ name: 'Baterias', href: 'tienda' },
 			{ name: 'Cascos', href: 'tienda' },
 			{ name: 'Tienda', href: 'tienda' },
-			{ name: 'Nosotros', href: '/' },
-			{ name: 'Novedades', href: '/' },
+			{ name: 'Nosotros', href: 'nosotros' },
+			{ name: 'Novedades', href: 'blog' },
 			{ name: 'Contacto', href: '/' },
 		],
 	}

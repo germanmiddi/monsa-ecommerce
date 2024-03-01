@@ -33,7 +33,7 @@ class OrderController extends Controller
 
     public function detail(Order $order)
     {
-        return inertia('Manager/Orders/detail', [
+        return inertia('Manager/Orders/Detail', [
             'order' => $order->load('client', 'items', 'items.product', 'status'),
         ]);
     }

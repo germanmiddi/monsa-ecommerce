@@ -30,7 +30,7 @@
                     </div>
 
                     <div v-html="post.content"
-                         class="text-gray-600 mt-4 mb-6 font-ptserif text-lg text-justify leading-10">
+                         class="text-gray-600 mt-4 mb-6 font-ptserif text-xl text-justify leading-5">
                     </div>    
 
                 </div> 

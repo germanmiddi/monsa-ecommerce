@@ -96,7 +96,7 @@
                             </td>
                             <td class="border-t px-6 py-4 ">
                                 <div class="flex justify-center">
-                                    <button class="text-xs font-semibold bg-blue-200 text-blue-800 rounded-md py-1 px-2 ">DETALLE</button>
+                                    <a :href="route('orders.detail', order.id)" class="text-xs font-semibold bg-blue-200 text-blue-800 rounded-md py-1 px-2 ">DETALLE</a>
                                 </div>                                    
                             </td>                                
                                 <!-- <div class="flex items-center">   
