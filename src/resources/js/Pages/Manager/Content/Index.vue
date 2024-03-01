@@ -320,7 +320,7 @@
     UserCircleIcon,
     ViewGridAddIcon,
     XIcon,
-  } from '@heroicons/vue/outline'
+  } from '@heroicons/vue/24/outline'
   
   const user = {
     name: 'Lisa Marie',

@@ -95,7 +95,7 @@
     { name: 'Productos', href: 'products', current: false },
     { name: 'Contenido', href: 'content', current: false },
     // { name: 'Reportes', href: 'client', current: false },
-    { name: 'Configuración', href: '/', current: false },
+    { name: 'Configuración', href: 'dashboard', current: false },
   ]
   const userNavigation = [
     { name: 'Your Profile', href: '#' },
