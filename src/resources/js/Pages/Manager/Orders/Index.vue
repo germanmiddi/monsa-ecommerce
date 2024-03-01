@@ -125,7 +125,7 @@
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 
-    import { useFormatPrice } from '@/composables/useFormatPrice.js';
+    import { useFormatPrice } from '@/Composables/useFormatPrice.js';
     import { defineComponent } from 'vue'
     import { PencilIcon,
              TrashIcon,

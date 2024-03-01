@@ -214,8 +214,8 @@
 <script>
 
 import { defineComponent } from 'vue'
-import { useFormatPrice } from '@/composables/useFormatPrice.js';
-import { useFormatDate } from '@/composables/useFormatDate.js';
+import { useFormatPrice } from '@/Composables/useFormatPrice.js';
+import { useFormatDate } from '@/Composables/useFormatDate.js';
 
 import { ChevronDownIcon, ChevronLeftIcon } from '@heroicons/vue/20/solid'
 import { CheckCircleIcon } from '@heroicons/vue/24/outline';

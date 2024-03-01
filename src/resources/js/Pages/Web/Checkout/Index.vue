@@ -232,7 +232,7 @@ import { ChevronRightIcon, ChevronUpIcon } from '@heroicons/vue/24/solid'
 import { TrashIcon } from '@heroicons/vue/24/outline'
 import { Popover, PopoverButton, PopoverOverlay, PopoverPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useCartStore } from '../../../Stores/useCartStore'
-import { useFormatPrice } from '@/composables/useFormatPrice.js'
+import { useFormatPrice } from '@/Composables/useFormatPrice.js'
 import Icons from '@/Layouts/Components/Icons.vue'
 // const formattedPrice = useFormatPrice(price);
 

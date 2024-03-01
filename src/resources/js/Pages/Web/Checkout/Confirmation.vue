@@ -96,7 +96,7 @@
   </template>
   
   <script>
- import { useFormatPrice } from '@/composables/useFormatPrice.js';
+ import { useFormatPrice } from '@/Composables/useFormatPrice.js';
  import { useCartStore } from '../../../Stores/useCartStore'
 
   export default {
