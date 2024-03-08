@@ -201,7 +201,7 @@
                             <div class="w-full border-b my-5"></div>
                             <div class="card-body-section">
                                 <div class="card-body-section-title text-sm text-gray-400 font-bold tracking-wider mb-1">MÉTODO DE PAGO</div>
-                                Nube - Tarjeta de Crédito
+                                Nave - Tarjeta de Crédito
                             </div>
                         </div>
                     </div>

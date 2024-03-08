@@ -84,8 +84,8 @@ class CheckoutController extends Controller
         $get_token_url = 'https://homoservices.apinaranja.com/security-ms/api/security/auth0/b2b/m2ms';
 
         $http_token = Http::post($get_token_url, 
-                                [ 'client_id'     => env('NUBE_CLIENT_ID'),
-                                  'client_secret' => env('NUBE_CLIENT_SECRET'),
+                                [ 'client_id'     => env('NAVE_CLIENT_ID'),
+                                  'client_secret' => env('NAVE_CLIENT_SECRET'),
                                   'audience'      => "https://naranja.com/ranty/merchants/api" ]);
                                 
         if($http_token->status() != 200){
