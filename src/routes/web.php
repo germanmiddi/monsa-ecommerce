@@ -18,6 +18,8 @@ use App\Http\Controllers\Manager\Orders\OrderController;
 use App\Http\Controllers\Manager\Clients\ClientController;
 use App\Http\Controllers\Manager\Products\ProductController as ManagerProductController;
 use App\Http\Controllers\Manager\Content\ContentController;
+use App\Http\Controllers\Manager\Settings\SettingsController;
+use PhpOffice\PhpSpreadsheet\Writer\Ods\Settings;
 
 /* Frontoffice */
 Route::get('/',[HomeController::class, 'index'])->name('home');
@@ -38,6 +40,11 @@ Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('manager')->group(function () {
+        Route::get('/logout', function () {
+            auth()->logout();
+            return redirect()->route('home'); 
+        })->name('logout');
+
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         
         Route::get('/orders', [OrderController::class, 'index'])->name('orders');
@@ -58,6 +65,26 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/contenido', [ContentController::class, 'index'])->name('content');
 
+        Route::get('/contenido/slider/list', [ContentController::class, 'list'])->name('content.slider.list');
+        Route::post('/contenido/slider/store', [ContentController::class, 'sliderStore'])->name('content.slider.store');
+        Route::post('/contenido/{id}/slider', [ContentController::class, 'sliderDelete'])->name('content.slider.delete');
+        //create a route named logout to logout the user
+        
+        
+        Route::get('/contenido/brand/list', [ContentController::class, 'brandList'])->name('content.brand.list');
+        Route::post('/contenido/brand/store', [ContentController::class, 'brandStore'])->name('content.brand.store');
+        Route::get('/contenido/banner', [ContentController::class, 'banner'])->name('content.banner');
+
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+        Route::get('/settings/family/list', [SettingsController::class, 'familyList'])->name('settings.family.list');
+        Route::post('settings/family/{id}/update', [SettingsController::class, 'familyUpdate'])->name('settings.family.update');
+
+        Route::get('settings/brand/list', [SettingsController::class, 'brandList'])->name('settings.brand.list');
+        Route::post('settings/brand/{id}/update', [SettingsController::class, 'brandUpdate'])->name('settings.brand.update');
+
+        Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');
+
+        
 
     });
 });

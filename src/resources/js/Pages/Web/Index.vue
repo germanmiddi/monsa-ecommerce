@@ -4,9 +4,18 @@
     <!-- eslint-disable -->
     <!-- Hero section -->
 
-    <div class="flex w-full h-2/3 ">      
+    <!-- <div class="flex w-full h-2/3 ">      
         <img class="w-full h-full object-center object-cover" src="/images/slide1.jpg" />
+    </div> -->
+
+    <div v-if="isMobile">
+
+        <img v-for="item in sliderMobile" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />
     </div>
+    <div v-else >
+        <img v-for="item in sliderDesktop" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />   
+    </div>
+    
 
     <section aria-labelledby="trending-heading">
         <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 sm:py-32 lg:pt-32 lg:px-8">
@@ -89,6 +98,7 @@
                                             <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/lluvia.png" alt="" />
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -102,26 +112,11 @@
         <div class="bg-white">
             <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:py-16 lg:px-8">
                 <h2 class="text-3xl mx-auto tracking-tight font-extrabold text-gray-900 sm:text-4xl">Nuestras Marcas</h2>
-                
                 <div class="mt-12 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-8">
-                    <div class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
-                        <img class="max-h-20" style="mix-blend-mode: multiply;" src="https://www.monsa-srl.com.ar/pedidosweb/resources/img/marcas/yuasa.png" alt="Workcation" />
+                    <div v-for="item in brands" :key="item.id" class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
+                        <img class="max-h-20" style="mix-blend-mode: multiply;" 
+                             :src="`/storage/${item.image}`" />
                     </div>
-                    <div class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
-                        <img class="max-h-20" style="mix-blend-mode: multiply;" src="https://www.monsa-srl.com.ar/pedidosweb/resources/img/marcas/delta.jpg" alt="Mirage" />
-                    </div>
-                    <div class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
-                        <img class="max-h-20" style="mix-blend-mode: multiply;" src="https://tailwindui.com/img/logos/tuple-logo-gray-400.svg" alt="Tuple" />
-                    </div>
-                    <div class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
-                        <img class="max-h-24" style="mix-blend-mode: multiply;" src="https://www.monsa-srl.com.ar/pedidosweb/resources/img/marcas/metzeler.jpg" alt="Laravel" />
-                    </div>
-                    <div class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
-                        <img class="max-h-20" style="mix-blend-mode: multiply;" src="https://tailwindui.com/img/logos/statamic-logo-gray-400.svg" alt="Statamic" />
-                    </div>
-                    <div class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
-                        <img class="max-h-24" style="mix-blend-mode: multiply;" src="https://www.monsa-srl.com.ar/pedidosweb/resources/img/marcas/riffel.jpg" alt="StaticKit" />
-                    </div>                    
                 </div>
             </div>
         </div>
@@ -264,14 +259,27 @@ const trendingProducts = [
     
 export default {
     props:{
-        posts: Object
+        sliderDesktop: Object,
+        sliderMobile:  Object,
+        brands:  Object,
+        content: Object,
+        posts:   Object
     },
     setup() {
         return {
             trendingProducts,
         }
 	},
+    data() {
+        return {
+            isMobile: false, // Estado para controlar si es móvil o no
+        }
+    },
     methods:{
+        checkMobile() {
+            this.isMobile = window.innerWidth < 768; // Asumiendo 768px como punto de corte para móvil
+        },
+
         truncateContent(htmlContent) {
             const div = document.createElement("div");
             div.innerHTML = htmlContent;
@@ -286,7 +294,20 @@ export default {
             // En este caso, solo estamos retornando texto, por lo que no es necesario
             return textContent;
         },
+
     },
+    // created() {
+    //   this.getHomeData()
+    // },
+    mounted() {
+        this.checkMobile(); // Comprobar al montar
+        window.addEventListener('resize', this.checkMobile); // Añadir listener para cambios de tamaño
+    },
+    beforeUnmount() { // o `destroyed` para Vue 2
+        window.removeEventListener('resize', this.checkMobile); // Limpiar listener
+    },
+
+
 
     layout: 'LayoutWeb' // Define the layout for this page
 }

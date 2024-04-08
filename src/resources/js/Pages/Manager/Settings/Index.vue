@@ -29,18 +29,20 @@ import Toast from '@/Layouts/Components/Toast.vue'
 import General from './General.vue';
 import Locations from './Locations.vue';
 import ServicesList from './ServicesList.vue';
+import BrandList from './BrandList.vue';
+import FamilyList from './FamilyList.vue';
+
 
 import { CogIcon,
-
          MapPinIcon,
 		 CubeIcon
   		} from '@heroicons/vue/24/outline'  
 
 
 const subNavigation = [
-    { name: 'General', icon: CogIcon, componentName: 'General' },
-    { name: 'Locaciones', icon: MapPinIcon, componentName: 'Locations' },
-	{ name: 'Lista de Servicios', icon: CubeIcon, componentName: 'ServicesList' },
+    { name: 'General',  icon: CogIcon, componentName: 'General' },
+    { name: 'Marcas',   icon: CubeIcon, componentName: 'BrandList' },
+	{ name: 'Familias', icon: CubeIcon, componentName: 'FamilyList' },
     // { name: 'API Whatsapp', icon: AdjustmentsIcon, componentName: 'Whatsapp' },
     // { name: 'Mensajes', icon: ChatAltIcon, componentName: 'Mensajes' },
     // { name: 'Chatbot', icon: ChatAlt2Icon, componentName: 'Chatbot' },
@@ -54,7 +56,9 @@ export default {
 		Toast,
 		General,
 		Locations,
-		ServicesList
+		ServicesList,
+		BrandList,
+		FamilyList
 	},
 
 	setup() {

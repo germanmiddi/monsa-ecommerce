@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Post;
 use App\Models\PostCategory;
-
+use App\Models\Slider;
+use App\Models\ContentBrand;
+use App\Models\Content;
 class HomeController extends Controller
 {
     /**
@@ -23,7 +25,11 @@ class HomeController extends Controller
 
         // Add your logic here
         return  Inertia::render('Web/Index', [
-            'posts' => $post
+            'sliderDesktop' => Slider::where('type', 'desktop')->get(),
+            'sliderMobile'  => Slider::where('type', 'mobile')->get(),
+            'brands'  => ContentBrand::all(),
+            'content' => Content::where('page', 'home')->get(),
+            'posts'   => $post,
         ]);
     }
     

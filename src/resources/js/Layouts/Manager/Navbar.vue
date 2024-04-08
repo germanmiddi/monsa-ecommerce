@@ -24,8 +24,7 @@
               <Menu as="div" class="ml-3 relative">
                 <div>
                   <MenuButton class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span class="sr-only">Open user menu</span>
-                    <img class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />
+                    <span class="">Hola, {{ this.$page.props.user.name }}</span>
                   </MenuButton>
                 </div>
                 <transition enter-active-class="transition ease-out duration-200" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
@@ -95,12 +94,13 @@
     { name: 'Productos', href: 'products', current: false },
     { name: 'Contenido', href: 'content', current: false },
     // { name: 'Reportes', href: 'client', current: false },
-    { name: 'Configuración', href: 'dashboard', current: false },
+    { name: 'Configuración', href: 'settings', current: false },
+    { name: 'Ir a tienda', href: 'home', current: false },
   ]
   const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Your Profile', href: 'dashboard' },
+    { name: 'Settings', href: 'dashboard' },
+    { name: 'Salir', href: 'logout' },
   ]
   
   export default {
