@@ -6,7 +6,7 @@
                         <div class="md:grid md:grid-cols-3 md:gap-6">
                             <div class="md:col-span-3">
                                 <div class="px-4 sm:px-0 flex justify-between items-center mb-3">
-                                    <h3 class="text-lg font-medium leading-6 text-gray-900">Slider Horizontal</h3>
+                                    <h3 class="text-lg font-medium leading-6 text-gray-900">Slider</h3>
                                    
                                 </div>
                             </div>
@@ -20,6 +20,12 @@
                                 </select>
                             </div>
                             
+                            <div class="col-span-6 sm:col-span-3">
+                                <label class="block text-sm font-medium text-gray-700">Tamaño Recomendado:</label>
+                                <div class="text-gray-500 text-sm">Desktop: Imagen horizontal de 1920x600.</div>
+                                <div class="text-gray-500 text-sm">Mobile: Imagen vertical de 820x1640.</div>
+                            </div>
+                                                        
                             <div class="col-span-6 sm:col-span-3">
                                 <!-- <label for="file" class="block text-sm font-medium text-gray-700">Imagen</label> -->
                                 <!-- <span class="text-gray-500 text-sm">Se recomienda utilizar una imagen cuadrada de al

@@ -21,9 +21,8 @@
                             </div> -->
                             
                             <div class="col-span-6 sm:col-span-3">
-                                <!-- <label for="file" class="block text-sm font-medium text-gray-700">Imagen</label> -->
-                                <!-- <span class="text-gray-500 text-sm">Se recomienda utilizar una imagen cuadrada de al
-                                    menos 1000px por lado.</span> -->
+                                <label for="file" class="block text-sm font-medium text-gray-700">Imagen</label>
+                                <span class="text-gray-500 text-sm">Se recomienda utilizar una imagen PNG de menos 612x250.</span>
                                 <input name="file" type="file" hidden @change="previewImage"
                                     @input="form.image = $event.target.files[0]" ref="import_file" />
                                 <div class="flex flex-row items-center">
@@ -60,8 +59,8 @@
                         <div class="md:col-span-3 mt-5">
                             <div class="grid grid-cols-3"> 
                                 <div v-for="item in brandItems" :key="item.id" class="col-span-1">
-                                    <div class="flex flex-col items-center justify-center">
-                                        <img :src="`/storage/${item.image}`" class="h-32" />
+                                    <div class="flex flex-col items-center justify-center mb-10">
+                                        <img :src="`/storage/${item.image}`" class="h-28" />
                                         <div class="flex justify-center items-center mt-2">
                                             <button class="text-red-500" @click="deleteItem(item.id)">
                                                 <TrashIcon class="w-6 h-6" />
@@ -132,11 +131,11 @@
                 this.getBrandsItems();
             },
 
-            // async deleteItem(itemId){
-            //     console.log(itemId)
-            //     const response = await axios.post(route('content.slider.delete', itemId))
-            //     this.getSliderItems();
-            // }
+            async deleteItem(itemId){
+                console.log(itemId)
+                const response = await axios.post(route('content.brand.delete', itemId))
+                this.getBrandsItems();
+            }
 
         },
     

@@ -49,7 +49,7 @@
   const asideItems = [
       { name: 'Slider', icon: CubeIcon, componentName: 'HomeSlider' },
       { name: 'Marcas', icon: CubeIcon, componentName: 'HomeBrands' },
-      { name: 'Banner', icon: CubeIcon, componentName: 'HomeBanner' },
+      { name: 'Banner Promoción', icon: CubeIcon, componentName: 'HomeBanner' },
       { name: 'Page - Nosotros', icon: CubeIcon, componentName: 'Aboutus' },
 
     ]

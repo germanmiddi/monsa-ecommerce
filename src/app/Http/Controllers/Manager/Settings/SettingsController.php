@@ -30,7 +30,14 @@ class SettingsController extends Controller
     }
 
     public function familyUpdate(Family $family){
-
+        try{
+            $family->active = !$family->active;
+            $family->save();
+            return response()->json(['message' => 'Familia actualizada correctamente']);
+        }catch(\Exception $e){
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error al actualizar la familia', 'error'=> $msg ], 500);
+        }
     }
 
     public function brandList(){
@@ -38,6 +45,15 @@ class SettingsController extends Controller
     }
 
     public function brandUpdate(Brand $brand){
+
+        try{
+            $brand->active = !$brand->active;
+            $brand->save();
+            return response()->json(['message' => 'Marca actualizada correctamente']);
+        }catch(\Exception $e){
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error al actualizar la marca', 'error'=> $msg ], 500);
+        }
 
     }
 

@@ -31,6 +31,23 @@ class ContentController extends Controller
         return response()->json($sliders);
     }
 
+    public function updateContent(Request $request)
+    {
+        $items = $request->input('items');
+    
+        foreach ($items as $item) {
+            $content = Content::find($item['id']);
+            if ($content) {
+                $content->content = $item['content'];
+                $content->save();
+            }
+        }
+    
+        return response()->json(['message' => 'All contents updated successfully']);
+    }
+
+
+
     public function sliderStore(Request $request)
     {
         DB::beginTransaction();    
@@ -64,22 +81,13 @@ class ContentController extends Controller
 
     public function sliderDelete(Slider $slider){
 
-        // DB::beginTransaction();    
-        // try{
-        //     // Borrar el archivo físico
-        //     if( $slider->image && 
-        //         Storage::disk('public')->exists($slider->image)){
-        //             Storage::disk('public')->delete($slider->image);
-        //     }
-        // }catch(\Exception $e){
-        //     DB::rollBack();
-        //     $msg = $e->getMessage();
-        //     return response()->json(['message' => 'Error deleting slider', 
-        //                              'detail'  => $msg ], 500);
-        // }
-
         try{
-            
+            // Borrar el archivo físico
+            if( $slider->image && 
+                Storage::disk('public')->exists($slider->image)){
+                    Storage::disk('public')->delete($slider->image);
+            }
+
             $slider->delete();
             // DB::commit();
         }catch(\Exception $e){
@@ -123,6 +131,28 @@ class ContentController extends Controller
                                      'detail'  => $msg ], 500);
         }
     }
+
+    public function brandDelete(ContentBrand $contentBrand){
+
+        try{
+            // Borrar el archivo físico
+            if( $contentBrand->image && 
+                Storage::disk('public')->exists($contentBrand->image)){
+                    Storage::disk('public')->delete($contentBrand->image);
+            }
+
+            $contentBrand->delete();
+            // DB::commit();
+        }catch(\Exception $e){
+            // DB::rollBack();
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error deleting marca', 
+            'detail'  => $msg ], 500);
+        }
+        
+        return response()->json(['message' => 'Marca deleted'], 200);
+    }
+
 
     public function getContent($page, $section = null)
     {

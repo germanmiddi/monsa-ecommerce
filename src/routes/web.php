@@ -65,22 +65,27 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/contenido', [ContentController::class, 'index'])->name('content');
 
+        Route::post('/contenido/update', [ContentController::class, 'updateContent'])->name('content.update');
+
+
         Route::get('/contenido/slider/list', [ContentController::class, 'list'])->name('content.slider.list');
         Route::post('/contenido/slider/store', [ContentController::class, 'sliderStore'])->name('content.slider.store');
-        Route::post('/contenido/{id}/slider', [ContentController::class, 'sliderDelete'])->name('content.slider.delete');
+        Route::post('/contenido/{slider}/slider', [ContentController::class, 'sliderDelete'])->name('content.slider.delete');
         //create a route named logout to logout the user
         
         
         Route::get('/contenido/brand/list', [ContentController::class, 'brandList'])->name('content.brand.list');
         Route::post('/contenido/brand/store', [ContentController::class, 'brandStore'])->name('content.brand.store');
+        Route::post('/contenido/{contentBrand}/brand', [ContentController::class, 'brandDelete'])->name('content.brand.delete');
+        
         Route::get('/contenido/banner', [ContentController::class, 'banner'])->name('content.banner');
 
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
         Route::get('/settings/family/list', [SettingsController::class, 'familyList'])->name('settings.family.list');
-        Route::post('settings/family/{id}/update', [SettingsController::class, 'familyUpdate'])->name('settings.family.update');
+        Route::post('settings/family/{family}/update', [SettingsController::class, 'familyUpdate'])->name('settings.family.update');
 
         Route::get('settings/brand/list', [SettingsController::class, 'brandList'])->name('settings.brand.list');
-        Route::post('settings/brand/{id}/update', [SettingsController::class, 'brandUpdate'])->name('settings.brand.update');
+        Route::post('settings/brand/update/{brand}', [SettingsController::class, 'brandUpdate'])->name('settings.brand.update');
 
         Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');
 

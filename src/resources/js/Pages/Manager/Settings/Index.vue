@@ -5,6 +5,8 @@
 	<main class="max-w-7xl mx-auto pb-10 lg:py-12 lg:px-8">
 		<div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
 			<aside class="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
+				
+				<div class="text-sm tracking-wide text-gray-700 font-bold mb-5">MENU</div>
 				<nav class="space-y-1">
 					<a v-for="(item,index) in subNavigation" :key="item.name" @click.prevent="selectItem(index)"
 						:class="[selectedIndex === index ? 'bg-gray-50 text-indigo-600 hover:bg-white' : 'text-gray-900 hover:text-gray-900 hover:bg-gray-50', 'group rounded-md px-3 py-2 flex items-center text-sm font-medium cursor-pointer']">
