@@ -8,7 +8,8 @@
         <div v-for="product in products" :key="product.id" 
                 class="group relative bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden">
                 <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
-                  <img :src=imageSrc alt="Lorem" class="w-full h-full object-center object-cover group-hover:opacity-75" />
+                  
+                  <img :src="buildImg(product.imagen)" alt="Lorem" class="w-full h-full object-center object-cover group-hover:opacity-75" />
                 </div>
                 <!-- <div class="aspect-w-1 aspect-h-1 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96">
             <img :src="product.imageSrc" :alt="product.imageAlt" class="w-full h-full object-center object-cover sm:w-full sm:h-full" />
@@ -99,5 +100,13 @@
         imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_black_ml1.jpg',
       }
     },
+    methods: {
+      buildImg(imagen) {
+
+        // console.log(imagenes); 
+
+        // return 'https://www.monsa-srl.com.ar/pedidosweb' + imagen;
+      }
+    }
   }
   </script>

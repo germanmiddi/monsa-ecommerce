@@ -3,216 +3,412 @@
 namespace App\Http\Controllers\Manager\Import;
 
 use App\Http\Controllers\Controller;
-use App\Imports\DiscapacidadImport;
-use App\Imports\EntidadImport;
-use App\Imports\EstadosImport;
-use App\Imports\FortalecimientoImport;
-use App\Imports\GeneroImport;
-use App\Imports\HabitatImport;
-use App\Imports\JuventudImport;
-use App\Imports\MayoresImport;
-use App\Imports\NinezImport;
-use App\Imports\PersonImport;
-use App\Imports\PromocionImport;
-use App\Models\Manager\Archivo;
-use App\Models\Manager\Dependencia;
-use App\Models\Manager\Entidad;
-use App\Models\Manager\Tramite;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
+
+use App\Jobs\ImportProductsJob;
+
+use App\Models\Family;
+use App\Models\Brand;
+use App\Models\Atribute;
+use App\Models\Product;
+use App\Models\ProductAtribute;
+
 
 class ImportController extends Controller
 {
-    public function index()
-    {
-        return Inertia::render('Manager/Settings/Importador/Index',[
-            'dependencias' => Dependencia::where('activo', true)->get()
+ 
+    
+    /***********************************************/
+    /* * Import products from the external API     */
+    /***********************************************/
+
+    public function import_products(){
+
+        $products = $this->_get_products();
+
+        if(!$products) {
+            return response()->json(['error' => 'An error occurred while trying to fetch products: '], 500);
+        }else{
+            // $result = $this->_storeProducts($products);
+            // return $result;
+            ImportProductsJob::dispatch($products);
+            return response()->json(['message' => 'Products are being imported']);            
+        }
+
+    }
+
+    public function _storeProducts($products){
+            
+        $count = 0;
+        $errorList = [];
+
+        foreach ($products as $product) {
+            DB::beginTransaction();
+
+            try {
+
+                $id_family = Family::where('externalId', $product['idFamilia'])->value('id');
+                $id_brand = Brand::where('externalId', $product['idMarca'])->value('id');
+
+                if(!$id_family || !$id_brand){
+                    $errorList[] = $product;
+                    continue;
+                }
+                // dd($product['idFamilia'], $id_family, $product['idMarca'], $id_brand);
+
+                $productModel = Product::updateOrCreate(
+                    ['externalId' => $product['idProducto']],
+                    [
+                        'idProducto' => $product['idProducto'],
+                        'idFamily' => $id_family,
+                        'idBrand'   => $id_brand,
+                        'nombre'    => $product['nombre'],
+                        'slug'      => $product['slug'],
+                        'modelo'    => $product['modelo'],
+                        'descripcion' => $product['descripcion'],
+                        'imagen' => $product['imagen'],
+                        'sku'    => $product['sku'],
+                        'precio' => $product['precio'],
+                        'dimensiones' => $product['dimensiones'],
+                        'peso'  => $product['peso'],
+                        'stock' => $product['stock'],
+                        'stock_quantity' => $product['stock_quantity'],
+                        'visibilidad'    => $product['visibilidad'],
+                        'state'  => $product['state'],
+                        'show'   => $product['show'],
+                        'search' => $product['search'],
+                        'alto'   => $product['alto'],
+                        'ancho'  => $product['ancho'],
+                        'largo'  => $product['largo'],
+                        'externalId' => $product['idProducto']
+                    ]
+                );
+
+                if(isset($product['atributos'])){
+                    foreach ($product['atributos'] as $atributo) {
+                        $id_atributo = Atribute::where('externalId', $atributo['idAtributo'])->value('id');
+                        if(!$id_atributo){
+                            $errorList[] = $product;
+                            continue;
+                        }
+                        $productAtribute = ProductAtribute::updateOrCreate(
+                            ['id_product' => $productModel->id, 'id_atribute' => $id_atributo],
+                            [
+                                'valores' => $atributo['valores']
+                            ]
+                        );
+                    }
+                }
+
+                DB::commit();
+                $count++;
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to store product: ' . $e->getMessage());
+                $errorList[] = $product;
+            }
+
+        }
+
+        return response()->json([
+            'success' => $count . ' products stored successfully',
+            'errors' => $errorList
         ]);
 
     }
 
-    public function importEntidades(Request $request)
-    {
-        if( $request->file('file')){
-                $archivoCSV = $request->file('file');
-                try {
-                    $import = new EntidadImport();
-                    Excel::import($import, $archivoCSV);
-                    $status = $import->getStatus();
-                    return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Entidades.', 'status' => $status], 200);
-                } catch (\Exception $e) {
-                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
-                }
-        }else{
-            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+    public function _get_products() {
+        // Ensure the API URL is set in the environment configuration
+        $apiUrl = env('MONSA_API_URL');
+        
+        if (!$apiUrl) {
+            return response()->json(['error' => 'API URL is not set.'], 422);
+        }
+
+        $url = $apiUrl . 'api/get_products';
+
+        try {
+            $httpResponse = Http::withHeaders(['Accept' => 'application/json'])
+                                 ->get($url);
+
+            // Check if the HTTP request was successful
+            if ($httpResponse->successful()) {
+                return $httpResponse->json();
+            } else {
+                Log::error('Failed to retrieve Products. Status code: ' . $httpResponse->status());
+                return false;
+            }
+        } catch (\Exception $e) {
+            // Log the exception or handle it according to your application's requirements
+            Log::error('An error occurred while trying to fetch Products: ' . $e->getMessage());
+            return false;    
         }
     }
 
-    public function importDependencias(Request $request)
-    {
 
-        if( $request->file('file')){
+    /***********************************************/
+    /* * Import familias from the external API     */
+    /***********************************************/
+
+    public function import_families(){
+
+        $families = $this->_get_families();
+
+        if(!$families) {
+            return response()->json(['error' => 'An error occurred while trying to fetch families: '], 500);
+        }else{
+            $result = $this->_storeFamilies($families);
+            return $result;
+            // return response()->json($families);
+        }
+
+    }
+
+    public function _storeFamilies($families) {
+        
+        $count = 0;
+        $errorList = [];
+
+        foreach ($families as $family) {
+            DB::beginTransaction();
+
             try {
-                $archivoCSV = $request->file('file');
-                    switch ($request['dependencia_id']) {
-                        case 2:
-                            Log::info('Se ha iniciado el proceso de Importación de Tramite DISCAPACIDAD. <br>');
-                            $import = new DiscapacidadImport();
-                            break;
-                        case 5:
-                            Log::info('Se ha iniciado el proceso de Importación de Tramite FORTALECIMIENTO. <br>');
-                            $import = new FortalecimientoImport();
-                            break;
-                        case 6:
-                            Log::info('Se ha iniciado el proceso de Importación de Tramite GENERO. <br>');
-                            $import = new GeneroImport();
-                            break;
-                        case 7:
-                            Log::info('Se ha iniciado el proceso de Importación de Tramite HABITAT. <br>');
-                            $import = new HabitatImport();
-                            break;
-                        case 8:
-                            Log::info('Se ha iniciado el proceso de Importación de Tramite NIÑEZ. <br>');
-                            $import = new NinezImport();
-                            break;
-                        case 9:
-                            Log::info('Se ha iniciado el proceso de Importación de Tramite PROMOCIONES. <br>');
-                            $import = new PromocionImport();
-                            break;
-                        case 13:
-                            Log::info('Se ha iniciado el proceso de Importación de Tramite JUVENTUD. <br>');
-                            $import = new JuventudImport();
-                            break;
-                        case 14:
-                            Log::info('Se ha iniciado el proceso de Importación de Tramite MAYORES. <br>');
-                            $import = new MayoresImport();
-                            break;
-                        default:
-                            return response()->json(['message' => 'No se ha podido detectar una Dependencia Valida'], 203);
-                            break;
-                    }
-                    Excel::import($import, $archivoCSV);
-                    $status = $import->getStatus();
 
-                    return response()->json(['message' => 'Se ha finalizado el proceso de importacion de tramite.', 'status' => $status], 200);
-                
-            } catch (\Throwable $th) {
-                return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
+                $familyModel = Family::updateOrCreate(
+                    ['externalId' => $family['idFamilia']],
+                    [
+                        'nombre' => $family['nombre'],
+                        'slug' => $family['slug'],
+                        // 'descripcion' => $family['descripcion'],
+                        // 'imagen' => $family['imagen'],
+                        'orden' => $family['orden'],
+                        // 'active' => false,
+                        'externalId' => $family['idFamilia']
+                    ]
+                );
+
+                DB::commit();
+                $count++;
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to store family: ' . $e->getMessage());
+                $errorList[] = $family;
             }
-        }else{
-            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+
+        }
+
+        return response()->json([
+            'success' => $count . ' families stored successfully',
+            'errors' => $errorList
+        ]);
+    }
+
+    public function _get_families() {
+        // Ensure the API URL is set in the environment configuration
+        $apiUrl = env('MONSA_API_URL');
+        
+        if (!$apiUrl) {
+            return response()->json(['error' => 'API URL is not set.'], 422);
+        }
+
+        $url = $apiUrl . 'api/get_families';
+
+        try {
+            $httpResponse = Http::withHeaders(['Accept' => 'application/json'])
+                                 ->get($url);
+
+            // Check if the HTTP request was successful
+            if ($httpResponse->successful()) {
+                return $httpResponse->json();
+
+            } else {
+                Log::error('Failed to retrieve families. Status code: ' . $httpResponse->status());
+                return false;
+            }
+        } catch (\Exception $e) {
+            // Log the exception or handle it according to your application's requirements
+            Log::error('An error occurred while trying to fetch families: ' . $e->getMessage());
+            return false;            
         }
     }
 
-    public function importPersonas(Request $request)
-    {
-        if( $request->file('file')){
-                $archivoCSV = $request->file('file');
-                try {
-                    $import = new PersonImport();
-                    Excel::import($import, $archivoCSV);
-                    $status = $import->getStatus();
-                    return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Personas.', 'status' => $status], 200);
-                } catch (\Exception $e) {
-                    dd($e);
-                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
-                }
+    /***********************************************/
+    /* * Import Marcas from the external API     */
+    /***********************************************/
+
+    public function import_brands(){
+
+        $brands = $this->_get_brands();
+
+        if(!$brands) {
+            return response()->json(['error' => 'An error occurred while trying to fetch brands: '], 500);
         }else{
-            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+            $result = $this->_storeBrands($brands);
+            return $result;
+            // return response()->json($families);
+        }
+
+    }
+
+    public function _storeBrands($brands) {
+        
+        $count = 0;
+        $errorList = [];
+
+        foreach ($brands as $brand) {
+            DB::beginTransaction();
+
+            try {
+
+                $brandModel = Brand::updateOrCreate(
+                    ['externalId' => $brand['idMarca']],
+                    [
+                        'nombre' => $brand['nombre'],
+                        'slug' => $brand['slug'],
+                        'orden' => $brand['orden'],
+                        'externalId' => $brand['idMarca']
+                    ]
+                );
+
+                DB::commit();
+                $count++;
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to store brand: ' . $e->getMessage());
+                $errorList[] = $brand;
+            }
+
+        }
+
+        return response()->json([
+            'success' => $count . ' brands stored successfully',
+            'errors' => $errorList
+        ]);
+    }
+
+    public function _get_brands() {
+        // Ensure the API URL is set in the environment configuration
+        $apiUrl = env('MONSA_API_URL');
+        
+        if (!$apiUrl) {
+            return response()->json(['error' => 'API URL is not set.'], 422);
+        }
+
+        $url = $apiUrl . 'api/get_brands';
+
+        try {
+            $httpResponse = Http::withHeaders(['Accept' => 'application/json'])
+                                 ->get($url);
+
+            // Check if the HTTP request was successful
+            if ($httpResponse->successful()) {
+                return $httpResponse->json();
+            } else {
+                // Handle the error based on the status code
+                Log::error('Failed to retrieve brands. Status code: ' . $httpResponse->status());
+                return false;
+            }
+        } catch (\Exception $e) {
+            // Log the exception or handle it according to your application's requirements
+            Log::error('An error occurred while trying to fetch brands: ' . $e->getMessage());
+            return false;     
         }
     }
 
-    public function importEstados(Request $request)
-    {
-        if( $request->file('file')){
-                $archivoCSV = $request->file('file');
-                try {
-                    $import = new EstadosImport();
-                    Excel::import($import, $archivoCSV);
-                    $status = $import->getStatus();
-                    return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Estados.', 'status' => $status], 200);
-                } catch (\Exception $e) {
-                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
-                }
+    /***********************************************/
+    /* * Import Atributos from the external API     */
+    /***********************************************/
+
+    public function import_atributes(){
+
+        $atributes = $this->_get_atributes();
+
+        if(!$atributes) {
+            return response()->json(['error' => 'An error occurred while trying to fetch Atributes: '], 500);
         }else{
-            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
-        }
-    }
-
-    public function importFiles(){
-        $sistemaArchivos = Storage::disk('restore_legacy')->files('/');
-
-        $files = count($sistemaArchivos);
-        $filesSuccess = 0;
-        $filesError = 0;
-        $filesDuplicados = 0;
-        $msgError = '';
-        $msgDuplidados = '';
-            foreach ($sistemaArchivos as $file) {
-                $infoArchivo = pathinfo($file);
-                // infoArchivo['basename']['extension']['filename']
-                $partes = explode('$', $infoArchivo['filename']);
-                /*
-                Parte[0] = num_tramite_legacy
-                Parte[1] = Observacion
-                */
-                try {
-                // Copiamos el archivo del disco "restore_legacy" al disco "public"
-                    Storage::disk('public')->put($file, Storage::disk('restore_legacy')->get($file));
-                    // Eliminar el archivo del disco de origen si es necesario
-                    Storage::disk('restore_legacy')->delete($file);
-                    // Verifico si existe el tramite
-                    $tramite = Tramite::where('num_tramite_legacy', $partes[0])->first();
-                    if($tramite){
-                        if(Archivo::where('name', $infoArchivo['basename'])->first()){
-                            $filesDuplicados++; 
-                            $msgDuplidados .= ' - El archivo '.$infoArchivo['basename'].' correspondiente al tramite legacy N° '.$partes[0].', ya se encuentra ingresado en el Sistema. <br>'; 
-                            Log::info( 'El archivo '.$infoArchivo['basename'].' correspondiente al tramite legacy N° '.$partes[0].', ya se encuentra ingresado en el Sistema. ', ["Modulo" => "Import:importFiles","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
-                        }else{
-                            Archivo::create([
-                                'name' => $infoArchivo['basename'],
-                                'description' => $partes[1],
-                                'ext' => $infoArchivo['extension'],
-                                'tramite_id' => $tramite->id
-                            ]);
-                            $filesSuccess++; 
-                            Log::info('El archivo '.$infoArchivo['basename'].' correspondiente al tramite legacy N° '.$partes[0].', se ha ingresado correctamente al Sistema.', ["Modulo" => "Import:importFiles","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
-                        }
-                    }else{
-                        $filesError++; 
-                        $msgError .= ' - El tramite legacy N° '.$partes[0].', no se encuentra ingresado en el Sistema. <br>'; 
-                        Log::info(" El tramite legacy N° '.$partes[0].', no se encuentra ingresado en el Sistema", ["Modulo" => "Import:importFiles","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
-                    }
-                } catch (\Throwable $th) {
-                    $filesError++; 
-                    $msgError .= 'Se ha producido un error al momento de almacenar el Archivo. '.$th->getMessage().'<br>'; 
-                    Log::info('Se ha producido un error al momento de almacenar el Archivo. '.$th->getMessage().'<br>', ["Modulo" => "Import:importFiles","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
-                }
-
-            }            
-            $retorno = 'PROCESO DE IMPORTADOR DE ARCHIVOS FINALIZADO <br>';
-            $retorno .= '=====================================<br>';
-            $retorno .= 'Se han procesado un total de '.strval($files).' archivos <br>';
-            $retorno .= 'Se ha registrado un total de '.strval($filesSuccess). ' registros correctamente <br>';
-            $retorno .= 'Se ha registrado un total de '.strval($filesDuplicados). ' registros duplicados <br>';
-            $retorno .= 'Se ha registrado un total de '.strval($filesError). ' registros con errores <br>';
+            $result = $this->_storeAtributes($atributes);
+            return $result;
             
-            if($msgError != ''){
-                $retorno .= '<br>Registros con Errores<br>';
-                $retorno .= '=====================================<br>';
-                $retorno .= $msgError;
+        }
+
+    }
+
+    public function _storeAtributes($atributes) {
+        
+        $count = 0;
+        $errorList = [];
+
+        foreach ($atributes as $atribute) {
+            DB::beginTransaction();
+
+
+            try {
+
+                $id_family = Family::where('externalId', $atribute['idfamilia'])->value('id');
+
+                if(!$id_family){
+                    $errorList[] = $atribute;
+                    continue;
+                }
+                $atributeModel = Atribute::updateOrCreate(
+                    ['externalId' => $atribute['idAtributo']],
+                    [
+                        'idfamily'  => $id_family,
+                        'nombre'    => $atribute['nombre'],
+                        'slug'      => $atribute['slug'],
+                        'valor'     => $atribute['valor'],
+                        'externalId' => $atribute['idAtributo']
+                    ]
+                );
+                DB::commit();
+                $count++;
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to store atribute: ' . $e->getMessage());
+                $errorList[] = $atribute;
             }
 
-            if($msgDuplidados != ''){
-                $retorno .= '<br>Registros Duplicados<br>';
-                $retorno .= '=====================================<br>';
-                $retorno .= $msgDuplidados;
-            }
+        }
 
-            return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Estados.', 'status' => $retorno], 200);
+        return response()->json([
+            'success' => $count . ' atributes stored successfully',
+            'errors' => $errorList
+        ]);
+    }
+
+    public function _get_atributes() {
+        // Ensure the API URL is set in the environment configuration
+        $apiUrl = env('MONSA_API_URL');
+        
+        if (!$apiUrl) {
+            return response()->json(['error' => 'API URL is not set.'], 422);
+        }
+
+        $url = $apiUrl . 'api/get_atributos';
+
+        try {
+            $httpResponse = Http::withHeaders(['Accept' => 'application/json'])
+                                 ->get($url);
+
+            // Check if the HTTP request was successful
+            if ($httpResponse->successful()) {
+                return $httpResponse->json();
+            } else {
+                // Handle the error based on the status code
+                Log::error('Failed to retrieve atributes. Status code: ' . $httpResponse->status());
+                return false;
+            }
+        } catch (\Exception $e) {
+            // Log the exception or handle it according to your application's requirements
+            Log::error('An error occurred while trying to fetch atributes: ' . $e->getMessage());
+            return false;     
         }
     }
+}

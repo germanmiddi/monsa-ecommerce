@@ -27,7 +27,7 @@ class ProductController extends Controller
 
         return $result->with('family', 'brand')
                         ->orderBy('created_at', 'desc')
-                      ->paginate(20)
+                      ->paginate(100)
                       ->withQueryString();
     }
     /**

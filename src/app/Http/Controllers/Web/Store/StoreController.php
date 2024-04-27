@@ -23,7 +23,12 @@ class StoreController extends Controller
         return  Inertia::render('Web/Store/Index', [
             'families' => Family::where('active', true)->orderBy('orden')->get(),
             'brands'   => Brand::where('active', true)->orderBy('orden')->get(),
-            'products' => Product::all()
+            'products' => Product::whereIn('idFamily', Family::where('active', true)->pluck('id'))
+                                  ->whereIn('idBrand', Brand::where('active', true)->pluck('id'))
+                                  ->limit(50)
+                                  ->get()
+
+
         ]);
         
     }

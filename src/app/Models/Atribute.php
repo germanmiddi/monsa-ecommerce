@@ -9,14 +9,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Atribute extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = 'Atribute';
+    protected $table = 'atribute';
 
     protected $fillable = [
         'idfamily',
         'nombre',
         'slug',
-        'valor'
+        'valor',
+        'externalId'
     ];
+
+    protected $casts = [
+        'valor' => 'array'
+    ];
+    
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_atribute', 'id_atribute', 'id_product');
+    }
 
     public function family()
     {

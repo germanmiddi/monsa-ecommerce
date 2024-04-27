@@ -16,7 +16,8 @@ class Brand extends Model
         'nombre',
         'slug',
         'orden',
-        'active'
+        'active',
+        'externalId'
     ];
 
     protected $casts = [

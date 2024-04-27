@@ -36,8 +36,14 @@ class Product extends Model
                     'search',
                     'alto',
                     'ancho',
-                    'largo' ];
+                    'largo',
+                    'externalId' ];
 
+    protected $casts = [
+        'imagen' => 'array', // Cast para las imágenes
+        'dimensiones' => 'array', // Cast para las dimensiones
+        'search' => 'array', // Cast para los términos de búsqueda
+    ];
 
     public function family()
     {

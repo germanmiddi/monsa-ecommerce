@@ -14,12 +14,37 @@
                         </div>
                     </div>                        
                     <div class="mt-5">
-                        <div class="flex justify-between items-center">
+
+                        <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
                             <div>
-                                Sincronizacion de productos<br>
+                                Sincronizacion de Familias<br>
                                 <span class="text-gray-400 text-sm">Última ejecución 01/04/2024 - 14:33 </span>
                             </div>
-                            <button class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
+                            <button @click="getFamilies()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
+                        </div>
+
+                        <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
+                            <div>
+                                Sincronizacion de Marcas<br>
+                                <span class="text-gray-400 text-sm">Última ejecución 01/04/2024 - 14:33 </span>
+                            </div>
+                            <button @click="getBrands()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
+                        </div>
+
+                        <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
+                            <div>
+                                Sincronizacion de Atributos<br>
+                                <span class="text-gray-400 text-sm">Última ejecución 01/04/2024 - 14:33 </span>
+                            </div>
+                            <button @click="getAtributes()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
+                        </div>
+
+                        <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
+                            <div>
+                                Sincronizacion de Productos<br>
+                                <span class="text-gray-400 text-sm">Última ejecución 01/04/2024 - 14:33 </span>
+                            </div>
+                            <button @click="getProducts()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
                         </div>
 
                     </div>
@@ -29,5 +54,68 @@
 </template>
     
 <script>   
+
+export default {
+    data() {
+        // return {
+        //     families: [],
+        //     brands: [],
+        //     products: []
+        // }
+    },
+    methods: {
+        async getFamilies() {
+
+            const url = route('import.families')
+            
+            try {
+                const response = await axios.get(url)
+                console.log(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+            
+        },
+        async getBrands() {
+
+            const url = route('import.brands')
+            
+            try {
+                const response = await axios.get(url)
+                console.log(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+
+        async getAtributes() {
+
+            const url = route('import.atributes')
+            
+            try {
+                const response = await axios.get(url)
+                console.log(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        
+        async  getProducts() {
+
+            const url = route('import.products')
+
+            try {
+                const response = await axios.get(url)
+                console.log(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
+    }
+}
+
 
 </script>

@@ -20,6 +20,7 @@ use App\Http\Controllers\Manager\Products\ProductController as ManagerProductCon
 use App\Http\Controllers\Manager\Content\ContentController;
 use App\Http\Controllers\Manager\Settings\SettingsController;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Settings;
+use App\Http\Controllers\Manager\Import\ImportController;
 
 /* Frontoffice */
 Route::get('/',[HomeController::class, 'index'])->name('home');
@@ -89,7 +90,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');
 
-        
+        Route::get('import/products',  [ImportController::class, 'import_products'])->name('import.products');
+        Route::get('import/families',  [ImportController::class, 'import_families'])->name('import.families');
+        Route::get('import/brands',    [ImportController::class, 'import_brands'])->name('import.brands');
+        Route::get('import/atributes', [ImportController::class, 'import_atributes'])->name('import.atributes');
 
     });
 });

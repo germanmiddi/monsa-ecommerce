@@ -17,7 +17,8 @@ class Family extends Model
         'descripcion',
         'imagen',
         'orden',
-        'active'
+        'active',
+        'externalId'
     ];
 
     public function products()
