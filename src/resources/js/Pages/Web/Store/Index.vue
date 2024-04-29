@@ -324,7 +324,8 @@ export default {
       return products.filter(product => {
         const matchesBrand = selectedBrands.value.length === 0 || selectedBrands.value.includes(product.brand.nombre);
         const matchesFamily = selectedFamilies.value.length === 0 || selectedFamilies.value.includes(product.family.nombre);
-        const matchesSearch = product.search.toLowerCase().includes(searchTerm.value.toLowerCase());
+        // const matchesSearch = product.search.toLowerCase().includes(searchTerm.value.toLowerCase());
+        const matchesSearch = product.search && typeof product.search === 'string' ? product.search.toLowerCase().includes(searchTerm.value.toLowerCase()) : false;
 
         return matchesBrand && matchesFamily && matchesSearch;
       });
