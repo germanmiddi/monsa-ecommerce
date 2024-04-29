@@ -35,57 +35,6 @@
 </template>
   
   <script>
-  // const products = [
-  //   {
-  //     id: 1,
-  //     name: 'CASCOS AGV K1 SOLID BLACK ML',
-  //     href: 'product',
-  //     price: '219186',
-  //     imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_black_ml1.jpg',
-  //     imageAlt: 'Tall slender porcelain bottle with natural clay textured body and cork stopper.',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'CASCOS AGV SPEED 46 TOP',
-  //     href: 'product',
-  //     price: '306860',
-  //     imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/captura-de-pantalla-2023-04-12-082323.png',
-  //     imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'CASCOS AGV VR46 SKY RACING TEAM BLACK/RED',
-  //     href: 'product',
-  //     price: '306860',
-  //     imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/captura-de-pantalla-2023-04-12-083921.png',
-  //     imageAlt: 'Person using a pen to cross a task off a productivity paper card.',
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'CASCOS AGV VR46 SKY RACING TEAM BLACK/RED',
-  //     href: 'product',
-  //     price: '306860',
-  //     imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/captura-de-pantalla-2023-04-12-083921.png',
-  //     imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'CASCOS AGV SPEED 46 TOP',
-  //     href: 'product',
-  //     price: '306860',
-  //     imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/captura-de-pantalla-2023-04-12-082323.png',
-  //     imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'CASCOS AGV VR46 SKY RACING TEAM BLACK/RED',
-  //     href: 'product',
-  //     price: '306860',
-  //     imageSrc: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/captura-de-pantalla-2023-04-12-083921.png',
-  //     imageAlt: 'Person using a pen to cross a task off a productivity paper card.',
-  //   },    
-  //   // More products...
-  // ]
   
   export default {
     props: {
@@ -102,10 +51,17 @@
     },
     methods: {
       buildImg(imagen) {
+        // console.log(imagen);
+        let imageArray = JSON.parse(imagen);
+        // console.log(imageArray);
 
-        // console.log(imagenes); 
-
-        // return 'https://www.monsa-srl.com.ar/pedidosweb' + imagen;
+        if (imageArray.length > 0) {
+          const img = `https://www.monsa-srl.com.ar/pedidosweb${imageArray[0]}`;
+          return img;
+        } else {
+          return null;
+        }
+       
       }
     }
   }

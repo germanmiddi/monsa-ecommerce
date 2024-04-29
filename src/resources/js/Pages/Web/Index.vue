@@ -7,14 +7,15 @@
     <!-- <div class="flex w-full h-2/3 ">      
         <img class="w-full h-full object-center object-cover" src="/images/slide1.jpg" />
     </div> -->
-
-    <div v-if="isMobile">
+    <Slider :sliderMobile="sliderMobile" :sliderDesktop="sliderDesktop" :isMobile="isMobile"/>
+    
+    <!-- <div v-if="isMobile">
 
         <img v-for="item in sliderMobile" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />
     </div>
     <div v-else >
         <img v-for="item in sliderDesktop" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />   
-    </div>
+    </div> -->
     
 
     <section aria-labelledby="trending-heading">
@@ -167,6 +168,7 @@
 </template>
 
 <script>
+import Slider from './Home/Slider.vue'
 
 const old_posts = [
   {
@@ -258,6 +260,7 @@ const trendingProducts = [
 	]
     
 export default {
+
     props:{
         sliderDesktop: Object,
         sliderMobile:  Object,
@@ -265,6 +268,11 @@ export default {
         content: Object,
         posts:   Object
     },
+
+    components:{
+        Slider
+    },
+
     setup() {
         return {
             trendingProducts,

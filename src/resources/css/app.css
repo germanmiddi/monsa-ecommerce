@@ -81,6 +81,14 @@
                disabled:opacity-25 transition
     }
 
+    .btn-monsa-xl{
+        @apply  w-1/3 bg-monsa-yellow 
+                border border-transparent rounded-md py-3 px-8 flex items-center justify-center 
+                text-base font-medium text-monsa-dark-light hover:bg-monsa-dark-light hover:text-monsa-yellow 
+                focus:outline-none focus:ring-2 focus:ring-offset-2
+                focus:ring-offset-gray-50 focus:ring-monsa-dark
+    }
+
     .btn-primary{
         @apply bg-blue-500 text-white hover:bg-blue-600;
     }
