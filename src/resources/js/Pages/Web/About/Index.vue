@@ -39,5 +39,26 @@ export default {
 </script>
 
 <style>
-
+    /* h1 {
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        color: #4f46e5;
+        line-height: 1.5rem;
+        font-weight: 600;
+    }
+    h2 {
+        font-size:2.25rem;
+        letter-spacing: -0.025em;
+        color: #111827;
+        line-height: 2.5rem;
+        font-weight: 800;
+        margin-top:0.5rem;
+    }
+    p {
+        font-size:1.125rem;
+        color: #6b7280;
+        line-height: 1.75rem;
+        margin-top:2rem;
+        text-align: justify;
+    } */
 </style>

@@ -10,7 +10,8 @@ use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 
 class PostController extends Controller
 {
@@ -36,8 +37,9 @@ class PostController extends Controller
                                         'image'     => $post->image,
                                         'slug'      => $post->slug,
                                         'created_at'  => $post->created_at->format('d-m-Y'),
-                                    ])
-                            ]);
+                                ]),
+            'toast' => Session::get('toast')
+            ]);
     }
 
     /**
@@ -47,7 +49,6 @@ class PostController extends Controller
      */
     public function create()
     {
-        // TODO: Implement create method
         return Inertia::render('Manager/Blog/Create');        
     }
 
@@ -85,8 +86,8 @@ class PostController extends Controller
             $post->save();
     
             DB::commit();
+            //return redirect()->route('posts.list')->with('message', 'Creado con éxito')->setStatusCode(200);
             return response()->json(array('message' => 'Creado con éxito'), 200);
-            // return Redirect::route('blog.index');
             
         }catch(\Exception $e){
             DB::rollback();
@@ -136,8 +137,8 @@ class PostController extends Controller
             $img_aux = $post->image;
             
             $date_published = $request->date_published;
-            $request->date_published = date('Y-m-d', strtotime(str_replace('/', '-', $date_published)));
-            // dd($request->date_published);
+            $request->date_published = date('Y-m-d', strtotime($date_published));//date('Y-m-d', strtotime(str_replace('/', '-', $date_published)));
+            //dd($request->date_published);
 
             $post->update($request->all());
     
@@ -161,11 +162,14 @@ class PostController extends Controller
 
         }catch(\Exception $e){
             DB::rollback();
-            $error = $e->getMessage();    
-            return response()->json(array('message' => $error), 200);
+            $error = $e->getMessage();
+            dd($e);
+            //return redirect()->route('posts.list')->with('message', 'Actualizado con éxito')->setStatusCode(500);
+            return response()->json(array('message' => $error), 500);
         }
         // return Redirect::route('blog.index');
-        return response()->json(array('message' => 'Actualizado con éxito'), 200);
+        return redirect()->route('posts.list')->with('message', 'Actualizado con éxito')->setStatusCode(200);
+        //return response()->json(array('message' => 'Actualizado con éxito'), 200);
     }
 
     /**

@@ -66,8 +66,8 @@
                                     <div class="col-span-6 sm:col-span-3">
                                         <label for="date_published" class="block text-sm font-medium text-gray-700 mb-1">Fecha
                                             publicación</label>
-                                        <VueDatePicker v-model="form.date_published" autoApply :enableTimePicker="false"
-                                            :format="format" :minDate="currentDate"></VueDatePicker>
+                                        <DatePicker v-model="form.date_published" autoApply :enableTimePicker="false"
+                                            :format="format" :minDate="currentDate"></DatePicker>
                                     </div>
                                     <div class="col-span-6 sm:col-span-3">
                                     </div>
@@ -145,7 +145,7 @@ import Toast from '@/Layouts/Components/Toast.vue'
 import { ChevronLeftIcon } from '@heroicons/vue/24/outline'
 import { Inertia } from '@inertiajs/inertia';
 // import Tinymce from '@/Layouts/Components/Tinymce/Tinymce.vue'
-import VueDatePicker from '@vuepic/vue-datepicker';
+import DatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import { quillEditor } from 'vue3-quill';
 
@@ -160,7 +160,7 @@ export default defineComponent({
         Toast,
         ChevronLeftIcon,
         Inertia,
-        VueDatePicker,
+        DatePicker,
         quillEditor        
     },
 
@@ -169,7 +169,7 @@ export default defineComponent({
             title: this.post.title,
             slug: this.post.slug,
             content: this.post.content,
-            date_published: this.post.date_published,
+            date_published: new Date(this.post.date_published+ "T00:00:00.000-03:00"),
             post_status_id: this.post.post_status_id,
             post_category_id: this.post.post_category_id,
             imageChanged: false
@@ -212,12 +212,17 @@ export default defineComponent({
 
         submit() {
             this.loading = true
-            this.$inertia.post(route('posts.update', this.$props.post.id), this.form)
+            //this.$inertia.post(route('posts.update', this.$props.post.id), this.form)
+            this.$inertia.post(route('posts.update', this.$props.post.id), this.form).then(() => {
+            // Redirecciona a otra página
+                this.$inertia.visit(route('posts.list'));
+            }).catch((error) => {
+                // Maneja errores si es necesario
+            });
         },
 
         openDialogSearchImg() {
             this.$refs.import_file.click()
-            console.log('hola')
         },
 
         previewImage(e) {
@@ -232,8 +237,6 @@ export default defineComponent({
             this.form.imageChanged = true
         },
         onEditorChange({ quill, html, text }) {
-            // alert(this.content)
-            // console.log('editor change!', quill, html, text)
             this.form.content = html
         }                  
     },

@@ -27,8 +27,11 @@ class ContentController extends Controller
 
     public function list()
     {
-        $sliders = Slider::all();
-        return response()->json($sliders);
+        //$sliders = Slider::orderby('type')->get();
+        return response()->json([
+            'desktop'   => Slider::where('type','desktop')->get(),
+            'mobile'    => Slider::where('type','mobile')->get()
+        ]);
     }
 
     public function updateContent(Request $request)
@@ -166,6 +169,32 @@ class ContentController extends Controller
         }
 
         return response()->json($content);
+    }
+
+    public function aboutStore(Request $request)
+    {
+        DB::beginTransaction();    
+        /* try{
+            $about = new ContentBrand();
+            
+            if($request->file()) {
+                $file_name = time().'_'.$request->file('image')->getClientOriginalName();
+                $file_path = $request->file('image')->storeAs('brand', $file_name, 'public');
+                $brand->image = $file_path;
+            }
+            
+            $brand->order = 0;
+            $brand->is_active = true;
+            $brand->save();
+
+            DB::commit();
+            return response()->json(['message' => 'Brand created successfully'], 200);
+        }catch(\Exception $e){
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error creating brand', 
+                                     'detail'  => $msg ], 500);
+        } */
     }
 
     // {

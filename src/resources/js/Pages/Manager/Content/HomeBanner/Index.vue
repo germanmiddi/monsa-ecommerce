@@ -5,6 +5,7 @@
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <div class="px-4 sm:px-0 flex justify-between items-center mb-3">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Banner Promoción</h3>
+                        <button @click="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
                     </div>
 
                     <div class="grid grid-cols-6 mt-5 gap-6">

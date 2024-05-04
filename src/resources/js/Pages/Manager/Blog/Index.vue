@@ -49,12 +49,12 @@
                                     <div class="ml-8">
                                         <div class="mb-3 text-lg uppercase font-bold text-blue-800">{{ post.title }}</div>
                                         <span class="mt-3 font-bold bg-gray-100 px-2 py-1 text-center ">{{ post.post_category_id }}</span>
-                                        <div class="mt-3">Creado: <span class="font-bold">{{ post.created_at }}</span> - Estado: <span class="font-bold">{{ post.post_status_id }}</span></div> 
+                                        <div class="mt-3">Creado: <span class="font-bold">{{ post.date_published }}</span> - Estado: <span class="font-bold">{{ post.post_status_id }}</span></div> 
                                     </div>
                                 </div>
                                 
                                 
-                                <div class="mt-3 overflow-wrap-normal" v-html="post.content"></div>
+                                <div class="mt-3 overflow-wrap-normal blog-content" v-html="post.content"></div>
                                 <button @click="editPost(post.id)" class="mt-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Editar
                                 </button>
@@ -182,7 +182,45 @@
         created() {
             // this.getClients()
         },
+        mounted()
+        {
+            if (this.toast) {
+                if (this.toast["status"] == 200) {
+                    this.labelType = "success";
+                    this.toastMessage = this.toast["message"];
+                } else {
+                    this.labelType = "danger";
+                    this.toastMessage = this.toast["message"];
+                }
+            }
+        }
     
     })
     </script>
+    
+    <style>
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            color: #4f46e5;
+            line-height: 1.5rem;
+            font-weight: 600;
+        }
+        h2 {
+            font-size:1.25rem;
+            letter-spacing: -0.025em;
+            color: #111827;
+            line-height: 1.5rem;
+            font-weight: 800;
+            margin-top:0.5rem;
+        }
+        p {
+            font-size:1rem;
+            color: #6b7280;
+            line-height: 1.75rem;
+            margin-top:2rem;
+            text-align: justify;
+        }
+
+    </style>
     

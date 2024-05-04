@@ -59,13 +59,14 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="relative pt-48 pb-16 sm:pb-24">
                             <div>
-                                <h2 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
-                                    Liquidación.
-                                    <br />
-                                    Hasta 50% off.
+                                <h1 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+                                    {{bannerTitle}}
+                                </h1>
+                                <h2 id="sale-heading" class="text-3xl font-extrabold tracking-tight text-white md:text-3xl">
+                                    {{bannerSubtitle}}
                                 </h2>
                                 <div class="mt-6 text-base">
-                                    <a href="#" class="font-semibold text-monsa-yellow">Ver productos<span aria-hidden="true"> &rarr;</span></a>
+                                    <a :href="bannerLink" class="font-semibold text-monsa-yellow">Ver productos<span aria-hidden="true"> &rarr;</span></a>
                                 </div>
                             </div>
 
@@ -116,7 +117,7 @@
                 <div class="mt-12 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-8">
                     <div v-for="item in brands" :key="item.id" class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
                         <img class="max-h-20" style="mix-blend-mode: multiply;" 
-                             :src="`/storage/${item.image}`" />
+                            :src="`/storage/${item.image}`" />
                     </div>
                 </div>
             </div>
@@ -302,7 +303,10 @@ export default {
             // En este caso, solo estamos retornando texto, por lo que no es necesario
             return textContent;
         },
-
+        getBannerElement(elementSearch) {
+            const element = this.content.find(item => item.element === elementSearch);
+            return element ? element.content : '-';
+        }
     },
     // created() {
     //   this.getHomeData()
@@ -313,6 +317,17 @@ export default {
     },
     beforeUnmount() { // o `destroyed` para Vue 2
         window.removeEventListener('resize', this.checkMobile); // Limpiar listener
+    },
+    computed: {
+        bannerTitle() {
+            return this.getBannerElement('h1');
+        },
+        bannerSubtitle() {
+            return this.getBannerElement('h2');
+        },
+        bannerLink() {
+            return this.getBannerElement('link');
+        }
     },
 
 

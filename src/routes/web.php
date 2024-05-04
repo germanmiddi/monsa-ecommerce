@@ -73,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/contenido/slider/store', [ContentController::class, 'sliderStore'])->name('content.slider.store');
         Route::post('/contenido/{slider}/slider', [ContentController::class, 'sliderDelete'])->name('content.slider.delete');
         //create a route named logout to logout the user
+
+        Route::post('/contenido/about/store', [ContentController::class, 'aboutStore'])->name('content.about.store');
         
         
         Route::get('/contenido/brand/list', [ContentController::class, 'brandList'])->name('content.brand.list');

@@ -7,7 +7,7 @@
                             <div class="md:col-span-3">
                                 <div class="px-4 sm:px-0 flex justify-between items-center mb-3">
                                     <h3 class="text-lg font-medium leading-6 text-gray-900">Página Nosotros</h3>
-                                   
+                                    <button @click="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
                                 </div>
                             </div>
                         </div>                        
@@ -18,7 +18,7 @@
                                 <!-- <Tinymce ref="editor-content" v-model="form.content" :height="400" :toolbar="toolbar"></Tinymce> -->
                                 
                                 <div class="quill-editor-container mb-10">
-                                    <quill-editor ref="editor-content" v-model="form.content" :options="editorOptions"></quill-editor>
+                                    <quill-editor ref="editor" v-model:value:value="form.content" :options="editorOptions"></quill-editor>
                                 </div>
 
                             </div>
@@ -57,21 +57,9 @@
                             <button v-if="url" @click="uploadImage" class="mt-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Subir</button>
 
                         </div>
-                        
-                        <!-- <div class="md:col-span-3 mt-5">
-                            <div class="grid grid-cols-3"> 
-                                <div v-for="item in brandItems" :key="item.id" class="col-span-1">
-                                    <div class="flex flex-col items-center justify-center">
-                                        <img :src="`/storage/${item.image}`" class="h-40" />
-                                        <div class="flex justify-center items-center mt-2">
-                                            <button class="text-red-500" @click="deleteItem(item.id)">
-                                                <TrashIcon class="w-6 h-6" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
+                    </div>
+                    <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 bg-gray-50">
+                        <button @click="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
                     </div>
                 </div>
         </div>
@@ -139,11 +127,14 @@
 
             },
 
-            // async deleteItem(itemId){
-            //     console.log(itemId)
-            //     const response = await axios.post(route('content.slider.delete', itemId))
-            //     this.getSliderItems();
-            // }
+            submit() {
+            this.loading = true
+            this.$inertia.post(route('about.store'), this.form)
+            .then(() => {
+                this.loading = false
+            })
+
+        },
 
         },
     
