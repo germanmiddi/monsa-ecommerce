@@ -129,6 +129,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 bg-gray-50">
+                    <button @click="submit" class="btn-blue">Guardar</button>
+                </div>
             </div>
 
         </div>
@@ -169,7 +172,7 @@ export default defineComponent({
             title: this.post.title,
             slug: this.post.slug,
             content: this.post.content,
-            date_published: new Date(this.post.date_published+ "T00:00:00.000-03:00"),
+            date_published: new Date(this.invertDate(this.post.date_published)+ "T00:00:00.000-03:00"),
             post_status_id: this.post.post_status_id,
             post_category_id: this.post.post_category_id,
             imageChanged: false
@@ -238,7 +241,13 @@ export default defineComponent({
         },
         onEditorChange({ quill, html, text }) {
             this.form.content = html
-        }                  
+        },
+        invertDate(date) {
+            const parts = date.split('/');
+            //"Y-m-d"
+            const invertedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            return invertedDate;
+        }               
     },
     created() {
         //this.getCity()

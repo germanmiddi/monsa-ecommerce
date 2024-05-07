@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/contenido/slider/list', [ContentController::class, 'list'])->name('content.slider.list');
         Route::post('/contenido/slider/store', [ContentController::class, 'sliderStore'])->name('content.slider.store');
         Route::post('/contenido/{slider}/slider', [ContentController::class, 'sliderDelete'])->name('content.slider.delete');
+        Route::post('/contenido/slider/order', [ContentController::class, 'sliderOrder'])->name('content.slider.order');
         //create a route named logout to logout the user
 
         Route::post('/contenido/about/store', [ContentController::class, 'aboutStore'])->name('content.about.store');
@@ -80,6 +81,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/contenido/brand/list', [ContentController::class, 'brandList'])->name('content.brand.list');
         Route::post('/contenido/brand/store', [ContentController::class, 'brandStore'])->name('content.brand.store');
         Route::post('/contenido/{contentBrand}/brand', [ContentController::class, 'brandDelete'])->name('content.brand.delete');
+        Route::post('/contenido/brand/order', [ContentController::class, 'brandOrder'])->name('content.brand.order');
         
         Route::get('/contenido/banner', [ContentController::class, 'banner'])->name('content.banner');
 

@@ -114,15 +114,15 @@
                                                             </div>
                                                             <hr>
                                                             <div class="flex justify-between">
-                                                                <div class="w-1/3 text-center border-r-2 border-gray-50  bg-gray-100">
+                                                                <div class="w-1/2 text-center border-r-2 border-gray-50  bg-gray-100">
                                                                     <Icons v-if="this.product.show == 1" name="building-storefront" class="w-8 h-8 text-green-400 mx-auto mb-2 mt-2"/>
                                                                     <Icons v-else name="building-storefront" class="w-8 h-8 text-red-400 mx-auto mb-2 mt-2"/>
                                                                 </div>
-                                                                <div class="w-1/3 text-center border-r-2 border-gray-50  bg-gray-100 ">
+                                                                <!-- <div class="w-1/3 text-center border-r-2 border-gray-50  bg-gray-100 ">
                                                                     <Icons v-if="this.product.visibilidad === 'publicar'" name="eye" class="w-8 h-8 text-green-400 mx-auto mb-2 mt-2"/>
                                                                     <Icons v-else name="eye" class="w-8 h-8 text-red-400 mx-auto mb-2 mt-2"/>
-                                                                </div>
-                                                                <div class="w-1/3 text-center bg-gray-100">
+                                                                </div> -->
+                                                                <div class="w-1/2 text-center bg-gray-100">
                                                                     <Icons v-if="this.product.show_home == 1" name="star" class="w-8 h-8 text-green-400 mx-auto mb-2 mt-2"/>
                                                                     <Icons v-else name="star" class="w-8 h-8 text-red-400 mx-auto mb-2 mt-2"/>
                                                                 </div>
@@ -147,6 +147,11 @@
                                                             <div class="flex text-sm text-gray-700">
                                                                 <label class="text-bold w-24 font-bold">SKU:</label>
                                                                 <span>{{ this.product.sku ?? '-' }}</span>
+                                                            </div>
+
+                                                            <div class="flex text-sm text-gray-700">
+                                                                <label class="text-bold w-24 font-bold">Visibilidad:</label>
+                                                                <span>{{ this.product.visibilidad ?? '-' }}</span>
                                                             </div>
 
                                                             <hr>
@@ -181,7 +186,7 @@
                                                                     class="block text-sm font-medium text-gray-700">
                                                                     <b>Imagenes </b></label>
                                                                     <div class="flex">
-                                                                        <img v-for="(image,index) in JSON.parse(this.product.imagen)" :key="index"  class="rounded-3xl h-32 w-32" src="https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/repuestos%20pl%C3%A1sticos/rodilleras-pro-tork.png" alt="">
+                                                                        <img v-for="(image,index) in JSON.parse(this.product.imagen)" :key="index"  class="rounded-3xl h-32 w-32" :src="`http://monsa-srl.com.ar/pedidosweb/${image}`" alt="">
                                                                     </div> 
                                                             </div>
                                                         </div>

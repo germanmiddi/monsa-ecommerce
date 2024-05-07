@@ -59,12 +59,13 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="relative pt-48 pb-16 sm:pb-24">
                             <div>
-                                <h1 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+                                <h1 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-white md:text-4xl">
                                     {{bannerTitle}}
-                                </h1>
-                                <h2 id="sale-heading" class="text-3xl font-extrabold tracking-tight text-white md:text-3xl">
+                                    <br>
                                     {{bannerSubtitle}}
-                                </h2>
+                                    <br>
+                                    {{bannerTitleH1}}
+                                </h1>
                                 <div class="mt-6 text-base">
                                     <a :href="bannerLink" class="font-semibold text-monsa-yellow">Ver productos<span aria-hidden="true"> &rarr;</span></a>
                                 </div>
@@ -274,9 +275,15 @@ export default {
         Slider
     },
 
-    setup() {
+    setup(props) {
+        const bannerTitle = props.content.find(item => item.element === 'h1').content;
+        const bannerSubtitle = props.content.find(item => item.element === 'h2').content;
+        const bannerLink = props.content.find(item => item.element === 'link').content;
         return {
             trendingProducts,
+            bannerTitle,
+            bannerSubtitle,
+            bannerLink
         }
 	},
     data() {
@@ -302,10 +309,6 @@ export default {
             // Opcional: Convertir texto truncado de nuevo a HTML si es necesario
             // En este caso, solo estamos retornando texto, por lo que no es necesario
             return textContent;
-        },
-        getBannerElement(elementSearch) {
-            const element = this.content.find(item => item.element === elementSearch);
-            return element ? element.content : '-';
         }
     },
     // created() {
@@ -319,18 +322,8 @@ export default {
         window.removeEventListener('resize', this.checkMobile); // Limpiar listener
     },
     computed: {
-        bannerTitle() {
-            return this.getBannerElement('h1');
-        },
-        bannerSubtitle() {
-            return this.getBannerElement('h2');
-        },
-        bannerLink() {
-            return this.getBannerElement('link');
-        }
+
     },
-
-
 
     layout: 'LayoutWeb' // Define the layout for this page
 }

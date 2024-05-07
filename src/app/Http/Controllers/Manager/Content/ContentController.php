@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manager\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,6 +14,7 @@ use App\Models\Content;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Constraint\Count;
 
 class ContentController extends Controller
 {
@@ -27,10 +29,9 @@ class ContentController extends Controller
 
     public function list()
     {
-        //$sliders = Slider::orderby('type')->get();
         return response()->json([
-            'desktop'   => Slider::where('type','desktop')->get(),
-            'mobile'    => Slider::where('type','mobile')->get()
+            'desktop'   => Slider::where('type','desktop')->orderby('order')->get(),
+            'mobile'    => Slider::where('type','mobile')->orderby('order')->get()
         ]);
     }
 
@@ -103,9 +104,37 @@ class ContentController extends Controller
         return response()->json(['message' => 'Slider deleted'], 200);
     }
 
+    public function sliderOrder(Request $request)
+    {
+        DB::beginTransaction();    
+        try{
+            $datosJSON = $request->getContent();
+            $datosDecodificados = json_decode($datosJSON, true); // El segundo parámetro true convierte el JSON en un array asociativo
+            $position = 1;
+            
+            foreach ($datosDecodificados as $value) {
+                Slider::where('id',$value['id'])->update(
+                    [
+                        'order' => $position
+                    ]
+                );
+                $position++;
+            }
+            DB::commit();
+            return response()->json(['message' => 'Slider created successfully'], 200);
+        }catch(\Exception $e){
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error creating slider', 
+                                     'detail'  => $msg ], 500);
+        }
+    }
+
+
+
     public function brandList()
     {
-        $brands = ContentBrand::all();
+        $brands = ContentBrand::orderby('order')->get();
         return response()->json($brands);
     }
 
@@ -156,6 +185,32 @@ class ContentController extends Controller
         return response()->json(['message' => 'Marca deleted'], 200);
     }
 
+    public function brandOrder(Request $request)
+    {
+        DB::beginTransaction();    
+        try{
+            $datosJSON = $request->getContent();
+            $datosDecodificados = json_decode($datosJSON, true); // El segundo parámetro true convierte el JSON en un array asociativo
+            $position = 1;
+            
+            foreach ($datosDecodificados as $value) {
+                ContentBrand::where('id',$value['id'])->update(
+                    [
+                        'order' => $position
+                    ]
+                );
+                $position++;
+            }
+            DB::commit();
+            return response()->json(['message' => 'Marca created successfully'], 200);
+        }catch(\Exception $e){
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error creating marca', 
+                                     'detail'  => $msg ], 500);
+        }
+    }
+
 
     public function getContent($page, $section = null)
     {
@@ -174,31 +229,35 @@ class ContentController extends Controller
     public function aboutStore(Request $request)
     {
         DB::beginTransaction();    
-        /* try{
-            $about = new ContentBrand();
-            
-            if($request->file()) {
-                $file_name = time().'_'.$request->file('image')->getClientOriginalName();
-                $file_path = $request->file('image')->storeAs('brand', $file_name, 'public');
-                $brand->image = $file_path;
+        try{
+            $items = $request->input('items');
+    
+            foreach ($items as $item) {
+                $content = Content::find($item['id']);
+                if($content['element'] === 'img'){
+                    //dd($request);
+                    if($request->file()) {
+                        $file_name = time().'_'.$request->file('image')->getClientOriginalName();
+                        $file_path = $request->file('image')->storeAs('aboutus', $file_name, 'public');
+                        $content->content = $file_path;
+                        $content->save();
+                    }
+                }else{
+                    if ($content) {
+                        $content->content = $item['content'];
+                        $content->save();
+                    }
+                }
             }
-            
-            $brand->order = 0;
-            $brand->is_active = true;
-            $brand->save();
-
+    
             DB::commit();
-            return response()->json(['message' => 'Brand created successfully'], 200);
+            return response()->json(['message' => 'Aboutus created successfully'], 200);
         }catch(\Exception $e){
             DB::rollBack();
             $msg = $e->getMessage();
-            return response()->json(['message' => 'Error creating brand', 
+            return response()->json(['message' => 'Error creating aboutus', 
                                      'detail'  => $msg ], 500);
-        } */
+        }
     }
 
-    // {
-    //     $banner = ContentBanner::first();
-    //     return response()->json($banner);
-    // }
 }

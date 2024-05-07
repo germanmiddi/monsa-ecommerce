@@ -11,12 +11,12 @@
                     <div class="grid grid-cols-6 mt-5 gap-6">
                         <div class="col-span-6 sm:col-span-6">
                             <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
-                            <input type="text" name="title" id="title" v-model="title.content"
+                            <input type="text" name="title" id="title" v-model="title.content" maxlength="20"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         </div>
                         <div class="col-span-6 sm:col-span-6">
                             <label for="subtitle" class="block text-sm font-medium text-gray-700">Sub Título</label>
-                            <input type="text" name="subtitle" id="subtitle" v-model="subtitle.content"
+                            <input type="text" name="subtitle" id="subtitle" v-model="subtitle.content" maxlength="25"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         </div>                                                        
                         <div class="col-span-6 sm:col-span-6">
@@ -113,8 +113,6 @@
 
                 // const response = await axios.get(`${route('content.get')}/home/banner`)
                 const content = response.data
-
-                console.log(content)
                 
                 this.title    = content.find(item => item.element === 'h1');
                 this.subtitle = content.find(item => item.element === 'h2');

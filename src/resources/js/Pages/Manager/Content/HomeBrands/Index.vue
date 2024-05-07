@@ -57,19 +57,26 @@
                         </div>
                         
                         <div class="md:col-span-3 mt-5">
-                            <div class="grid grid-cols-3"> 
-                                <div v-for="item in brandItems" :key="item.id" class="col-span-1">
-                                    <div class="flex flex-col items-center justify-center mb-10">
-                                        <img :src="`/storage/${item.image}`" class="h-28" />
-                                        <div class="flex justify-center items-center mt-2">
-                                            <button class="text-red-500" @click="deleteItem(item.id)">
-                                                <TrashIcon class="w-6 h-6" />
-                                            </button>
+                            <!-- <div class="grid grid-cols-3">  -->
+                                <draggable v-model="brandItems" tag="div" class="grid grid-cols-3" @end="dragBrand" :options="dragOptions">
+                                    <template #item="{element}">
+                                        <div class="col-span-1">
+                                        <div class="flex flex-col items-center justify-center mb-10">
+                                            <img :src="`/storage/${element.image}`" class="h-28" />
+                                            <div class="flex justify-center items-center mt-2">
+                                                <button class="text-red-500" @click="deleteItem(element.id)">
+                                                    <TrashIcon class="w-6 h-6" />
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </div>
+                                    </template>
+                                </draggable>
+                                
+                            <!-- </div> -->
                         </div>
+
+                        
                     </div>
                 </div>
         </div>
@@ -77,11 +84,14 @@
     
     <script>
     import { TrashIcon } from '@heroicons/vue/24/outline'
+    // Drag
+    import draggable from 'vuedraggable'
 
     export default {
         
         components: {
-            TrashIcon
+            TrashIcon,
+            draggable
         },
 
         data(){
@@ -89,6 +99,11 @@
                 form: {},
                 url: null,
                 brandItems: [],
+                drag: false,
+                dragOptions: {
+                    handle: '.drag-handle', // Especifica que el arrastre se activa solo cuando se hace clic en un elemento con la clase 'drag-handle'
+                    filter: '.drag-handle' // Deshabilita el arrastre en los elementos que no tienen la clase 'drag-handle'
+                }
             }
         },
     
@@ -135,7 +150,16 @@
                 console.log(itemId)
                 const response = await axios.post(route('content.brand.delete', itemId))
                 this.getBrandsItems();
-            }
+            },
+            async dragBrand() {
+                try {
+                    const response = await axios.post(route('content.brand.order'), JSON.stringify(this.brandItems));
+                    const content = response.data;
+                    console.log(content);
+                } catch (error) {
+                    console.error('Submission failed:', error);
+                }
+            },
 
         },
     
@@ -147,5 +171,8 @@
     </script>
     
     <style>
-    
+    /* Estilos para el icono de agarre */
+    .drag-handle {
+        cursor: grab;
+    }
     </style>

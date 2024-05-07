@@ -18,13 +18,14 @@
                                 <!-- <Tinymce ref="editor-content" v-model="form.content" :height="400" :toolbar="toolbar"></Tinymce> -->
                                 
                                 <div class="quill-editor-container mb-10">
-                                    <quill-editor ref="editor" v-model:value:value="form.content" :options="editorOptions"></quill-editor>
+                                    <quill-editor ref="editor" v-model:value="text.content" :options="editorOptions"></quill-editor>
                                 </div>
 
                             </div>
                                                      
                             <div class="col-span-6 sm:col-span-3">
- 
+                                <label for="file" class="block text-sm font-medium text-gray-700">Imagen</label>
+                                <span class="text-gray-500 text-sm">Se recomienda utilizar una imagen de 1414 x 1000px.</span>
                                 <input name="file" type="file" hidden @change="previewImage"
                                     @input="form.image = $event.target.files[0]" ref="import_file" />
                                 <div class="flex flex-row items-center">
@@ -53,8 +54,18 @@
                                         </i>Buscar Imagen</button>
                                 </div>
                             </div>
+                            <div v-if="img.content">
+                                <hr>
+                                <label for="Imagen"
+                                    class="block text-sm font-medium text-gray-700 mb-2">
+                                    <b>Imagen actual:</b></label>
+                                    <div class="flex">
+                                        <img class="rounded-3xl h-32 w-32" :src="`/storage/${this.img.content}`" alt="">
+                                    </div> 
+                                <hr>
+                            </div>
 
-                            <button v-if="url" @click="uploadImage" class="mt-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Subir</button>
+                            <!-- <button v-if="url" @click="uploadImage" class="mt-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Subir</button> -->
 
                         </div>
                     </div>
@@ -104,14 +115,26 @@
                 },
                 url: null,
                 brandItems: [],
+                // Data Aboutus
+                text:[],
+                img:[],
             }
         },
     
         methods: {
             
             async getData(){
-                const response = await axios.get(`${route('content.get')}/aboutus`)
-                this.brandItems = response.data
+
+                const page = 'aboutus';
+                const section = 'content';
+                const url = route('content.get', { page: page, section: section });
+                const response = await axios.get(url);                
+
+                // const response = await axios.get(`${route('content.get')}/home/banner`)
+                const content = response.data
+
+                this.text    = content.find(item => item.element === 'text');
+                this.img = content.find(item => item.element === 'img');
             },
 
             openDialogSearchImg() {
@@ -127,14 +150,32 @@
 
             },
 
-            submit() {
-            this.loading = true
-            this.$inertia.post(route('about.store'), this.form)
-            .then(() => {
-                this.loading = false
-            })
+            async submit() {
+                let data = new FormData();
 
-        },
+                data.append('items[0][id]', this.text.id);
+                data.append('items[0][content]', this.text.content);
+
+                data.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                data.append('items[1][id]', this.img.id);
+                data.append('items[1][content]', this.img.content);
+                
+                // Configura el header para el contenido multipart/form-data
+                const config = {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                };
+
+                try {
+                    const response = await axios.post(route('content.about.store'), data, config);
+                    const content = response.data;
+                    console.log(content);
+                    alert('Actualizado con exito');
+                } catch (error) {
+                    console.error('Submission failed:', error);
+                    alert('Error al actualizar');
+                }
+            }
+
 
         },
     
