@@ -92,6 +92,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('settings/brand/list', [SettingsController::class, 'brandList'])->name('settings.brand.list');
         Route::post('settings/brand/update/{brand}', [SettingsController::class, 'brandUpdate'])->name('settings.brand.update');
 
+        Route::get('settings/label/list', [SettingsController::class, 'labelList'])->name('settings.label.list');
+        Route::post('settings/label/update/{label}', [SettingsController::class, 'labelUpdate'])->name('settings.label.update');
+        Route::post('settings/label/store', [SettingsController::class, 'labelStore'])->name('settings.label.store');
+
         Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');
 
         Route::get('import/products',  [ImportController::class, 'import_products'])->name('import.products');

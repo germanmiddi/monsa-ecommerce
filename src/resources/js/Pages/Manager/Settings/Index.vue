@@ -18,7 +18,7 @@
 	
 			<!-- Payment details -->
 			<div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-				<component :is="selectedItem.componentName" :data="selectedItem.componentData" />
+				<component @message="messageToast" :is="selectedItem.componentName" :data="selectedItem.componentData" />
 			</div>
 		</div>
 	</main>
@@ -33,11 +33,13 @@ import Locations from './Locations.vue';
 import ServicesList from './ServicesList.vue';
 import BrandList from './BrandList.vue';
 import FamilyList from './FamilyList.vue';
+import LabelList from './LabelList.vue';
 
 
 import { CogIcon,
          MapPinIcon,
-		 CubeIcon
+		 CubeIcon,
+		 TagIcon
   		} from '@heroicons/vue/24/outline'  
 
 
@@ -45,9 +47,7 @@ const subNavigation = [
     { name: 'General',  icon: CogIcon, componentName: 'General' },
     { name: 'Marcas',   icon: CubeIcon, componentName: 'BrandList' },
 	{ name: 'Familias', icon: CubeIcon, componentName: 'FamilyList' },
-    // { name: 'API Whatsapp', icon: AdjustmentsIcon, componentName: 'Whatsapp' },
-    // { name: 'Mensajes', icon: ChatAltIcon, componentName: 'Mensajes' },
-    // { name: 'Chatbot', icon: ChatAlt2Icon, componentName: 'Chatbot' },
+	{ name: 'Etiquetas', icon: TagIcon, componentName: 'LabelList' },
 ]
 
 export default {
@@ -60,7 +60,8 @@ export default {
 		Locations,
 		ServicesList,
 		BrandList,
-		FamilyList
+		FamilyList,
+		LabelList
 	},
 
 	setup() {
@@ -70,12 +71,10 @@ export default {
 	},
 
 	data() {
-
 		return {
 			toastMessage: "",
 			labelType:    "info",
 			selectedIndex: 0
-		
 		}
 	},
 	watch: {
@@ -86,9 +85,16 @@ export default {
 
 	},
     methods: {
-      selectItem(index) {
-        this.selectedIndex = index;
-      }
+		clearMessage() {
+			this.toastMessage = "";
+		},
+		selectItem(index) {
+			this.selectedIndex = index;
+		},
+		messageToast(data){
+			this.labelType = data.labelType;
+			this.toastMessage = data.message;
+		}
     },
     computed: {
       selectedItem() {
