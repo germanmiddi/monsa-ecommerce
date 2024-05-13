@@ -37,7 +37,8 @@ class Product extends Model
                     'alto',
                     'ancho',
                     'largo',
-                    'externalId' ];
+                    'externalId',
+                    'is_active'];
 
     protected $casts = [
         'imagen' => 'array', // Cast para las imágenes

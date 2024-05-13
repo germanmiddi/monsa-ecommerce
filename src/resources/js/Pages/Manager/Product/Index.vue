@@ -38,6 +38,68 @@
 
 
 
+            <div class="mt-2 mb-4">
+                <div class="shadow sm:rounded-md sm:overflow-hidden">
+                    <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+                        <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+                            <div class="">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
+                                <div class="mt-2">
+                                
+                            </div>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
+                                        @click="clearFilter">Limpiar Filtro</button>
+                                <button type="button"
+                                    class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-blue-200 text-blue-900 hover:bg-blue-600 hover:text-white" @click="getProducts()">Aplicar
+                                    Filtro</button>
+
+                                <label class="text-sm font-medium text-gray-700 mr-2 ml-4" for="">Ver: </label>
+                                <select class="text-sm border-gray-300 rounded-md" v-model="length" @change="getProducts">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="grid grid-cols-12 gap-6">
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="modelo" class="block text-sm font-medium text-gray-700">Modelo</label>
+                                <input v-model="filter.modelo" type="text" name="modelo" id="modelo" autocomplete="off"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="family_id" class="block text-sm font-medium text-gray-700">Familia</label>
+                                <select v-model="filter.family_id" id="family_id" name="family_id"
+                                    autocomplete="off"
+                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="">-</option>
+                                    <option v-for="family in families" :key="family.id" :value="family.id">{{
+                                        family.nombre
+                                    }}</option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="brand_id" class="block text-sm font-medium text-gray-700">Marca</label>
+                                <select v-model="filter.brand_id" id="brand_id" name="brand_id"
+                                    autocomplete="off"
+                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="">-</option>
+                                    <option v-for="brand in brands" :key="brand.id" :value="brand.id">{{
+                                        brand.nombre
+                                    }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
                 <table class="w-full whitespace-nowrap">
                     <tr class="text-left font-bold bg-blue-500 text-white">
@@ -69,8 +131,27 @@
                         </td>
                     </tr>
                 </table>
+                <hr>
+                <div class="flex justify-between mx-5 my-3 px-2 items-center text-sm">
+                    <div>
+                        Mostrando: {{  this.products.from  }} a {{  this.products.to  }} - Entradas encontradas:
+                        {{  this.products.total  }}
+                    </div>
+    
+                    <div class="flex flex-wrap -mb-1">
+                        <template v-for="link in products.links">
+                            <div v-if="link.url === null"
+                                class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded-md"
+                                v-html="link.label"> </div>
+                            <div v-else
+                                class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border border-gray-300 rounded-md hover:bg-blue-500 hover:text-white cursor-pointer"
+                                :class="{ 'bg-blue-500': link.active }, { 'text-white': link.active }"
+                                @click="getProductsPaginate(link.url)" v-html="link.label"> </div>
+                        </template>
+                    </div>
+                </div>
             </div>
-            <Pagination :links="products.links" class="flex justify-end mx-5 mb-5" />
+            <!-- <Pagination :links="products.links" class="flex justify-end mx-5 mb-5" /> -->
         </div>
     </div>
 
@@ -228,6 +309,8 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 export default defineComponent({
     props: {
         toast: Object,
+        families: Object,
+        brands: Object
     },
     components: {
         // Panel lateral
@@ -257,17 +340,50 @@ export default defineComponent({
             message: "",
             showToast: false,
             open: false, // Panel lateral
+            //Filtros
+            length: 10,
+            filter: {}
         }
     },
 
     methods: {
         async getProducts() {
-            let response = await axios.get(route('products.list'))
-            this.products = response.data
+            /* let response = await axios.get(route('products.list'))
+            this.products = response.data */
+            let filter = `&length=${this.length}`
 
+            if (this.filter.modelo) {
+                filter += `&modelo=${JSON.stringify(this.filter.modelo)}`
+            }
+
+            if (this.filter.family_id) {
+                filter += `&family_id=${JSON.stringify(this.filter.family_id)}`
+            }
+
+            if (this.filter.brand_id) {
+                filter += `&brand_id=${JSON.stringify(this.filter.brand_id)}`
+            }
+
+            const get = `${route('products.list')}?${filter}`
+
+            const response = await fetch(get, { method: 'GET' })
+            this.products = await response.json()
+
+        },
+        async getProductsPaginate(link) {
+
+            var get = `${link}`;
+            const response = await fetch(get, { method: 'GET' })
+
+            this.products = await response.json()
         },
         clearMessage() {
             this.toastMessage = ""
+        },
+        clearFilter(){
+            this.filter = {} 
+            this.length = 10
+            this.getProducts()
         },
     },
 

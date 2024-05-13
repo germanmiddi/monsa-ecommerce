@@ -40,12 +40,16 @@ class ImportProductsJob implements ShouldQueue
 
                 $id_family = Family::where('externalId', $product['idFamilia'])->value('id');
                 $id_brand = Brand::where('externalId', $product['idMarca'])->value('id');
+                $is_active = 1;
 
                 if(!$id_family || !$id_brand){
                     Log::error('Failed to store product: ' . json_encode($product));
                     continue;
                 }
-                // dd($product['idFamilia'], $id_family, $product['idMarca'], $id_brand);
+                
+                if($product['visibilidad'] === 'oculto'){
+                    $is_active = 0;
+                }
 
                 $productModel = Product::updateOrCreate(
                     ['externalId' => $product['idProducto']],
@@ -71,7 +75,8 @@ class ImportProductsJob implements ShouldQueue
                         'alto'   => $product['alto'],
                         'ancho'  => $product['ancho'],
                         'largo'  => $product['largo'],
-                        'externalId' => $product['idProducto']
+                        'externalId' => $product['idProducto'],
+                        'is_active' => $is_active
                     ]
                 );
 
