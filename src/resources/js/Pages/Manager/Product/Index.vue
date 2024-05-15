@@ -77,7 +77,7 @@
                                 <select v-model="filter.family_id" id="family_id" name="family_id"
                                     autocomplete="off"
                                     class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <option value="">-</option>
+                                    <option value="" disabled> - Seleccione una familia - </option>
                                     <option v-for="family in families" :key="family.id" :value="family.id">{{
                                         family.nombre
                                     }}</option>
@@ -88,9 +88,20 @@
                                 <select v-model="filter.brand_id" id="brand_id" name="brand_id"
                                     autocomplete="off"
                                     class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <option value="">-</option>
+                                    <option value="" disabled> - Seleccione una marca - </option>
                                     <option v-for="brand in brands" :key="brand.id" :value="brand.id">{{
                                         brand.nombre
+                                    }}</option>
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="label_id" class="block text-sm font-medium text-gray-700">Etiqueta</label>
+                                <select v-model="filter.label_id" id="label_id" name="label_id"
+                                    autocomplete="off"
+                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled> - Seleccione una etiqueta - </option>
+                                    <option v-for="label in labels" :key="label.id" :value="label.id">{{
+                                        label.nombre
                                     }}</option>
                                 </select>
                             </div>
@@ -125,7 +136,7 @@
                         </td>
                         <td class="border-t px-6 py-4 ">
                             <div class="flex justify-center">
-                                <button @click="open=true, this.product=product"
+                                <button @click="loadProduct(product)"
                                     class="text-xs font-semibold bg-blue-200 text-blue-800 rounded-md py-1 px-2">DETALLE</button>
                             </div>
                         </td>
@@ -188,95 +199,111 @@
                                         <div class="flex-1 flex flex-col justify-between">
                                             <div class="px-4 divide-y divide-gray-200 sm:px-6">
 
-                                                        <div class="space-y-2 pt-2 pb-5">
-                                                            <div>
-                                                                <label for="time"
-                                                                    class="block text-md font-medium text-gray-700 "><b>{{this.product.nombre}}</b></label>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="flex justify-between">
-                                                                <div class="w-1/2 text-center border-r-2 border-gray-50  bg-gray-100">
-                                                                    <Icons v-if="this.product.show == 1" name="building-storefront" class="w-8 h-8 text-green-400 mx-auto mb-2 mt-2"/>
-                                                                    <Icons v-else name="building-storefront" class="w-8 h-8 text-red-400 mx-auto mb-2 mt-2"/>
-                                                                </div>
-                                                                <!-- <div class="w-1/3 text-center border-r-2 border-gray-50  bg-gray-100 ">
-                                                                    <Icons v-if="this.product.visibilidad === 'publicar'" name="eye" class="w-8 h-8 text-green-400 mx-auto mb-2 mt-2"/>
-                                                                    <Icons v-else name="eye" class="w-8 h-8 text-red-400 mx-auto mb-2 mt-2"/>
-                                                                </div> -->
-                                                                <div class="w-1/2 text-center bg-gray-100">
-                                                                    <Icons v-if="this.product.show_home == 1" name="star" class="w-8 h-8 text-green-400 mx-auto mb-2 mt-2"/>
-                                                                    <Icons v-else name="star" class="w-8 h-8 text-red-400 mx-auto mb-2 mt-2"/>
-                                                                </div>
-                                                            </div>
+                                                <div class="space-y-2 pt-2 pb-5">
+                                                    <div>
+                                                        <label for="time"
+                                                            class="block text-md font-medium text-gray-700 "><b>{{this.product.nombre}}</b></label>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Principal:</label>
+                                                        <Switch v-model="product.show_home"
+                                                                @click="product.show_home = !product.show_home"
+                                                                :class="product.show_home ? 'bg-blue-600' : 'bg-gray-200'"
+                                                                class="relative inline-flex h-6 w-11 items-center rounded-full">
+                                                                <span :class="product.show_home ? 'translate-x-6' : 'translate-x-1'"
+                                                                    class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
+                                                        </Switch>   
+                                                    </div>
+                                                    <hr>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Familia:</label>
+                                                        <span>{{ this.product.family?.nombre ?? '-' }}</span>
+                                                    </div>
 
-                                                            <hr>
-                                                            <div class="flex text-sm text-gray-700">
-                                                                <label class="text-bold w-24 font-bold">Familia:</label>
-                                                                <span>{{ this.product.family?.nombre ?? '-' }}</span>
-                                                            </div>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Marca:</label>
+                                                        <span>{{ this.product.brand?.nombre ?? '-' }}</span>
+                                                    </div>
 
-                                                            <div class="flex text-sm text-gray-700">
-                                                                <label class="text-bold w-24 font-bold">Marca:</label>
-                                                                <span>{{ this.product.brand?.nombre ?? '-' }}</span>
-                                                            </div>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Modelo:</label>
+                                                        <span>{{ this.product.modelo ?? '-' }}</span>
+                                                    </div>
 
-                                                            <div class="flex text-sm text-gray-700">
-                                                                <label class="text-bold w-24 font-bold">Modelo:</label>
-                                                                <span>{{ this.product.modelo ?? '-' }}</span>
-                                                            </div>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">SKU:</label>
+                                                        <span>{{ this.product.sku ?? '-' }}</span>
+                                                    </div>
 
-                                                            <div class="flex text-sm text-gray-700">
-                                                                <label class="text-bold w-24 font-bold">SKU:</label>
-                                                                <span>{{ this.product.sku ?? '-' }}</span>
-                                                            </div>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Visibilidad:</label>
+                                                        <span>{{ this.product.visibilidad ?? '-' }}</span>
+                                                    </div>
 
-                                                            <div class="flex text-sm text-gray-700">
-                                                                <label class="text-bold w-24 font-bold">Visibilidad:</label>
-                                                                <span>{{ this.product.visibilidad ?? '-' }}</span>
+                                                    <hr>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Precio:</label>
+                                                        <span>$ {{ this.product.precio ?? '-' }}</span>
+                                                    </div>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Peso: </label>
+                                                        <span>{{ this.product.peso ?? '-' }}</span>
+                                                    </div>
+                                                    <hr>
+                                                    <div>
+                                                        <label for="comentario"
+                                                            class="block text-sm font-medium text-gray-700">
+                                                            <b>Descripción: </b></label>
+                                                        <p class="text-xs text-justify">{{ this.product.descripcion }}</p>
+                                                    </div>
+                                                    <hr>
+                                                    <div>
+                                                        <label for="comentario"
+                                                            class="block text-sm font-medium text-gray-700">
+                                                            <b>Parametros de Busqueda: </b></label>
+                                                                <span  v-for="(search, index) in JSON.parse(this.product.search)" :key="index" 
+                                                                    class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 mr-2">
+                                                                    {{search.replace(/['"]+/g, '')}}
+                                                                </span>
+                                                    </div>
+                                                    <hr>
+                                                    <div>
+                                                        <label for="labels"
+                                                            class="block text-sm font-medium text-gray-700">
+                                                            <b>Etiquetas: </b></label>
+                                                            <div class="flex items-center mb-2">
+                                                                <input type="text" list="labels_from" v-model="labelSelect" id="label_id"
+                                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                                <datalist id="labels_from">
+                                                                    <option v-for="lab in labels" :value="lab.nombre" :key="lab.id">{{ lab.nombre }}</option>
+                                                                </datalist>
+                                                                <a class="ml-2 items-center" @click="addLabel"><PlusCircleIcon class="h-8 w-8 text-blue-700"></PlusCircleIcon></a>
                                                             </div>
-
-                                                            <hr>
-                                                            <div class="flex text-sm text-gray-700">
-                                                                <label class="text-bold w-24 font-bold">Precio:</label>
-                                                                <span>$ {{ this.product.precio ?? '-' }}</span>
-                                                            </div>
-                                                            <div class="flex text-sm text-gray-700">
-                                                                <label class="text-bold w-24 font-bold">Peso: </label>
-                                                                <span>{{ this.product.peso ?? '-' }}</span>
-                                                            </div>
-                                                            <hr>
-                                                            <div>
-                                                                <label for="comentario"
-                                                                    class="block text-sm font-medium text-gray-700">
-                                                                    <b>Descripción: </b></label>
-                                                                <p class="text-xs text-justify">{{ this.product.descripcion }}</p>
-                                                            </div>
-                                                            <hr>
-                                                            <div>
-                                                                <label for="comentario"
-                                                                    class="block text-sm font-medium text-gray-700">
-                                                                    <b>Parametros de Busqueda: </b></label>
-                                                                        <span  v-for="(search, index) in JSON.parse(this.product.search)" :key="index" 
-                                                                            class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 mr-2">
-                                                                            {{search.replace(/['"]+/g, '')}}
-                                                                        </span>
-                                                            </div>
-                                                            <hr>
-                                                            <div>
-                                                                <label for="comentario"
-                                                                    class="block text-sm font-medium text-gray-700">
-                                                                    <b>Imagenes </b></label>
-                                                                    <div class="flex">
-                                                                        <img v-for="(image,index) in JSON.parse(this.product.imagen)" :key="index"  class="rounded-3xl h-32 w-32" :src="`http://monsa-srl.com.ar/pedidosweb/${image}`" alt="">
-                                                                    </div> 
-                                                            </div>
-                                                        </div>
+                                                            <span  v-for="(label, index) in this.labelsSelected" :key="index" 
+                                                                class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10 mr-2">
+                                                                {{label}} <TrashIcon @click="removeLabel(label)" class="h-5 w-5 text-red-700 ml-2"></TrashIcon>
+                                                            </span>
+                                                    </div>
+                                                    <hr>
+                                                    <div>
+                                                        <label for="comentario"
+                                                            class="block text-sm font-medium text-gray-700">
+                                                            <b>Imagenes </b></label>
+                                                            <div class="flex">
+                                                                <img v-for="(image,index) in JSON.parse(this.product.imagen)" :key="index"  class="rounded-3xl h-32 w-32" :src="`http://monsa-srl.com.ar/pedidosweb/${image}`" alt="">
+                                                            </div> 
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 px-4 py-4 flex justify-end">
+                                        <button type="button" @click="storeLabel()"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >Guardar</button>
                                         <button type="button" @click="open=false"
-                                            class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                            class="ml-2 bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                             >Ocultar</button>
                                     </div>
                                 </form>
@@ -305,12 +332,14 @@ import Icons from '@/Layouts/Components/Icons.vue'
 import Toast from '@/Layouts/Components/Toast.vue';
 // Panel lateral.
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { Switch } from '@headlessui/vue'
 
 export default defineComponent({
     props: {
         toast: Object,
         families: Object,
-        brands: Object
+        brands: Object,
+        labels: Object
     },
     components: {
         // Panel lateral
@@ -329,6 +358,8 @@ export default defineComponent({
         CheckCircleIcon,
         ChevronRightIcon,
         ChevronDownIcon,
+
+        Switch
     },
     data() {
 
@@ -342,7 +373,10 @@ export default defineComponent({
             open: false, // Panel lateral
             //Filtros
             length: 10,
-            filter: {}
+            filter: {},
+
+            labelSelect: '',
+            labelsSelected: []
         }
     },
 
@@ -376,6 +410,54 @@ export default defineComponent({
             const response = await fetch(get, { method: 'GET' })
 
             this.products = await response.json()
+        },
+        async storeLabel() {
+            
+            try {
+                this.product.labelDetails = this.labelsSelected;
+                const response = await axios.post(route('products.update', this.product.id), this.product);
+                if (response.status == 200) {
+                    this.toastMessage = response.data.message
+                    this.labelType = 'success'
+                } else {
+                    this.toastMessage = response.data.message
+                    this.labelType = 'danger'
+                }
+            } catch (error) {
+                this.toastMessage = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                this.labelType = 'danger'
+            }
+
+/*             this.form = {}
+            this.getLabels();
+            this.$emit('message', data) */
+        },
+        addLabel(){
+            let existe_label = this.labelsSelected.find( label => label === this.labelSelect );
+            if(this.labelSelect === ''){
+                this.labelType = "info";
+                this.toastMessage = "Debe ingresar un valor en la etiqueta";
+            }else{
+                if(!existe_label)
+                {
+                    this.labelsSelected.push(this.labelSelect);
+                }else{
+                    this.labelType = "info";
+                    this.toastMessage = "La etiqueta ya se encuentra asignada";
+                }
+            }
+            this.labelSelect = '';
+        },
+        removeLabel(label){
+            const index = this.labelsSelected.findIndex(item => item === label);
+            this.labelsSelected.splice(index, 1);
+            this.labelType = "success";
+            this.toastMessage = "Se ha eliminado correctamente la etiqueta";
+        },
+        loadProduct(product){
+            this.open=true
+            this.product=product
+            this.labelsSelected = []
         },
         clearMessage() {
             this.toastMessage = ""

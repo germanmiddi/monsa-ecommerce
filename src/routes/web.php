@@ -57,12 +57,14 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/products', [ManagerProductController::class, 'index'])->name('products');
         Route::get('/products/list', [ManagerProductController::class, 'list'])->name('products.list');
+        Route::post('/products/update/{product}', [ManagerProductController::class, 'update'])->name('products.update');
         
         Route::get('/novedades', [PostController::class, 'index'])->name('posts.list');
         Route::get('/novedades/create', [PostController::class, 'create'])->name('posts.create');
         Route::get('/novedades/{id}/edit',   [PostController::class, 'edit'])->name('posts.edit');
         Route::post('/novedades/store', [PostController::class, 'store'])->name('posts.store');
         Route::post('/novedades/update/{post}', [PostController::class, 'update'])->name('posts.update');
+        
 
         Route::get('/contenido', [ContentController::class, 'index'])->name('content');
 

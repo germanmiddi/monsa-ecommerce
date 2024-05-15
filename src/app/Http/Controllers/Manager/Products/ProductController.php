@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Manager\Products;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Family;
+use App\Models\Label;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 
 class ProductController extends Controller
@@ -22,6 +24,7 @@ class ProductController extends Controller
         return  Inertia::render('Manager/Product/Index',[
             'families' => Family::orderby('nombre')->get(),
             'brands' => Brand::orderby('nombre')->get(),
+            'labels' => Label::orderby('nombre')->get(),
         ]);
     }
 
@@ -103,7 +106,33 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        //dd($request->show_home);
+        try{
+            //$product->fill($request->all()); // rellena los campos con los datos recibidos
+            $product->show_home = ($request->show_home === 0 || $request->show_home === false ) ? 0 : 1;
+            
+            $labelIds = array();
+            //Obtengo los ID de las etiquetas.
+            foreach ($request->labelDetails as $value) {
+                // Buscar el Lable por nombre
+                $label = Label::firstOrCreate(
+                    ['nombre' => $value],
+                    [
+                        'nombre' => $value, 
+                        'slug' => Str::slug(Str::ascii($value))
+                        ]
+                    );
+                    $labelIds[] = $label->id;
+                }
+            $product->labels()->sync($labelIds);
+            $product->save();
+
+            return response()->json(['message' => 'Producto actualizado correctamente'],200);
+        }catch(\Exception $e){
+            dd($e);
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error al actualizar el producto', 'error'=> $msg ], 500);
+        }
     }
 
     /**
@@ -116,4 +145,5 @@ class ProductController extends Controller
     {
         //
     }
+
 }
