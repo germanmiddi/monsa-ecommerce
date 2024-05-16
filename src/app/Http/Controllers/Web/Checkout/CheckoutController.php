@@ -77,8 +77,14 @@ class CheckoutController extends Controller
 
         $payment = $this->payment($request, $newOrder->id);
 
+        $responsePayment = json_decode($payment->content());
+
+        if($payment->status != 200){
+            return response()->json(['message' => 'Error creating payment method', 'error' => $payment->error], 500);
+        }
+
         return response()->json(['message'  => 'Proceso finalizado', 
-                                 'response' => $payment ]);
+                                 'response' => $responsePayment->payment ]);
 
     }
 
@@ -93,7 +99,7 @@ class CheckoutController extends Controller
                                   'audience'      => "https://naranja.com/ranty/merchants/api" ]);
                                 
         if($http_token->status() != 200){
-            return response()->json(['message' => 'Error getting token', 'response' => $http_token], 500);
+            return response()->json(['message' => 'Error getting token', 'error' => $http_token], 500);
         }
 
         $response_token = json_decode($http_token);
@@ -108,12 +114,13 @@ class CheckoutController extends Controller
                            ->post($url, $params);
         
         if($http_post->status() != 200){
-            return response()->json(['message' => 'Error getting token', 'response' => $http_token], 500);
+            return response()->json(['message' => 'Error creating payment method', 'error' => $http_token], 500);
         }
 
         $response = json_decode($http_post);
         
-        return $response;
+        return response()->json(['message' => 'Payment created successfully', 'response' => $response], 200);
+        
                          
     }
     
