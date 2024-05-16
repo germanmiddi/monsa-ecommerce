@@ -16,46 +16,54 @@ class PostCategoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('post_categories')->insert([
+        $categories = [
             [
-                'name' => 'Novedades',
-                'slug' => Str::slug('novedades'),
-                'description' => null,
-                'image' => null,
-                'parent_id' => null,
-                'order' => null,
-                'featured' => false,
-                'menu' => false,
-                'active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+            'name' => 'Novedades',
+            'slug' => Str::slug('novedades'),
+            'description' => null,
+            'image' => null,
+            'parent_id' => null,
+            'order' => null,
+            'featured' => false,
+            'menu' => false,
+            'active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
             ],
             [
-                'name' => 'Lanzamiento',
-                'slug' => Str::slug('Lanzamiento'),
-                'description' => null,
-                'image' => null,
-                'parent_id' => null,
-                'order' => null,
-                'featured' => false,
-                'menu' => false,
-                'active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+            'name' => 'Lanzamiento',
+            'slug' => Str::slug('Lanzamiento'),
+            'description' => null,
+            'image' => null,
+            'parent_id' => null,
+            'order' => null,
+            'featured' => false,
+            'menu' => false,
+            'active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
             ],
             [
-                'name' => 'Nuevo Ingreso',
-                'slug' => Str::slug('Nuevo Ingreso'),
-                'description' => null,
-                'image' => null,
-                'parent_id' => null,
-                'order' => null,
-                'featured' => false,
-                'menu' => false,
-                'active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+            'name' => 'Nuevo Ingreso',
+            'slug' => Str::slug('Nuevo Ingreso'),
+            'description' => null,
+            'image' => null,
+            'parent_id' => null,
+            'order' => null,
+            'featured' => false,
+            'menu' => false,
+            'active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
             ],
+        ];
+
+        foreach ($categories as $category) {
+            DB::table('post_categories')->updateOrInsert(
+            ['name' => $category['name']],
+            $category
+            );
+        }
         ]);
     }
 }
