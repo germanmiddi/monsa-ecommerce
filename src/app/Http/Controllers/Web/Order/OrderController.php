@@ -31,6 +31,7 @@ class OrderController extends Controller
             ]);
 
             foreach ($cartItems as $item) {
+                // dd($item['id']);
                 OrderItem::create([
                     'orderitems_order_id'   => $order->id,
                     'orderitems_product_id' => $item['id'],
@@ -41,11 +42,13 @@ class OrderController extends Controller
             }
 
             DB::commit();
-            return $order;
+            // return $order;
+            return response()->json(['message' => 'Order created successfully', 'order' => $order->toArray()], 201);
             
         } catch (\Exception $e) {
             DB::rollback();
-            return $e->getMessage();
+            return response()->json(['message' => 'Error creating order', 'response' => $e->getMessage()], 500);
+            // return $e->getMessage();
         }
     }
 

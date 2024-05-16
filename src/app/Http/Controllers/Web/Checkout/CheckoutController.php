@@ -67,11 +67,14 @@ class CheckoutController extends Controller
         $orderController = new OrderController();
         $order = $orderController->store($client->id, $request->totalPrice, $request->cartItems);
 
-        if(!$order){
+        if($order->status() != 201){
             return response()->json(['message' => 'Error creating order'], 500);
         }
+        
+        $response = json_decode($order->content());
+        $newOrder = $response->order;
 
-        $payment = $this->payment($request, $order->id);
+        $payment = $this->payment($request, $newOrder->id);
 
         return response()->json(['message'  => 'Proceso finalizado', 
                                  'response' => $payment ]);
