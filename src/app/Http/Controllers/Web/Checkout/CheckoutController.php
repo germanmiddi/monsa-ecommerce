@@ -80,7 +80,7 @@ class CheckoutController extends Controller
         $responsePayment = json_decode($payment->content());
 
         if($payment->status() != 200){
-            return response()->json(['message' => 'Error creating payment method', 'error' => $responsePayment->error], 500);
+            return response()->json(['message' => $responsePayment->message, 'error' => $responsePayment->error], 500);
         }
 
         return response()->json(['message'  => 'Proceso finalizado', 
@@ -93,11 +93,12 @@ class CheckoutController extends Controller
         
         $get_token_url = 'https://homoservices.apinaranja.com/security-ms/api/security/auth0/b2b/m2ms';
 
-        $http_token = Http::post($get_token_url, 
+        $http_token = Http::withHeaders(['Content-Type' => 'application/json'])
+                            ->post($get_token_url, 
                                 [ 'client_id'     => env('NAVE_CLIENT_ID'),
-                                  'client_secret' => env('NAVE_CLIENT_SECRET'),
-                                  'audience'      => "https://naranja.com/ranty/merchants/api" ]);
-                                
+                                'client_secret' => env('NAVE_CLIENT_SECRET'),
+                                'audience'      => "https://naranja.com/ranty/merchants/api" ]);
+
         if($http_token->status() != 200){
             return response()->json(['message' => 'Error getting token', 'error' => $http_token], 500);
         }
