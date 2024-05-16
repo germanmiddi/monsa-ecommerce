@@ -79,7 +79,7 @@ class CheckoutController extends Controller
 
         $responsePayment = json_decode($payment->content());
 
-        if($payment->status != 200){
+        if($payment->status() != 200){
             return response()->json(['message' => 'Error creating payment method', 'error' => $payment->error], 500);
         }
 
