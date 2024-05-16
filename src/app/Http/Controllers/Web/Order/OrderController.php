@@ -47,7 +47,7 @@ class OrderController extends Controller
             
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['message' => 'Error creating order', 'response' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Error creating order', 'error' => $e->getMessage()], 500);
             // return $e->getMessage();
         }
     }
