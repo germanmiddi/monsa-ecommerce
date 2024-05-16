@@ -36,8 +36,6 @@
                 </div>
             </div>
 
-
-
             <div class="mt-2 mb-4">
                 <div class="shadow sm:rounded-md sm:overflow-hidden">
                     <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -206,12 +204,12 @@
                                                     </div>
                                                     <hr>
                                                     <div class="flex text-sm text-gray-700">
-                                                        <label class="text-bold w-24 font-bold">Principal:</label>
-                                                        <Switch v-model="product.show_home"
-                                                                @click="product.show_home = !product.show_home"
-                                                                :class="product.show_home ? 'bg-blue-600' : 'bg-gray-200'"
+                                                        <label class="text-bold w-24 font-bold">Activo:</label>
+                                                        <Switch v-model="product.is_active"
+                                                                @click="product.is_active = !product.is_active"
+                                                                :class="product.is_active ? 'bg-blue-600' : 'bg-gray-200'"
                                                                 class="relative inline-flex h-6 w-11 items-center rounded-full">
-                                                                <span :class="product.show_home ? 'translate-x-6' : 'translate-x-1'"
+                                                                <span :class="product.is_active ? 'translate-x-6' : 'translate-x-1'"
                                                                     class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
                                                         </Switch>   
                                                     </div>
@@ -427,10 +425,8 @@ export default defineComponent({
                 this.toastMessage = 'Se ha producido un error al procesar | Comuniquese con el administrador'
                 this.labelType = 'danger'
             }
-
-/*             this.form = {}
-            this.getLabels();
-            this.$emit('message', data) */
+            this.open = false;
+            this.getProducts();
         },
         addLabel(){
             let existe_label = this.labelsSelected.find( label => label === this.labelSelect );
@@ -458,6 +454,9 @@ export default defineComponent({
             this.open=true
             this.product=product
             this.labelsSelected = []
+            this.product.labels.forEach(element => {
+                this.labelsSelected.push(element.nombre)
+            });
         },
         clearMessage() {
             this.toastMessage = ""

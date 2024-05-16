@@ -35,7 +35,7 @@ class ImportController extends Controller
             // $result = $this->_storeProducts($products);
             // return $result;
             ImportProductsJob::dispatch($products);
-            return response()->json(['message' => 'Products are being imported']);            
+            return response()->json(['message' => 'Products are being imported'],200);            
         }
 
     }
@@ -162,7 +162,8 @@ class ImportController extends Controller
             return response()->json(['error' => 'An error occurred while trying to fetch families: '], 500);
         }else{
             $result = $this->_storeFamilies($families);
-            return $result;
+            return response()->json(['message' => 'Families are being imported'],200);    
+            //return $result;
             // return response()->json($families);
         }
 
@@ -249,7 +250,8 @@ class ImportController extends Controller
             return response()->json(['error' => 'An error occurred while trying to fetch brands: '], 500);
         }else{
             $result = $this->_storeBrands($brands);
-            return $result;
+            return response()->json(['message' => 'Brands are being imported'],200);    
+            //return $result;
             // return response()->json($families);
         }
 
@@ -333,7 +335,8 @@ class ImportController extends Controller
             return response()->json(['error' => 'An error occurred while trying to fetch Atributes: '], 500);
         }else{
             $result = $this->_storeAtributes($atributes);
-            return $result;
+            return response()->json(['message' => 'Atributes are being imported'],200);    
+            //return $result;
             
         }
 

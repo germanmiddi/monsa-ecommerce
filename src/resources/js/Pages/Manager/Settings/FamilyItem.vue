@@ -39,9 +39,21 @@ export default {
 
     methods: {
         async updateFamily(item) {
-            let response = await axios.post(route('settings.family.update', item))
-            let data = response.data
-            console.log(data)
+            let data = {}
+            try {
+				const response = await axios.post(route('settings.family.update', item.id));
+				if (response.status == 200) {
+					data.message = response.data.message
+                    data.labelType = 'success'
+				} else {
+                    data.message = response.data.message
+                    data.labelType = 'danger'
+				}
+			} catch (error) {
+				data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                data.labelType = 'danger'
+			}
+            this.$emit('message', data)
         }
     },
 

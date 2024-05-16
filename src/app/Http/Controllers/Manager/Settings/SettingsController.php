@@ -35,7 +35,7 @@ class SettingsController extends Controller
         try{
             $family->active = !$family->active;
             $family->save();
-            return response()->json(['message' => 'Familia actualizada correctamente']);
+            return response()->json(['message' => 'Familia actualizada correctamente'],200);
         }catch(\Exception $e){
             $msg = $e->getMessage();
             return response()->json(['message' => 'Error al actualizar la familia', 'error'=> $msg ], 500);
@@ -51,7 +51,7 @@ class SettingsController extends Controller
         try{
             $label->active = !$label->active;
             $label->save();
-            return response()->json(['message' => 'Etiqueta actualizada correctamente']);
+            return response()->json(['message' => 'Etiqueta actualizada correctamente'],200);
         }catch(\Exception $e){
             $msg = $e->getMessage();
             return response()->json(['message' => 'Error al actualizar la Etiqueta', 'error'=> $msg ], 500);
