@@ -84,7 +84,7 @@ class CheckoutController extends Controller
         }
 
         return response()->json(['message'  => 'Proceso finalizado', 
-                                 'response' => $responsePayment->payment ]);
+                                 'payment' => $responsePayment->payment ]);
 
     }
 
@@ -109,7 +109,7 @@ class CheckoutController extends Controller
         $url    = 'https://e3-api.ranty.io/ecommerce/payment_request/external';
 
         $params = $this->_buildPaymentData($request->all(), $order_id);
-        
+
         $http_post = Http::withHeaders([ 'Authorization' => 'Bearer ' . $token,
                                          'Content-Type'  => 'application/json'])
                            ->post($url, $params);
@@ -120,7 +120,7 @@ class CheckoutController extends Controller
 
         $response = json_decode($http_post);
         
-        return response()->json(['message' => 'Payment created successfully', 'response' => $response], 200);
+        return response()->json(['message' => 'Payment created successfully', 'payment' => $response], 200);
         
                          
     }
@@ -130,6 +130,12 @@ class CheckoutController extends Controller
 
         $items = $this->_generateItems($request['cartItems']);
         $callback_url = $this->_generateCallbackUrl($order_id);
+
+        $total = array_reduce($items, function($carry, $item) {
+            return $carry + $item['unit_price']['value'];
+        }, 0);
+        $total = number_format($total, 2, '.', '');
+
 
         return [
                     "store_id" => "YqzLxzVobkr6Xqk7JGZmzZsHqmTOAL37",
@@ -144,7 +150,7 @@ class CheckoutController extends Controller
                                 "amount" => 
                                 [
                                     "currency" => "ARS",
-                                    "value" => "498.00"
+                                    "value" => $total
                                 ]
                             ]
                         ],

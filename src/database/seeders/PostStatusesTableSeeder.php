@@ -16,15 +16,17 @@ class PostStatusesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('post_statuses')->insert([
+        $data = [
             [
-                'name' => 'Borrador',
-
+            'name' => 'Borrador',
             ],
             [
-                'name' => 'Publicado',
-
+            'name' => 'Publicado',
             ]
-        ]);
+        ];
+
+        foreach ($data as $status) {
+            DB::table('post_statuses')->updateOrInsert($status);
+        }
     }
 }
