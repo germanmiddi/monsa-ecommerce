@@ -276,15 +276,16 @@ export default {
                                             },
                                             {
                                               headers: {
-                                                        'X-CSRF-TOKEN': csrfToken // Asegúrate de que la solicitud incluya el token CSRF
+                                                        'X-CSRF-TOKEN': csrfToken 
                                                       }
                                             })
 
-      // console.log(response.data.response.data.checkout_url)
+      console.log(response.data.response.data.checkout_url)
       
-      // if (response.data.response.data.checkout_url) {
-      //   window.location.href = response.data.response.data.checkout_url
-      // }
+      if (response.data.response.data.checkout_url) {
+        window.location.href = response.data.response.data.checkout_url
+      }
+      
       
       window.location.href = "http://localhost:8899/checkout/confirmation?token=Gf1QkuOybbFGiUr%2BrmyyOg%3D%3D%3AYfuGhUBEO41o0s%2BcM1OzwA%3D%3D"
       

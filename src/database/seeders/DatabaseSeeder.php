@@ -13,15 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         
-        // $this->call(FamilyTableSeeder::class);
-        // $this->call(BrandTableSeeder::class);
-        // $this->call(AtributeTableSeeder::class);
         $this->call([
-            FamilyTableSeeder::class,
-            BrandTableSeeder::class,
-            AtributeTableSeeder::class,
-            ProductTableSeeder::class,
             PostCategoriesTableSeeder::class,
             PostStatusesTableSeeder::class,
         ]);
@@ -29,12 +21,12 @@ class DatabaseSeeder extends Seeder
         
 
         
-
-        // User::create([
-        //     'name' => 'German Middi',
-        //     'email' => 'g@gmail.com',
-        //     'password' => bcrypt('Inicio123')
-        // ]);
+        User::firstOrCreate([
+            'email' => 'g@gmail.com'
+        ], [
+            'name' => 'German Middi',
+            'password' => bcrypt('Inicio123')
+        ]);
        
 
     }
