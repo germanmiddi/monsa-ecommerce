@@ -36,7 +36,9 @@ Route::get('/cart',[CartController::class, 'index'])->name('cart');
 
 Route::get('/checkout',[CheckoutController::class, 'index'])->name('checkout');
 Route::get('/checkout/confirmation',[CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
+Route::post('/checkout/calcDelivery',[CheckoutController::class, 'calcDelivery'])->name('checkout.calcDelivery');
 Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout_process');
+
 /*Backoffice */
 
 Route::middleware(['auth'])->group(function () {

@@ -37,7 +37,7 @@
             </div>
   
             <!-- Reviews -->
-            <div class="mt-3">
+            <!-- <div class="mt-3">
               <h3 class="sr-only">Reviews</h3>
               <div class="flex items-center">
                 <div class="flex items-center">
@@ -45,7 +45,7 @@
                 </div>
                 <p class="sr-only">{{ product.rating }} out of 5 stars</p>
               </div>
-            </div>
+            </div> -->
   
             <div class="mt-6">
               <h3 class="sr-only">Description</h3>
@@ -55,13 +55,10 @@
                     <dt class="text-sm font-medium text-gray-500">MODELO</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ product.modelo }}</dd>
                   </div>
-                  <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                    <dt class="text-sm font-medium text-gray-500">TALLE</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">ML</dd>
-                  </div>
-                  <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                    <dt class="text-sm font-medium text-gray-500">GRÁFICA</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">SOLID</dd>
+
+                  <div v-for="atribute in product.atributes" :key="atribute.id" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                    <dt class="text-sm font-medium text-gray-500">{{ atribute.atribute.nombre }}</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase">{{ atribute.valores }}</dd>
                   </div>
 
                 </dl>  
@@ -71,7 +68,7 @@
   
             <form class="mt-6">
               <!-- Colors -->
-              <div>
+              <!-- <div>
                 <h3 class="text-sm text-gray-600">Color</h3>
   
                 <RadioGroup v-model="selectedColor" class="mt-2">
@@ -87,7 +84,7 @@
                     </RadioGroupOption>
                   </div>
                 </RadioGroup>
-              </div>
+              </div> -->
   
               <div class="mt-10 flex sm:flex-col1">
                 <button @click.prevent="handleAddToCart"
@@ -95,10 +92,10 @@
                                text-base font-medium text-monsa-dark-light hover:bg-monsa-dark-light hover:text-monsa-yellow focus:outline-none 
                                focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">Agregar al carrito</button>
   
-                <button type="button" class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
+                <!-- <button type="button" class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
                   <HeartIcon class="h-6 w-6 flex-shrink-0" aria-hidden="true" />
                   <span class="sr-only">Add to favorites</span>
-                </button>
+                </button> -->
               </div>
             </form>
  
@@ -130,40 +127,7 @@
   import { StarIcon } from '@heroicons/vue/24/solid'
   import { HeartIcon, MinusIcon, PlusIcon } from '@heroicons/vue/24/outline'
   import { useCartStore } from '../../../Stores/useCartStore'
-  // import { useCart } from '@/Stores/useCartStore'
-
-  // const product = {
-  //   name: 'Cascos AGV K1 SOLID MATT BLACK ML',
-  //   price: '$ 219.186',
-  //   rating: 4,
-  const images = [
-                    {
-                      id: 1,
-                      name: 'CASCOS AGV K1 SOLID BLACK ML',
-                      src: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_matt_black1.jpg',
-                      alt: 'Angled front view with bag zipped and handles upright.',
-                    },
-                    {
-                      id: 2,
-                      name: 'CASCOS AGV K1 SOLID BLACK ML',
-                      src: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_matt_black2.jpg',
-                      alt: 'Angled front view with bag zipped and handles upright.',
-                    },
-                    {
-                      id: 3,
-                      name: 'CASCOS AGV K1 SOLID BLACK ML',
-                      src: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_matt_black3.jpg',
-                      alt: 'Angled front view with bag zipped and handles upright.',
-                    },
-                    {
-                      id: 4,
-                      name: 'CASCOS AGV K1 SOLID BLACK ML',
-                      src: 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_matt_black4.jpg',
-                      alt: 'Angled front view with bag zipped and handles upright.',
-                    },
-                    // More images...
-                  ]
-  
+ 
 
   export default {
     props: {
@@ -217,8 +181,37 @@
         window.location.href = '/checkout';
       }
 
+      const buildImg = (imagen) => {
+          // console.log(imagen); return
+          // Asegura que la ruta de la imagen comience siempre con una barra '/'
+          const imagePath = imagen.startsWith('/') ? imagen : '/' + imagen;
+          const img = `https://www.monsa-srl.com.ar/pedidosweb${imagePath}`;
+          return img;
+        
+      }
+
+      const images = () => {
+        let images = [];
+        if (props.product.imagen) {
+          
+          const items = JSON.parse(props.product.imagen)
+          // console.log(items);return
+
+          for (const item of items) {
+            let id = Math.floor(Math.random() * 1000);
+            images.push({
+              id: id,
+              src: buildImg(item)
+            });
+          }
+        }
+
+        return images;
+      } 
+      
+
       return {
-        product : {...props.product, images},
+        product : {...props.product, images: images()},
         selectedColor,
         formatPrice,
         handleAddToCart,

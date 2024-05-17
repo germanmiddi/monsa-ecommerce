@@ -57,7 +57,7 @@ class Product extends Model
 
     public function atributes()
     {
-        return $this->hasMany(Atribute::class, 'idProduct');
+        return $this->hasMany(ProductAtribute::class, 'id_product');
     }
                     
 

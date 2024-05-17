@@ -3,6 +3,8 @@ import { defineStore } from 'pinia';
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [],
+    delivery: 0,
+
   }),
   persist: true,
   getters: {
@@ -11,6 +13,9 @@ export const useCartStore = defineStore('cart', {
     },
     totalPrice() {
       return this.items.reduce((total, item) => total + item.precio, 0);
+    },
+    totalPricewDel() {
+      return this.items.reduce((total, item) => total + item.precio, 0) + parseFloat(this.delivery);
     },
   },
   actions: {
@@ -34,13 +39,17 @@ export const useCartStore = defineStore('cart', {
     },
     clearCart() {
       this.items = [];
+      this.delivery = 0;
     },
     _generateUUID() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
       });
-    }
+    },
+    setDelivery(amount) {
+      this.delivery = parseFloat(amount);
+    },
     
   },
 });

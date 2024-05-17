@@ -97,9 +97,9 @@
 									<div class="flex items-center lg:ml-8">
 										<!-- Cart -->
 										<div class="ml-4 flow-root lg:ml-8">
-											<a href="#" class="group -m-2 p-2 flex items-center">
+											<a :href="route('checkout')" class="group -m-2 p-2 flex items-center hover:text-monsa-yellow">
 												<ShoppingBagIcon class="flex-shrink-0 h-6 w-6 text-gray-50 group-hover:text-gray-100" aria-hidden="true" />
-												<span class="ml-2 text-sm font-medium text-gray-50 group-hover:text-gray-100">0</span>
+												<span class="ml-2 text-sm font-medium text-gray-50 group-hover:text-gray-100">{{ totalItems }}</span>
 											</a>
 										</div>
 									</div>
@@ -153,7 +153,7 @@
 	</template>
 	
 	<script>
-	import { ref } from 'vue'
+	import { ref, computed } from 'vue'
 	import {
 		Dialog,
 		DialogOverlay,
@@ -171,7 +171,8 @@
 	} from '@headlessui/vue'
 	//  import { MenuIcon, QuestionMarkCircleIcon, SearchIcon, ShoppingBagIcon, XIcon } from '@heroicons/vue/24/solid'
 	import { ShoppingBagIcon } from '@heroicons/vue/24/solid'
-	
+	import { useCartStore } from '../Stores/useCartStore'
+
 	const navigation = {
 		pages: [
 			{ name: 'Tienda', href: 'store' },
@@ -219,11 +220,17 @@
 		},
 		setup() {
 			const open = ref(false)
-	
+			const cart = useCartStore()
+
+			// const totalItems = cart.totalItems()
+			const totalItems = computed(() => cart.totalItems);
+
+
 			return {
 				navigation,
 				trendingProducts,
 				open,
+				totalItems
 			}
 		},
 		methods: {

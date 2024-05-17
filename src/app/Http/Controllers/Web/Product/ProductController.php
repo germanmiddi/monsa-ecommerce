@@ -18,9 +18,11 @@ class ProductController extends Controller
      */
     public function index(Product $product)
     {
+        $prod = $product->load('atributes', 'atributes.atribute');
+
         // Add your logic here
         return  Inertia::render('Web/Product/Index', [
-            'product' => $product
+            'product' => $prod
         ]);
         
     }

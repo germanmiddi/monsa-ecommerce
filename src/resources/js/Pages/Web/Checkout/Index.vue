@@ -29,15 +29,17 @@
     </header>
 
     <main class="relative grid grid-cols-1 gap-x-16 max-w-7xl mx-auto lg:px-8 lg:grid-cols-2 xl:gap-x-48">
-      <h1 class="sr-only">Order information</h1>
       <section aria-labelledby="summary-heading"
         class="bg-gray-50 pt-16 pb-10 px-4 sm:px-6 lg:px-0 lg:pb-16 lg:bg-transparent lg:row-start-1 lg:col-start-2">
         <div class="max-w-lg mx-auto lg:max-w-none">
-          <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Resumen de la orden</h2>
+          <div class="flex justify-between items-center">
+            <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Resumen de la orden</h2>
+            <span @click="clearCart" class="hover:underline cursor-pointer text-xs uppercase">Vaciar Carrito</span>
+          </div>
           
           <ul role="list" class="text-sm font-medium text-gray-900 divide-y divide-gray-200">
             <li v-for="product in items" :key="product.id" class="flex items-start py-6 space-x-4">
-              <img :src="imageSrc" class="flex-none w-20 h-20 rounded-md object-center object-cover" />
+              <img :src="product.imagen" class="flex-none w-20 h-20 rounded-md object-center object-cover" />
               <div class="flex-auto space-y-1">
                 <h3>{{ product.nombre }}</h3>
                 <button
@@ -53,17 +55,22 @@
           <dl class="hidden text-sm font-medium text-gray-900 space-y-6 border-t border-gray-200 pt-6 lg:block">
             <div class="flex items-center justify-between">
               <dt class="text-gray-600">Subtotal</dt>
-              <!-- <dd>$ {{ product.precio }}</dd> -->
+              <dd> {{ formattedPrice(totalPrice)}}</dd>
             </div>
 
-            <div class="flex items-center justify-between">
-              <dt class="text-gray-600">Envío</dt>
-              <dd>$ 3.500</dd>
+            <div v-if="delivery == 0" class="flex items-center justify-between">
+              <dt class="text-gray-600">
+                <div @click="calcDelivery" class="hover:underline">Calcular costo de envío</div></dt>
+              <dd></dd>
+            </div>
+            <div v-else class="flex items-center justify-between">
+              <dt class="text-gray-600">Envío a domicilio</dt>
+              <dd>{{ formattedPrice(delivery) }}</dd>
             </div>
 
             <div class="flex items-center justify-between border-t border-gray-200 pt-6">
               <dt class="text-base">Total</dt>
-              <dd class="text-base">{{ formattedPrice(totalPrice) }}</dd>
+              <dd class="text-base">{{ formattedPrice(totalPricewDelivery) }}</dd>
             </div>
           </dl>
 
@@ -73,7 +80,7 @@
               <div class="max-w-lg mx-auto">
                 <PopoverButton class="w-full flex items-center py-6 font-medium">
                   <span class="text-base mr-auto">Total</span>
-                  <span class="text-base mr-2">{{ formattedPrice(totalPrice) }}</span>
+                  <span class="text-base mr-2">{{ formattedPrice(totalPricewDelivery) }}</span>
                   <ChevronUpIcon class="w-5 h-5 text-gray-500" aria-hidden="true" />
                 </PopoverButton>
               </div>
@@ -98,15 +105,16 @@
                         <dd>{{ formattedPrice(totalPrice) }}</dd>
                       </div>
 
-                      <div class="flex items-center justify-between">
-                        <dt class="text-gray-600">Envio</dt>
-                        <dd>$ 3.500</dd>
+                      <div v-if="delivery == 0" class="flex items-center justify-between">
+                        <dt class="text-gray-600">
+                          <div @click="calcDelivery" class="hover:underline">Calcular costo de envío</div></dt>
+                        <dd></dd>
+                      </div>
+                      <div v-else class="flex items-center justify-between">
+                        <dt class="text-gray-600">Envío a domicilio</dt>
+                        <dd>{{ formattedPrice(delivery) }}</dd>
                       </div>
 
-                      <!-- <div class="flex items-center justify-between">
-                          <dt class="text-gray-600">Taxes</dt>
-                          <dd>$26.80</dd>
-                        </div> -->
                     </dl>
                   </PopoverPanel>
                 </TransitionChild>
@@ -116,7 +124,8 @@
         </div>
       </section>
 
-      <form class="pt-16 pb-36 px-4 sm:px-6 lg:pb-16 lg:px-0 lg:row-start-1 lg:col-start-1">
+      <form class="pt-14  pb-36 px-4 sm:px-6 lg:pb-16 lg:px-0 lg:row-start-1 lg:col-start-1">
+        <a :href="route('store')" class="hover:underline text-sm">Volver a la tienda</a>
         <div class="max-w-lg mx-auto lg:max-w-none">
           <section aria-labelledby="contact-info-heading">
             <h2 id="contact-info-heading" class="text-lg font-medium text-gray-900">Información de Contacto</h2>
@@ -233,6 +242,8 @@ import { TrashIcon } from '@heroicons/vue/24/outline'
 import { Popover, PopoverButton, PopoverOverlay, PopoverPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useCartStore } from '../../../Stores/useCartStore'
 import { useFormatPrice } from '@/Composables/useFormatPrice.js'
+import { useBuildImg } from '@/Composables/useBuildImg.js'
+
 import Icons from '@/Layouts/Components/Icons.vue'
 // const formattedPrice = useFormatPrice(price);
 
@@ -260,6 +271,8 @@ export default {
 
     const cart = useCartStore()
     const totalPrice = computed(() => cart.totalPrice);
+    const delivery = computed(() => cart.delivery);
+    const totalPricewDelivery = computed(() => cart.totalPricewDel);
 
     const formattedPrice = (price) => useFormatPrice(price);
     const loading = ref(false)
@@ -308,18 +321,59 @@ export default {
       zip: '',
       addressNro: ''
     })
-    const imageSrc = 'https://www.monsa-srl.com.ar/pedidosweb/resources/img/uploads/cascos/cascos_agv_k1_solid_black_ml1.jpg'
+    
+    const items = computed(() =>
+      cart.items.map((item) => {
+        const imgList = JSON.parse(item.imagen);
+        if (imgList.length > 0) {
+          return {
+            ...item,
+            imagen: useBuildImg(imgList[0]),
+          };
+        } else {
+          return {
+            ...item,
+            imagen: '',
+          };
+        }
+      })
+    );
+    
+
+    const calcDelivery = async() => {
+
+      const post = route('checkout.calcDelivery')
+
+      const params = {...form.value, items: cart.items, total: cart.totalPrice};
+      const response = await axios.post(post, { form: params })
+      const data = response.data
+            
+      if (response.status == 200) {
+        console.log(data.price)
+        cart.setDelivery(data.price)
+ 
+      }
+
+    }
+
+    const clearCart = () => {
+      cart.clearCart()
+    }
+
 
     return {
-      items: cart.items,
+      items,
+      delivery,
       steps,
       totalPrice,
       formattedPrice,
       submitCheckout,
+      totalPricewDelivery,
       form,
       removeCart,
-      imageSrc,
-      loading
+      loading,
+      calcDelivery,
+      clearCart
     }
   },
   template: 'none'
