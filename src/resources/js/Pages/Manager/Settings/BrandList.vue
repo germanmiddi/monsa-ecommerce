@@ -24,7 +24,7 @@
                                 </tr>
                                 <BrandItem v-for="item in brands" 
                                                 :key="item.id"
-                                                :item="item" />
+                                                :item="item" @message="messageToast"/>
                             </table>
                         </div>
                     </div>
@@ -57,6 +57,9 @@
                 this.brands = response.data
     
             },
+            messageToast(data){
+                this.$emit('message', data)
+            }
         },
     
         created() {

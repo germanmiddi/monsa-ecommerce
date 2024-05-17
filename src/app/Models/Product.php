@@ -37,12 +37,14 @@ class Product extends Model
                     'alto',
                     'ancho',
                     'largo',
-                    'externalId' ];
+                    'externalId',
+                    'is_active'];
 
     protected $casts = [
         'imagen' => 'array', // Cast para las imágenes
         'dimensiones' => 'array', // Cast para las dimensiones
         'search' => 'array', // Cast para los términos de búsqueda
+        'is_active' => 'boolean'
     ];
 
     public function family()
@@ -59,6 +61,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductAtribute::class, 'id_product');
     }
-                    
+
+    public function labels(){
+        return $this->belongsToMany(Label::class, 'label_product');
+    }
+
 
 }

@@ -112,7 +112,7 @@
                                         <!-- <Tinymce ref="editor-content" v-model="form.content" :height="400" :toolbar="toolbar"></Tinymce> -->
                                         
                                         <div class="quill-editor-container mb-10">
-                                            <quill-editor ref="editor-content" v-model="form.content" :options="editorOptions"></quill-editor>
+                                            <quill-editor ref="editor" v-model:value="form.content" :options="editorOptions"></quill-editor>
                                         </div>
 
                                     </div>
@@ -121,6 +121,9 @@
                             </form>
                         </div>
                     </div>
+                </div>
+                <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 bg-gray-50">
+                    <button @click="submit" class="btn-blue">Guardar</button>
                 </div>
             </div>
 
@@ -220,7 +223,10 @@ export default defineComponent({
     },
     created() {
         //this.getCity()
-    }
+    },
+    mounted() {
+
+    },
 })
 </script>
 

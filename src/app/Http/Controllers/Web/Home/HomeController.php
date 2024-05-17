@@ -25,9 +25,9 @@ class HomeController extends Controller
 
         // Add your logic here
         return  Inertia::render('Web/Index', [
-            'sliderDesktop' => Slider::where('type', 'desktop')->get(),
-            'sliderMobile'  => Slider::where('type', 'mobile')->get(),
-            'brands'  => ContentBrand::all(),
+            'sliderDesktop' => Slider::where('type', 'desktop')->orderby('order')->get(),
+            'sliderMobile'  => Slider::where('type', 'mobile')->orderby('order')->get(),
+            'brands'  => ContentBrand::orderby('order')->get(),
             'content' => Content::where('page', 'home')->get(),
             'posts'   => $post,
         ]);

@@ -7,7 +7,7 @@
                             <div class="md:col-span-3">
                                 <div class="px-4 sm:px-0 flex justify-between items-center mb-3">
                                     <h3 class="text-lg font-medium leading-6 text-gray-900">Slider</h3>
-                                   
+                                    <button v-if="url" @click="uploadImage" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
                                 </div>
                             </div>
                         </div>                        
@@ -27,9 +27,6 @@
                             </div>
                                                         
                             <div class="col-span-6 sm:col-span-3">
-                                <!-- <label for="file" class="block text-sm font-medium text-gray-700">Imagen</label> -->
-                                <!-- <span class="text-gray-500 text-sm">Se recomienda utilizar una imagen cuadrada de al
-                                    menos 1000px por lado.</span> -->
                                 <input name="file" type="file" hidden @change="previewImage"
                                     @input="form.image = $event.target.files[0]" ref="import_file" />
                                 <div class="flex flex-row items-center">
@@ -59,57 +56,157 @@
                                 </div>
                             </div>
 
-                            <button v-if="url" @click="uploadImage" class="mt-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Subir</button>
-
-                        </div>
-                        
-                        <div class="md:col-span-3 mt-5">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Imagen
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Acciones
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr v-for="item in sliderItems" :key="item.id">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex flex-col mb-2 text-sm">
-                                                <div class="text-gray-500 mb-2"> Tipo: <span class="text-gray-800 uppercase">{{ item.type }}</span> </div>
-                                                <img :src="`/storage/${item.image}`"
-                                                     :class="{ 'w-4/5': item.type === 'desktop', 
-                                                               'w-1/4': item.type === 'mobile'}" class="object-cover rounded-md" />
-                                                <!-- <img :src="`/storage/${item.image}`" class="h-20 w-20 object-cover">
-                                                <img :class="" :src="`/storage/${item.image}`" > -->
-                                            </div>                                                      
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">Editar</a> -->
-                                            
-                                            <div @click="deleteItem(item.id)" class="text-red-600 hover:text-red-700 flex bg-gray-100 px-2 py-1 rounded-lg hover:cursor">
-                                                <TrashIcon class="w-4 mr-2"/>Eliminar
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <!-- <button v-if="url" @click="uploadImage" class="mt-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Subir</button> -->
                         </div>
                     </div>
                 </div>
         </div>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden sm:rounded-md">
+                <div class="px-4 py-5 bg-white sm:p-6">
+                    <div class="md:grid md:grid-cols-3 md:gap-6">
+                        <div class="md:col-span-3">
+                            <div class="px-4 sm:px-0 flex justify-between items-center mb-3">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Desktop</h3>
+                            </div>
+                        </div>
+                    </div>   
+                    <div class="md:col-span-3 mt-5">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Imagen
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Acciones
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Orden
+                                    </th>
+                                </tr>
+                            </thead>
+                            <draggable v-model="sliderItems.desktop" tag="tbody" class="bg-white divide-y divide-gray-200" @end="dragDesktop" :options="dragOptions">
+                                <template #item="{element, index}">
+                                    <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col mb-2 text-sm">
+                                        <!-- <div class="text-gray-500 mb-2"> Tipo: <span class="text-gray-800 uppercase">{{ element.type }}</span> </div> -->
+                                        <img :src="`/storage/${element.image}`"
+                                            :class="{ 'w-4/5': element.type === 'desktop', 
+                                                        'w-1/4': element.type === 'mobile'}" class="object-cover rounded-md" />
+                                        </div>                                                      
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" >
+                                        <div @click="deleteItem(element.id)" class="text-red-600 hover:text-red-700 flex bg-gray-100 px-2 py-1 rounded-lg hover:cursor">
+                                        <TrashIcon class="w-4 mr-2"/>Eliminar
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" >
+                                        <EllipsisVerticalIcon class="w-8 mr-8 drag-handle flex items-end"/>
+                                    </td>
+                                    </tr>
+                                </template>
+                            </draggable>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden sm:rounded-md">
+                <div class="px-4 py-5 bg-white sm:p-6">
+                    <div class="md:grid md:grid-cols-3 md:gap-6">
+                        <div class="md:col-span-3">
+                            <div class="px-4 sm:px-0 flex justify-between items-center mb-3">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Mobile</h3>
+                            </div>
+                        </div>
+                    </div>   
+                    <div class="md:col-span-3 mt-5">
+                        <!-- <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Imagen
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr v-for="item in sliderItems.mobile" :key="item.id">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col mb-2 text-sm">
+                                            <div class="text-gray-500 mb-2"> Tipo: <span class="text-gray-800 uppercase">{{ item.type }}</span> </div>
+                                            <img :src="`/storage/${item.image}`"
+                                                    :class="{ 'w-4/5': item.type === 'desktop', 
+                                                            'w-1/4': item.type === 'mobile'}" class="object-cover rounded-md" />
+                                        </div>                                                      
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div @click="deleteItem(item.id)" class="text-red-600 hover:text-red-700 flex bg-gray-100 px-2 py-1 rounded-lg hover:cursor">
+                                            <TrashIcon class="w-4 mr-2"/>Eliminar
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table> -->
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Imagen
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Acciones
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Orden
+                                    </th>
+                                </tr>
+                            </thead>
+                            <draggable v-model="sliderItems.mobile" tag="tbody" class="bg-white divide-y divide-gray-200" @end="dragMobile" :options="dragOptions">
+                                <template #item="{element, index}">
+                                    <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col mb-2 text-sm">
+                                        <!-- <div class="text-gray-500 mb-2"> Tipo: <span class="text-gray-800 uppercase">{{ element.type }}</span> </div> -->
+                                        <img :src="`/storage/${element.image}`"
+                                            :class="{ 'w-4/5': element.type === 'desktop', 
+                                                        'w-1/4': element.type === 'mobile'}" class="object-cover rounded-md" />
+                                        </div>                                                      
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" >
+                                        <div @click="deleteItem(element.id)" class="text-red-600 hover:text-red-700 flex bg-gray-100 px-2 py-1 rounded-lg hover:cursor">
+                                        <TrashIcon class="w-4 mr-2"/>Eliminar
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" >
+                                        <EllipsisVerticalIcon class="w-8 mr-8 drag-handle flex items-end"/>
+                                    </td>
+                                    </tr>
+                                </template>
+                            </draggable>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
     
     <script>
-    import { TrashIcon } from '@heroicons/vue/24/outline'
+    import { TrashIcon, EllipsisVerticalIcon } from '@heroicons/vue/24/outline'
+    // Drag
+    import draggable from 'vuedraggable'
 
     export default {
         
         components: {
-            TrashIcon
+            TrashIcon,
+            EllipsisVerticalIcon,
+            draggable
         },
 
         data(){
@@ -117,63 +214,143 @@
                 form: {},
                 url: null,
                 sliderItems: [],
+                drag: false,
+                dragOptions: {
+                    handle: '.drag-handle', // Especifica que el arrastre se activa solo cuando se hace clic en un elemento con la clase 'drag-handle'
+                    filter: '.drag-handle' // Deshabilita el arrastre en los elementos que no tienen la clase 'drag-handle'
+                }
             }
         },
     
         methods: {
-            
             async getSliderItems(){
                 const response = await axios.get(route('content.slider.list'))
-                this.sliderItems = response.data
+                this.sliderItems = response.data                
             },
-
             openDialogSearchImg() {
                 this.$refs.import_file.click()
             },
-
             previewImage(e) {
                 const file = e.target.files[0];
                 this.url = URL.createObjectURL(file);
             },     
-
             async uploadImage(){
                 this.loading = true
+                let data = {}
 
-                let formData = new FormData();
+                try {
+                    let formData = new FormData();
+                    formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                    formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
 
-                formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
-                formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                    // Configura el header para el contenido multipart/form-data
+                    const config = {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    };
+                    
+                    const response = await axios.post(route('content.slider.store', this.form, config));
+                    if (response.status == 200) {
+                        data.message = response.data.message
+                        data.labelType = 'success'
+                    } else {
+                        data.message = response.data.message
+                        data.labelType = 'danger'
+                    }
+                } catch (error) {
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
+                }
+
+                //let formData = new FormData();
+
+                //formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                //formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
 
                 // Configura el header para el contenido multipart/form-data
-                const config = {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                };
+                //const config = {
+                //    headers: { 'Content-Type': 'multipart/form-data' }
+                //};
                 
-                const response = await axios.post(route('content.slider.store'), formData, config)
+                //const response = await axios.post(route('content.slider.store'), formData, config)
 
-                const data = response.data
+                //const data = response.data
                 this.loading = false
                 this.url  = null
                 this.form = {}
                 
                 this.getSliderItems();
+                this.$emit('message', data)
             },
-
             async deleteItem(itemId){
-                console.log(itemId)
-                const response = await axios.post(route('content.slider.delete', itemId))
+                let data = {}
+                try {
+                    /* let formData = new FormData();
+                    formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                    formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
+
+                    // Configura el header para el contenido multipart/form-data
+                    const config = {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    }; */
+                    
+                    const response = await axios.post(route('content.slider.delete', itemId))
+                    if (response.status == 200) {
+                        data.message = response.data.message
+                        data.labelType = 'success'
+                    } else {
+                        data.message = response.data.message
+                        data.labelType = 'danger'
+                    }
+                } catch (error) {
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
+                }
+
+                //const response = await axios.post(route('content.slider.delete', itemId))
                 this.getSliderItems();
-            }
+                this.$emit('message', data)
+            },
+            async dragDesktop() {
+                let data = {}
+                try {
+                    const response = await axios.post(route('content.slider.order'), JSON.stringify(this.sliderItems.desktop));
+                    const content = response.data;
+                    data.message = response.data.message
+                    data.labelType = 'success'
+                } catch (error) {
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
+                }
+                this.$emit('message', data)
+            },
+            async dragMobile() {
+                let data = {}
+                try {
+                    const response = await axios.post(route('content.slider.order'), JSON.stringify(this.sliderItems.mobile));
+                    const content = response.data;
+                    data.message = response.data.message
+                    data.labelType = 'success'
+                } catch (error) {
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
+                }
+                this.$emit('message', data)
+            },
 
         },
     
         created() {
             this.getSliderItems();
         },
+        mounted() {
+        },
     
     }
     </script>
     
     <style>
-    
+    /* Estilos para el icono de agarre */
+    .drag-handle {
+        cursor: grab;
+    }
     </style>

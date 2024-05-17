@@ -1,4 +1,5 @@
 <template>
+    <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
     <!-- eslint-disable -->
     <div class="max-w-7xl mx-auto py-5 sm:px-6 lg:px-8">
             <div class="shadow overflow-hidden sm:rounded-md">
@@ -54,25 +55,38 @@
 </template>
     
 <script>   
+import Toast from '@/Layouts/Components/Toast.vue'
 
 export default {
+    components: {
+		Toast
+	},
     data() {
-        // return {
-        //     families: [],
-        //     brands: [],
-        //     products: []
-        // }
+        return {
+            toastMessage: "",
+			labelType:    "info",
+        }
     },
     methods: {
+        clearMessage() {
+			this.toastMessage = "";
+		},
         async getFamilies() {
 
             const url = route('import.families')
             
             try {
                 const response = await axios.get(url)
-                console.log(response.data);
+                if (response.status == 200) {
+					this.toastMessage = response.data.message
+                    this.labelType = 'success'
+				} else {
+                    this.toastMessage = response.data.message
+                    this.labelType = 'danger'
+				} 
             } catch (error) {
-                console.log(error);
+                this.toastMessage = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                this.labelType = 'danger'
             }
             
         },
@@ -82,9 +96,16 @@ export default {
             
             try {
                 const response = await axios.get(url)
-                console.log(response.data);
+                if (response.status == 200) {
+					this.toastMessage = response.data.message
+                    this.labelType = 'success'
+				} else {
+                    this.toastMessage = response.data.message
+                    this.labelType = 'danger'
+				} 
             } catch (error) {
-                console.log(error);
+                this.toastMessage = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                this.labelType = 'danger'
             }
 
         },
@@ -95,9 +116,16 @@ export default {
             
             try {
                 const response = await axios.get(url)
-                console.log(response.data);
+                if (response.status == 200) {
+					this.toastMessage = response.data.message
+                    this.labelType = 'success'
+				} else {
+                    this.toastMessage = response.data.message
+                    this.labelType = 'danger'
+				} 
             } catch (error) {
-                console.log(error);
+                this.toastMessage = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                this.labelType = 'danger'
             }
 
         },
@@ -105,12 +133,22 @@ export default {
         async  getProducts() {
 
             const url = route('import.products')
+            
+            this.labelType = 'info';
+            this.toastMessage = 'Se ha inciado proceso de importación de producto';
 
             try {
                 const response = await axios.get(url)
-                console.log(response.data);
+                if (response.status == 200) {
+					this.toastMessage = response.data.message
+                    this.labelType = 'success'
+				} else {
+                    this.toastMessage = response.data.message
+                    this.labelType = 'danger'
+				} 
             } catch (error) {
-                console.log(error);
+                this.toastMessage = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                this.labelType = 'danger'
             }
 
         }

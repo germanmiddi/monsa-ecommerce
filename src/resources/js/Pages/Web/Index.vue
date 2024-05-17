@@ -59,13 +59,15 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="relative pt-48 pb-16 sm:pb-24">
                             <div>
-                                <h2 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
-                                    Liquidación.
-                                    <br />
-                                    Hasta 50% off.
-                                </h2>
+                                <h1 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-white md:text-4xl">
+                                    {{bannerTitle}}
+                                    <br>
+                                    {{bannerSubtitle}}
+                                    <br>
+                                    {{bannerTitleH1}}
+                                </h1>
                                 <div class="mt-6 text-base">
-                                    <a href="#" class="font-semibold text-monsa-yellow">Ver productos<span aria-hidden="true"> &rarr;</span></a>
+                                    <a :href="bannerLink" class="font-semibold text-monsa-yellow">Ver productos<span aria-hidden="true"> &rarr;</span></a>
                                 </div>
                             </div>
 
@@ -116,7 +118,7 @@
                 <div class="mt-12 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-8">
                     <div v-for="item in brands" :key="item.id" class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
                         <img class="max-h-20" style="mix-blend-mode: multiply;" 
-                             :src="`/storage/${item.image}`" />
+                            :src="`/storage/${item.image}`" />
                     </div>
                 </div>
             </div>
@@ -273,9 +275,15 @@ export default {
         Slider
     },
 
-    setup() {
+    setup(props) {
+        const bannerTitle = props.content.find(item => item.element === 'h1').content;
+        const bannerSubtitle = props.content.find(item => item.element === 'h2').content;
+        const bannerLink = props.content.find(item => item.element === 'link').content;
         return {
             trendingProducts,
+            bannerTitle,
+            bannerSubtitle,
+            bannerLink
         }
 	},
     data() {
@@ -301,8 +309,7 @@ export default {
             // Opcional: Convertir texto truncado de nuevo a HTML si es necesario
             // En este caso, solo estamos retornando texto, por lo que no es necesario
             return textContent;
-        },
-
+        }
     },
     // created() {
     //   this.getHomeData()
@@ -314,8 +321,9 @@ export default {
     beforeUnmount() { // o `destroyed` para Vue 2
         window.removeEventListener('resize', this.checkMobile); // Limpiar listener
     },
+    computed: {
 
-
+    },
 
     layout: 'LayoutWeb' // Define the layout for this page
 }

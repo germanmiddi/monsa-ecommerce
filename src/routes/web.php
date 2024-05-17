@@ -59,12 +59,14 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/products', [ManagerProductController::class, 'index'])->name('products');
         Route::get('/products/list', [ManagerProductController::class, 'list'])->name('products.list');
+        Route::post('/products/update/{product}', [ManagerProductController::class, 'update'])->name('products.update');
         
         Route::get('/novedades', [PostController::class, 'index'])->name('posts.list');
         Route::get('/novedades/create', [PostController::class, 'create'])->name('posts.create');
         Route::get('/novedades/{id}/edit',   [PostController::class, 'edit'])->name('posts.edit');
         Route::post('/novedades/store', [PostController::class, 'store'])->name('posts.store');
         Route::post('/novedades/update/{post}', [PostController::class, 'update'])->name('posts.update');
+        
 
         Route::get('/contenido', [ContentController::class, 'index'])->name('content');
 
@@ -74,12 +76,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/contenido/slider/list', [ContentController::class, 'list'])->name('content.slider.list');
         Route::post('/contenido/slider/store', [ContentController::class, 'sliderStore'])->name('content.slider.store');
         Route::post('/contenido/{slider}/slider', [ContentController::class, 'sliderDelete'])->name('content.slider.delete');
+        Route::post('/contenido/slider/order', [ContentController::class, 'sliderOrder'])->name('content.slider.order');
         //create a route named logout to logout the user
+
+        Route::post('/contenido/about/store', [ContentController::class, 'aboutStore'])->name('content.about.store');
         
         
         Route::get('/contenido/brand/list', [ContentController::class, 'brandList'])->name('content.brand.list');
         Route::post('/contenido/brand/store', [ContentController::class, 'brandStore'])->name('content.brand.store');
         Route::post('/contenido/{contentBrand}/brand', [ContentController::class, 'brandDelete'])->name('content.brand.delete');
+        Route::post('/contenido/brand/order', [ContentController::class, 'brandOrder'])->name('content.brand.order');
         
         Route::get('/contenido/banner', [ContentController::class, 'banner'])->name('content.banner');
 
@@ -89,6 +95,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('settings/brand/list', [SettingsController::class, 'brandList'])->name('settings.brand.list');
         Route::post('settings/brand/update/{brand}', [SettingsController::class, 'brandUpdate'])->name('settings.brand.update');
+
+        Route::get('settings/label/list', [SettingsController::class, 'labelList'])->name('settings.label.list');
+        Route::post('settings/label/update/{label}', [SettingsController::class, 'labelUpdate'])->name('settings.label.update');
+        Route::post('settings/label/store', [SettingsController::class, 'labelStore'])->name('settings.label.store');
 
         Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');
 

@@ -24,7 +24,7 @@
                                 </tr>
                                 <FamilyItem v-for="item in families" 
                                                 :key="item.id"
-                                                :item="item" />
+                                                :item="item" @message="messageToast"/>
                             </table>
                         </div>
                     </div>
@@ -57,6 +57,9 @@
                 this.families = response.data
     
             },
+            messageToast(data){
+                this.$emit('message', data)
+            }
         },
     
         created() {

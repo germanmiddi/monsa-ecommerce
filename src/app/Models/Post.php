@@ -26,7 +26,7 @@ class Post extends Model
         'featured' => 'boolean',
         'menu' => 'boolean',
         'active' => 'boolean',
-        'date_published' => 'datetime:Y-m-d',
+        //'date_published' => 'date:Y-m-d',
     ];
 
     public function postStatus()
@@ -89,5 +89,9 @@ class Post extends Model
         // Formatea y devuelve la fecha en formato DD/MM/YYYY
         return $value->format('d/m/Y');
     }
+    /* public function getDatePublishedAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('d-m-Y');
+    } */
 
 }

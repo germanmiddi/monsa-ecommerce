@@ -5,7 +5,8 @@
         <td class="border-t px-4 py-2 text-left">{{ item.nombre }}</td>
         <td class="border-t px-4 py-2 text-left">
             <Switch v-model="item.active"
-                    @click="item.active = !item.active; updateFamily(item)"
+
+                    @click="item.active = !item.active; updateLabel(item)"
                     :class="item.active ? 'bg-blue-600' : 'bg-gray-200'"
                     class="relative inline-flex h-6 w-11 items-center rounded-full">
                     <span :class="item.active ? 'translate-x-6' : 'translate-x-1'"
@@ -38,10 +39,10 @@ export default {
     },
 
     methods: {
-        async updateFamily(item) {
+        async updateLabel(item) {
             let data = {}
             try {
-				const response = await axios.post(route('settings.family.update', item.id));
+				const response = await axios.post(route('settings.label.update', item.id));
 				if (response.status == 200) {
 					data.message = response.data.message
                     data.labelType = 'success'
@@ -53,6 +54,9 @@ export default {
 				data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
                 data.labelType = 'danger'
 			}
+
+            //let response = await axios.post(route('settings.label.update', item.id))
+            //let data = response.data
             this.$emit('message', data)
         }
     },
