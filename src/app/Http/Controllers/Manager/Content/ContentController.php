@@ -93,15 +93,16 @@ class ContentController extends Controller
             }
 
             $slider->delete();
+            return response()->json(['message' => 'El Sliders se ha eliminado correctamente'], 200);
             // DB::commit();
         }catch(\Exception $e){
             // DB::rollBack();
             $msg = $e->getMessage();
-            return response()->json(['message' => 'Error deleting slider', 
+            return response()->json(['message' => 'Error al momento de crear el Slider', 
             'detail'  => $msg ], 500);
         }
         
-        return response()->json(['message' => 'Slider deleted'], 200);
+        //return response()->json(['message' => 'Error al momento de crear el Slider'], 200);
     }
 
     public function sliderOrder(Request $request)
@@ -121,11 +122,11 @@ class ContentController extends Controller
                 $position++;
             }
             DB::commit();
-            return response()->json(['message' => 'Slider created successfully'], 200);
+            return response()->json(['message' => 'El Sliders se ha creado correctamente'], 200);
         }catch(\Exception $e){
             DB::rollBack();
             $msg = $e->getMessage();
-            return response()->json(['message' => 'Error creating slider', 
+            return response()->json(['message' => 'Error al momento de crear el Slider', 
                                      'detail'  => $msg ], 500);
         }
     }

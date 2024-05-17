@@ -44,6 +44,7 @@ class Product extends Model
         'imagen' => 'array', // Cast para las imágenes
         'dimensiones' => 'array', // Cast para las dimensiones
         'search' => 'array', // Cast para los términos de búsqueda
+        'is_active' => 'boolean'
     ];
 
     public function family()

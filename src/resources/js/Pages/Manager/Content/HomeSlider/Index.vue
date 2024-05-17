@@ -236,47 +236,105 @@
             },     
             async uploadImage(){
                 this.loading = true
+                let data = {}
 
-                let formData = new FormData();
+                try {
+                    let formData = new FormData();
+                    formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                    formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
 
-                formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
-                formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                    // Configura el header para el contenido multipart/form-data
+                    const config = {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    };
+                    
+                    const response = await axios.post(route('content.slider.store', this.form, config));
+                    if (response.status == 200) {
+                        data.message = response.data.message
+                        data.labelType = 'success'
+                    } else {
+                        data.message = response.data.message
+                        data.labelType = 'danger'
+                    }
+                } catch (error) {
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
+                }
+
+                //let formData = new FormData();
+
+                //formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                //formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
 
                 // Configura el header para el contenido multipart/form-data
-                const config = {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                };
+                //const config = {
+                //    headers: { 'Content-Type': 'multipart/form-data' }
+                //};
                 
-                const response = await axios.post(route('content.slider.store'), formData, config)
+                //const response = await axios.post(route('content.slider.store'), formData, config)
 
-                const data = response.data
+                //const data = response.data
                 this.loading = false
                 this.url  = null
                 this.form = {}
                 
                 this.getSliderItems();
+                this.$emit('message', data)
             },
             async deleteItem(itemId){
-                const response = await axios.post(route('content.slider.delete', itemId))
+                let data = {}
+                try {
+                    /* let formData = new FormData();
+                    formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                    formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
+
+                    // Configura el header para el contenido multipart/form-data
+                    const config = {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    }; */
+                    
+                    const response = await axios.post(route('content.slider.delete', itemId))
+                    if (response.status == 200) {
+                        data.message = response.data.message
+                        data.labelType = 'success'
+                    } else {
+                        data.message = response.data.message
+                        data.labelType = 'danger'
+                    }
+                } catch (error) {
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
+                }
+
+                //const response = await axios.post(route('content.slider.delete', itemId))
                 this.getSliderItems();
+                this.$emit('message', data)
             },
             async dragDesktop() {
+                let data = {}
                 try {
                     const response = await axios.post(route('content.slider.order'), JSON.stringify(this.sliderItems.desktop));
                     const content = response.data;
-                    console.log(content);
+                    data.message = response.data.message
+                    data.labelType = 'success'
                 } catch (error) {
-                    console.error('Submission failed:', error);
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
                 }
+                this.$emit('message', data)
             },
             async dragMobile() {
+                let data = {}
                 try {
                     const response = await axios.post(route('content.slider.order'), JSON.stringify(this.sliderItems.mobile));
                     const content = response.data;
-                    console.log(content);
+                    data.message = response.data.message
+                    data.labelType = 'success'
                 } catch (error) {
-                    console.error('Submission failed:', error);
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
                 }
+                this.$emit('message', data)
             },
 
         },

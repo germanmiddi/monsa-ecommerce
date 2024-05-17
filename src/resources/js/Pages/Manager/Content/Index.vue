@@ -24,7 +24,7 @@
     
         <!-- Payment details -->
         <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-          <component :is="selectedItem.componentName" :data="selectedItem.componentData" />
+          <component @message="messageToast" :is="selectedItem.componentName" :data="selectedItem.componentData" />
         </div>
       </div>
     </main>
@@ -59,6 +59,7 @@
     },
   
     components: {
+      Toast,
       HomeSlider,
       HomeBrands,
       HomeBanner,
@@ -88,8 +89,15 @@
   
     },
       methods: {
+        clearMessage() {
+          this.toastMessage = "";
+        },
         selectItem(index) {
           this.selectedIndex = index;
+        },
+        messageToast(data){
+          this.labelType = data.labelType;
+          this.toastMessage = data.message;
         }
       },
       computed: {
