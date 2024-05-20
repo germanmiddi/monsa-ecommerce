@@ -188,7 +188,7 @@ class CheckoutController extends Controller
                 "quantity"    => 1,
                 "unit_price"  => [
                     "currency" => "ARS",
-                    "value"    => $i['precio'] . ".00"
+                    "value"    => $i['price_public'] . ".00"
                     // "value"    => "299.00"
                 ]
             ];

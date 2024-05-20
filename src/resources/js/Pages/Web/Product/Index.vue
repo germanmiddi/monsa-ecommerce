@@ -33,7 +33,7 @@
   
             <div class="mt-3">
               <h2 class="sr-only">Product information</h2>
-              <p class="text-3xl text-gray-900">{{ formatPrice(product.precio) }}</p>
+              <p class="text-3xl text-gray-900">{{ formatPrice(product.price_public) }}</p>
             </div>
   
             <!-- Reviews -->
@@ -163,9 +163,9 @@
       const cart = useCartStore()
       const totalPrice = computed(() => cart.calculatedTotalPrice);
 
-      const formatPrice = (price) => {
+      const formatPrice = (price_public) => {
         
-        const formattedPrice = price.toLocaleString('es-AR', {
+        const formattedPrice = price_public.toLocaleString('es-AR', {
           style: 'currency',
           currency: 'ARS',
           minimumFractionDigits: 0,

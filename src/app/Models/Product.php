@@ -20,6 +20,7 @@ class Product extends Model
                     'imagen',
                     'sku',
                     'precio',
+                    'price_public',
                     'dimensiones',
                     'peso',
                     'stock',

@@ -64,6 +64,7 @@ class ImportProductsJob implements ShouldQueue
                         'imagen' => $product['imagen'],
                         'sku'    => $product['sku'],
                         'precio' => $product['precio'],
+                        'public_price' => $product['public_price'],
                         'dimensiones' => $product['dimensiones'],
                         'peso'  => $product['peso'],
                         'stock' => $product['stock'],

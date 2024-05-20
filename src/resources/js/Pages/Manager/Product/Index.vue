@@ -202,7 +202,7 @@
                                                         <label for="time"
                                                             class="block text-md font-medium text-gray-700 "><b>{{this.product.nombre}}</b></label>
                                                     </div>
-                                                    <hr>
+                                                    <hr class="p-2">
                                                     <div class="flex text-sm text-gray-700">
                                                         <label class="text-bold w-24 font-bold">Activo:</label>
                                                         <Switch v-model="product.is_active"
@@ -213,7 +213,7 @@
                                                                     class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
                                                         </Switch>   
                                                     </div>
-                                                    <hr>
+                                                    <hr class="p-2">
                                                     <div class="flex text-sm text-gray-700">
                                                         <label class="text-bold w-24 font-bold">Familia:</label>
                                                         <span>{{ this.product.family?.nombre ?? '-' }}</span>
@@ -239,23 +239,29 @@
                                                         <span>{{ this.product.visibilidad ?? '-' }}</span>
                                                     </div>
 
-                                                    <hr>
+                                                    <hr class="p-2">
+
                                                     <div class="flex text-sm text-gray-700">
                                                         <label class="text-bold w-24 font-bold">Precio:</label>
                                                         <span>$ {{ this.product.precio ?? '-' }}</span>
+                                                    </div>
+
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Precio Min.:</label>
+                                                        <span>$ {{ this.product.price_public ?? '-' }}</span>
                                                     </div>
                                                     <div class="flex text-sm text-gray-700">
                                                         <label class="text-bold w-24 font-bold">Peso: </label>
                                                         <span>{{ this.product.peso ?? '-' }}</span>
                                                     </div>
-                                                    <hr>
+                                                    <hr class="p-2">
                                                     <div>
                                                         <label for="comentario"
                                                             class="block text-sm font-medium text-gray-700">
                                                             <b>Descripción: </b></label>
                                                         <p class="text-xs text-justify">{{ this.product.descripcion }}</p>
                                                     </div>
-                                                    <hr>
+                                                    <hr class="p-2">
                                                     <div>
                                                         <label for="comentario"
                                                             class="block text-sm font-medium text-gray-700">
@@ -265,7 +271,7 @@
                                                                     {{search.replace(/['"]+/g, '')}}
                                                                 </span>
                                                     </div>
-                                                    <hr>
+                                                    <hr class="p-2">
                                                     <div>
                                                         <label for="labels"
                                                             class="block text-sm font-medium text-gray-700">
@@ -283,7 +289,7 @@
                                                                 {{label}} <TrashIcon @click="removeLabel(label)" class="h-5 w-5 text-red-700 ml-2"></TrashIcon>
                                                             </span>
                                                     </div>
-                                                    <hr>
+                                                    <hr class="p-2">
                                                     <div>
                                                         <label for="comentario"
                                                             class="block text-sm font-medium text-gray-700">

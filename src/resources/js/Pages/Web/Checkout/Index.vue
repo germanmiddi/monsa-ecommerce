@@ -48,7 +48,7 @@
                   <TrashIcon class="w-5 " />Eliminar
                 </button>
               </div>
-              <p class="flex-none text-base font-medium">{{ formattedPrice(product.precio) }}</p>
+              <p class="flex-none text-base font-medium">{{ formattedPrice(product.price_public) }}</p>
             </li>
           </ul>
 
