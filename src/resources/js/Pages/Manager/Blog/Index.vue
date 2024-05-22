@@ -53,57 +53,15 @@
                                     </div>
                                 </div>
                                 
-                                
                                 <div class="mt-3 overflow-wrap-normal blog-content" v-html="post.content"></div>
                                 <button @click="editPost(post.id)" class="mt-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Editar
                                 </button>
                             </div>
                         </div>
-                    
                         <Pagination :links="posts.links" class="flex justify-end mx-5 mb-5" />
                     </div>
-        
                 </div>
-
-                <!-- <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
-                    <table class="w-full whitespace-nowrap">
-                        <tr class="text-left font-bold bg-blue-500 text-white">
-                            <th class="px-6 py-3 text-center">ID</th>
-                            <th class="px-6 py-3 text-center">Nombre</th>
-                            <th class="px-6 py-3 ">Contacto</th>
-                            <th class="px-6 py-3 text-center">Acciones</th>
-                        </tr>
-                        <tr v-for="client in clients.data" :key="client.id"
-                            class="hover:bg-gray-100 focus-within:bg-gray-100 text-sm ">
-                            <td class="border-t px-6 py-4 text-center">
-                                {{ client.id }}
-                            </td>
-                            <td class="border-t px-6 py-4 text-center">
-                                {{ client.company_name }}
-                            </td>
-    
-                            <td class="border-t px-6 py-4 text-center">
-                                <div class="flex"> 
-                                    <PhoneIcon class="w-3 mr-2 text-blue-500"/> {{ client.phone }} </div>
-                                <div class="flex"> 
-                                <EnvelopeIcon class="w-3 mr-2 text-blue-500"/>{{ client.email }}</div>
-                            </td>
-                            <td class="border-t px-6 py-4 ">
-                                <div class="flex items-center">   
-                                    <a type="button" :href="route('client.edit', client.id)" 
-                                       class="inline-flex items-center px-2 py-1 border border-gray-200 rounded-md bg-gray-100 
-                                            hover:bg-gray-300 text-gray-700">
-                                        <PencilIcon class="h-4 w-4 mr-2" aria-hidden="true" />Editar</a>
-                                    <button class="ml-2 inline-flex items-center px-2 py-1 border border-gray-200 rounded-md bg-gray-100 
-                                             hover:bg-gray-300 text-gray-700"
-                                            @click="deleteClient(client)">
-                                            <TrashIcon class="h-3 w-3  mr-2 " aria-hidden="true" /> Borrar </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div> -->
             </div>
         </div>
     
@@ -180,7 +138,7 @@
         },
     
         created() {
-            // this.getClients()
+
         },
         mounted()
         {

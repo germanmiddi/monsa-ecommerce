@@ -24,10 +24,11 @@ class StoreController extends Controller
             'families' => Family::where('active', true)->orderBy('orden')->get(),
             'brands'   => Brand::where('active', true)->orderBy('orden')->get(),
             'products' => Product::with('family', 'brand')
-                                  ->whereIn('idFamily', Family::where('active', true)->pluck('id'))
-                                  ->whereIn('idBrand', Brand::where('active', true)->pluck('id'))
-                                //   ->limit(50)
-                                  ->get()
+                                    ->whereIn('idFamily', Family::where('active', true)->pluck('id'))
+                                    ->whereIn('idBrand', Brand::where('active', true)->pluck('id'))
+                                    //->limit(50)
+                                    ->active()
+                                    ->get()
 
 
         ]);

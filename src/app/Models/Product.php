@@ -39,7 +39,8 @@ class Product extends Model
                     'ancho',
                     'largo',
                     'externalId',
-                    'is_active'];
+                    'is_active',
+                    'promo_text'];
 
     protected $casts = [
         'imagen' => 'array', // Cast para las imágenes
@@ -67,5 +68,9 @@ class Product extends Model
         return $this->belongsToMany(Label::class, 'label_product');
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', '1');
+    }
 
 }

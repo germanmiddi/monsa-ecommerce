@@ -291,6 +291,15 @@
                                                     </div>
                                                     <hr class="p-2">
                                                     <div>
+                                                        <label for="labels" class="block text-sm font-medium text-gray-700">
+                                                            <b>Texto Promocional: </b></label>
+                                                            <div class="flex items-center mb-2">
+                                                                <input type="text" v-model="product.promo_text" id="promo_text"
+                                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                            </div>
+                                                    </div>
+                                                    <hr class="p-2">
+                                                    <div>
                                                         <label for="comentario"
                                                             class="block text-sm font-medium text-gray-700">
                                                             <b>Imagenes </b></label>

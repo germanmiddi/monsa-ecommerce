@@ -108,7 +108,7 @@ class ProductController extends Controller
     {
         try{
             $product->is_active = ($request->is_active === 0 || $request->is_active === false ) ? 0 : 1;
-            
+            $product->promo_text = $request->promo_text;
             $labelIds = array();
             //Obtengo los ID de las etiquetas.
             foreach ($request->labelDetails as $value) {

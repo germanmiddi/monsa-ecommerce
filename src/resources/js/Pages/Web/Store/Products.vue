@@ -7,6 +7,7 @@
         <div class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-4 lg:grid-cols-4 lg:gap-x-6">
         <div v-for="product in products" :key="product.id" 
                 class="group relative bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden">
+                
                 <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
                   
                   <img :src="buildImg(product.imagen)" alt="Lorem" class="w-full h-full object-center object-cover group-hover:opacity-75" />
@@ -28,6 +29,7 @@
                   <p class="text-xl font-bold text-gray-900">$ {{ Number(product.price_public).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) }}</p>
               </div>
             </div>
+            
         </div>
         </div>
     </div>
