@@ -9,8 +9,12 @@
                 class="group relative bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden">
                 
                 <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
-                  
                   <img :src="buildImg(product.imagen)" alt="Lorem" class="w-full h-full object-center object-cover group-hover:opacity-75" />
+                  <!-- <div class=""> 
+                  </div> -->
+                </div>
+                <div v-show="product.promo_text" class="absolute mt-8 mx-8 ml-1 xl:ml-2 bg-yellow-400 rounded-md p-4 font-semibold bg-opacity-90 text-xs xl:text-sm">
+                  <span class="">{{product.promo_text ?? '-'}}</span>
                 </div>
                 <!-- <div class="aspect-w-1 aspect-h-1 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96">
             <img :src="product.imageSrc" :alt="product.imageAlt" class="w-full h-full object-center object-cover sm:w-full sm:h-full" />
