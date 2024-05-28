@@ -25,15 +25,11 @@
                 <a href="#" class="hidden text-sm font-medium text-indigo-600 hover:text-indigo-500 md:block">Todos los destacados<span aria-hidden="true"> &rarr;</span></a>
             </div>
 
-            <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
-                <!-- <div v-for="product in trendingProducts" :key="product.id" class="group relative">
-                    <div class="w-full h-56 rounded-md overflow-hidden group-hover:opacity-75 lg:h-72 xl:h-80 bg-gray-100">
-                        <img style="mix-blend-mode:multiply" :src="product.imageSrc" :alt="product.imageAlt" class="m-auto w-1/2 h-1/2 object-center object-cover" />
-                    </div> -->
-                    <div v-for="product in trendingProducts" :key="product.id" class="group relative">
-                        <div class="w-full h-56 rounded-md overflow-hidden group-hover:opacity-75 lg:h-72 xl:h-80 bg-gray-100 flex items-center">
-                            <img style="mix-blend-mode: multiply" :src="product.imageSrc" :alt="product.imageAlt" class="m-auto w-2/3 h-2/3 object-center object-cover" />
-                        </div>                
+            <!-- <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
+                <div v-for="product in trendingProducts" :key="product.id" class="group relative">
+                    <div class="w-full h-56 rounded-md overflow-hidden group-hover:opacity-75 lg:h-72 xl:h-80 bg-gray-100 flex items-center">
+                        <img style="mix-blend-mode: multiply" :src="product.imageSrc" :alt="product.imageAlt" class="m-auto w-2/3 h-2/3 object-center object-cover" />
+                    </div>                
                     <h3 class="mt-4 text-sm text-gray-700">
                         <a :href="product.href">
                             <span class="absolute inset-0" />
@@ -43,7 +39,9 @@
                     <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
                     <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }}</p>
                 </div>
-            </div>
+            </div> -->
+
+            <SliderProducts :productItems="products"/>
 
             <div class="mt-8 text-sm md:hidden">
                 <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Todos los destacados<span aria-hidden="true"> &rarr;</span></a>
@@ -171,6 +169,7 @@
 
 <script>
 import Slider from './Home/Slider.vue'
+import SliderProducts from './Home/SliderProducts.vue'
 
 const old_posts = [
   {
@@ -268,11 +267,13 @@ export default {
         sliderMobile:  Object,
         brands:  Object,
         content: Object,
-        posts:   Object
+        posts:   Object,
+        products: Object
     },
 
     components:{
-        Slider
+        Slider,
+        SliderProducts
     },
 
     setup(props) {

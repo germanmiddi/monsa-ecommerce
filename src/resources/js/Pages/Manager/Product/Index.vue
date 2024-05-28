@@ -254,6 +254,18 @@
                                                         <label class="text-bold w-24 font-bold">Peso: </label>
                                                         <span>{{ this.product.peso ?? '-' }}</span>
                                                     </div>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Alto: </label>
+                                                        <span>{{this.product.dimensiones ? JSON.parse(this.product.dimensiones).alto ?? '-' : '-'}}</span>
+                                                    </div>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Largo: </label>
+                                                        <span>{{this.product.dimensiones ? JSON.parse(this.product.dimensiones).largo ?? '-' : '-'}}</span>
+                                                    </div>
+                                                    <div class="flex text-sm text-gray-700">
+                                                        <label class="text-bold w-24 font-bold">Ancho: </label>
+                                                        <span>{{this.product.dimensiones ? JSON.parse(this.product.dimensiones).ancho ?? '-' : '-'}}</span>
+                                                    </div>
                                                     <hr class="p-2">
                                                     <div>
                                                         <label for="comentario"
@@ -409,6 +421,10 @@ export default defineComponent({
 
             if (this.filter.brand_id) {
                 filter += `&brand_id=${JSON.stringify(this.filter.brand_id)}`
+            }
+
+            if (this.filter.label_id) {
+                filter += `&label_id=${JSON.stringify(this.filter.label_id)}`
             }
 
             const get = `${route('products.list')}?${filter}`

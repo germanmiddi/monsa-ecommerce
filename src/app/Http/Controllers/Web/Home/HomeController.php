@@ -10,6 +10,8 @@ use App\Models\PostCategory;
 use App\Models\Slider;
 use App\Models\ContentBrand;
 use App\Models\Content;
+use App\Models\Product;
+
 class HomeController extends Controller
 {
     /**
@@ -22,6 +24,9 @@ class HomeController extends Controller
     {
 
         $post = Post::with('post_category')->get()->toArray();
+        $products = Product::whereHas('labels', function ($query) {
+            $query->where('label_id', 13);
+        })->get();
 
         // Add your logic here
         return  Inertia::render('Web/Index', [
@@ -30,6 +35,7 @@ class HomeController extends Controller
             'brands'  => ContentBrand::orderby('order')->get(),
             'content' => Content::where('page', 'home')->get(),
             'posts'   => $post,
+            'products'   => $products
         ]);
     }
     

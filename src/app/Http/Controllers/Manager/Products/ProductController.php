@@ -49,6 +49,17 @@ class ProductController extends Controller
             $result->where('idBrand', $brand_id);
         }
 
+        if(request('label_id')){
+            $label_id = json_decode(request('label_id'));
+            $result->whereIn('id', function ($sub) use($label_id) {
+                $sub->selectRaw('product.id')
+                    ->from('product')
+                    ->join('label_product', 'product.id', '=', 'label_product.product_id')
+                    ->where('label_product.label_id', $label_id);
+            });
+        }
+
+
         return $result->with('family', 'brand', 'labels')
                     ->orderBy('created_at', 'desc')
                     ->paginate($length)

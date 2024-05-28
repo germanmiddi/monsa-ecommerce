@@ -1,6 +1,6 @@
 <template>
     <!-- <vue-carousel :data="data"></vue-carousel> -->
-    <vue-carousel v-if="isMobile" :data="mobileItems"></vue-carousel>
+    <carousel v-if="isMobile" :data="mobileItems"></carousel>
 
     <vue-carousel v-else :data="desktopItems"></vue-carousel>
     
