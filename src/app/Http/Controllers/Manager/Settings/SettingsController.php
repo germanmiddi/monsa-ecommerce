@@ -47,7 +47,7 @@ class SettingsController extends Controller
     }
 
     public function brandUpdate(Brand $brand){
-        dd($brand);
+        // dd($brand);
 
         try{
             $brand->active = !$brand->active;
