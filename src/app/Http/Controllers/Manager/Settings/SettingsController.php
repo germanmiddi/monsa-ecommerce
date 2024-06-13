@@ -46,11 +46,12 @@ class SettingsController extends Controller
         return Brand::all();
     }
 
-    public function brandUpdate(Brand $label){
+    public function brandUpdate(Brand $brand){
+        dd($brand);
 
         try{
-            $label->active = !$label->active;
-            $label->save();
+            $brand->active = !$brand->active;
+            $brand->save();
             return response()->json(['message' => 'Etiqueta actualizada correctamente'],200);
         }catch(\Exception $e){
             $msg = $e->getMessage();
