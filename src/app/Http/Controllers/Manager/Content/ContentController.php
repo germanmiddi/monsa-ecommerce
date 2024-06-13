@@ -54,6 +54,7 @@ class ContentController extends Controller
 
     public function sliderStore(Request $request)
     {
+
         DB::beginTransaction();    
         try{
             $slider = new Slider();
@@ -62,6 +63,8 @@ class ContentController extends Controller
                 $file_name = time().'_'.$request->file('image')->getClientOriginalName();
                 $file_path = $request->file('image')->storeAs('slider', $file_name, 'public');
                 $slider->image = $file_path;
+            }else{
+                throw new \Exception('No se ha subido ninguna imagen');
             }
             
             $slider->title = $request->title ?? null;

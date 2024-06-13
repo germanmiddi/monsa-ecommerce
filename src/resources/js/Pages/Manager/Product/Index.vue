@@ -65,6 +65,11 @@
                         </div>
                         <hr>
                         <div class="grid grid-cols-12 gap-6">
+                            <div class="col-span-12 sm:col-span-1">
+                                <label for="sku" class="block text-sm font-medium text-gray-700">SKU</label>
+                                <input v-model="filter.sku" type="text" name="sku" id="sku" autocomplete="off"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            </div>
                             <div class="col-span-12 sm:col-span-3">
                                 <label for="modelo" class="block text-sm font-medium text-gray-700">Modelo</label>
                                 <input v-model="filter.modelo" type="text" name="modelo" id="modelo" autocomplete="off"
@@ -81,7 +86,7 @@
                                     }}</option>
                                 </select>
                             </div>
-                            <div class="col-span-12 sm:col-span-3">
+                            <div class="col-span-12 sm:col-span-2">
                                 <label for="brand_id" class="block text-sm font-medium text-gray-700">Marca</label>
                                 <select v-model="filter.brand_id" id="brand_id" name="brand_id"
                                     autocomplete="off"
@@ -112,14 +117,17 @@
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
                 <table class="w-full whitespace-nowrap">
                     <tr class="text-left font-bold bg-blue-500 text-white">
+                        <th class="px-6 py-3 text-center">SKU</th>
                         <th class="px-6 py-3 text-center">Familia</th>
                         <th class="px-6 py-3 text-center">Marca</th>
                         <th class="px-6 py-3 text-center">Modelo</th>
-                        <th class="px-6 py-3 text-center"></th>
                         <th class="px-6 py-3 text-center">Acciones</th>
                     </tr>
                     <tr v-for="product in products.data" :key="product.id"
                         class="hover:bg-gray-100 focus-within:bg-gray-100 text-sm ">
+                        <td class="border-t px-6 py-4 text-center">
+                               {{ product.sku }} 
+                        </td>
                         <td class="border-t px-6 py-4 text-center">
                             {{ product.family.nombre }}
                         </td>
@@ -128,9 +136,6 @@
                         </td>
                         <td class="border-t px-6 py-4 text-center">
                             {{ product.modelo }}
-                        </td>
-                        <td class="border-t px-6 py-4 text-center">
-                            
                         </td>
                         <td class="border-t px-6 py-4 ">
                             <div class="flex justify-center">
@@ -425,6 +430,10 @@ export default defineComponent({
 
             if (this.filter.label_id) {
                 filter += `&label_id=${JSON.stringify(this.filter.label_id)}`
+            }
+
+            if (this.filter.sku) {
+                filter += `&sku=${JSON.stringify(this.filter.sku)}`
             }
 
             const get = `${route('products.list')}?${filter}`

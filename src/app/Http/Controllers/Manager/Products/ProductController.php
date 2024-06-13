@@ -34,6 +34,11 @@ class ProductController extends Controller
         /** Filtros */
         $length = request('length');
 
+        if(request('sku')){
+            $sku = json_decode(request('sku'));
+            $result->where('sku',$sku);
+        }
+
         if(request('modelo')){
             $modelo = json_decode(request('modelo'));
             $result->where('modelo','LIKE','%'.$modelo.'%');

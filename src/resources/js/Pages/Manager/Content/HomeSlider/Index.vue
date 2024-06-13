@@ -230,10 +230,12 @@
             openDialogSearchImg() {
                 this.$refs.import_file.click()
             },
+            
             previewImage(e) {
                 const file = e.target.files[0];
                 this.url = URL.createObjectURL(file);
             },     
+
             async uploadImage(){
                 this.loading = true
                 let data = {}
@@ -247,8 +249,8 @@
                     const config = {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     };
-                    
-                    const response = await axios.post(route('content.slider.store', this.form, config));
+                     
+                    const response = await axios.post(route('content.slider.store'), formData, config);
                     if (response.status == 200) {
                         data.message = response.data.message
                         data.labelType = 'success'
@@ -261,37 +263,17 @@
                     data.labelType = 'danger'
                 }
 
-                //let formData = new FormData();
-
-                //formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
-                //formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
-
-                // Configura el header para el contenido multipart/form-data
-                //const config = {
-                //    headers: { 'Content-Type': 'multipart/form-data' }
-                //};
-                
-                //const response = await axios.post(route('content.slider.store'), formData, config)
-
-                //const data = response.data
                 this.loading = false
                 this.url  = null
                 this.form = {}
                 
                 this.getSliderItems();
                 this.$emit('message', data)
-            },
+            },  
+
             async deleteItem(itemId){
                 let data = {}
                 try {
-                    /* let formData = new FormData();
-                    formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
-                    formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
-
-                    // Configura el header para el contenido multipart/form-data
-                    const config = {
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                    }; */
                     
                     const response = await axios.post(route('content.slider.delete', itemId))
                     if (response.status == 200) {

@@ -53,10 +53,14 @@
                                     </div>
                                 </div>
                                 
-                                <div class="mt-3 overflow-wrap-normal blog-content" v-html="post.content"></div>
-                                <button @click="editPost(post.id)" class="mt-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Editar
-                                </button>
+                                <!-- <div class="mt-3 overflow-wrap-normal blog-content" v-html="post.content"></div> -->
+                                <div class="mt-3 overflow-wrap-normal blog-content" v-html="truncateContent(post.content)"></div>
+                                <div class="flex justify-between items-center mt-4 ">  
+                                    <button @click="editPost(post.id)" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Editar
+                                    </button>
+                                    <a class="hover:underline py-2 px-4 text-sm font-medium" target="_blank" :href="route('blog.single', post.slug)" >Ver Nota</a>
+                                </div>
                             </div>
                         </div>
                         <Pagination :links="posts.links" class="flex justify-end mx-5 mb-5" />
@@ -133,7 +137,14 @@
             clearMessage() {
                 this.toastMessage = ""
             },
-            
+
+            truncateContent(content) {
+                const limit = 400;
+                if (content.length > limit) {
+                    return content.substring(0, limit) + '...';
+                }
+                return content;
+            },            
 
         },
     
