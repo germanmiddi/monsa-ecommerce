@@ -36,8 +36,8 @@ class OrderController extends Controller
                     'orderitems_order_id'   => $order->id,
                     'orderitems_product_id' => $item['id'],
                     'quantity'   => 1, //$item['quantity'],
-                    'price'      => $item['precio'],
-                    'total'      => $item['precio']
+                    'price'      => $item['price_public'],
+                    'total'      => $item['price_public']
                 ]);
             }
 

@@ -64,6 +64,5 @@ class PostCategoriesTableSeeder extends Seeder
             $category
             );
         }
-        ]);
     }
 }

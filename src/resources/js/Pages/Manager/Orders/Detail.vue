@@ -38,7 +38,7 @@
                     <div class="card">
                         <div class="border-b flex justify-between items-center">
                             <div class="card-title-text">Resumen del Pedido</div>
-                            <div class="p-4">(1 Items)</div>
+                            <div class="p-4">{{ order.items.length }} Items</div>
                         </div>
                         <div class="card-body text-sm px-4 py-5">
                             <table class="w-full mt-2">
@@ -62,11 +62,11 @@
                             <table class="w-full mt-2">
                                 <tr>
                                     <td class="w-5/6">Subtotal</td>
-                                    <td class="w-1/6 text-right">$ </td>
+                                    <td class="w-1/6 text-right">{{formattedPrice( Number(subtotal) )}}</td>
                                 </tr>
                                 <tr>
                                     <td class="w-5/6">Shipping</td>
-                                    <td class="w-1/6 text-right">$ 0.00</td>
+                                    <td class="w-1/6 text-right">{{formattedPrice( Number(order.shipments[0].price_incl_tax) )}}</td>
                                 </tr>
                                 <!-- <tr>
                                     <td class="w-5/6">Tax</td>
@@ -108,7 +108,7 @@
                         <div class="border-b flex justify-between items-center">
                             <div class="card-title-text">Información del Envio</div>
                             <div class="flex"> 
-                                <a href="#" class="bg-gray-100 btn-default m-4">Guia</a>
+                                <button @click="getShipmentLabel" class="bg-gray-100 btn-default m-4">Guia</button>
                                 <!-- <a href="#" class="bg-gray-100 btn-default m-4">FC Comercial</a> -->
                             </div>
                         </div>
@@ -121,13 +121,13 @@
                                     
                                 </tr>
                                 <tr>
-                                    <td class="text-center">{{formatDateDDMMYYYY(order.created_at)}}</td>
+                                    <td class="text-center">{{formatDateDDMMYYYY(order.shipments[0].created_at)}}</td>
                                     <td class="font-bold text-center">
-                                        <a href="https://app.zippin.com.ar/track/947967464abf8b8533eefe8c9e860f72abff449c">01hqw65k9tpc3r5k029tpy60pk</a> 
+                                        <a target="_blank" class="hover:underline" :href="order.shipments[0].tracking_url">{{ order.shipments[0].delivery_id }}</a> 
                                     </td>
-                                    <td class="text-center flex align-middle">
-                                        <div >Toparco</div>
-                                        <img src="https://zippincore.s3.amazonaws.com/carriers/toparco/ae26g7uhgPg4xqTH775QblR11EDNDR3SVGenRk1v.png" class="h-9"/>    
+                                    <td class="text-center flex flex-col align-middle items-center">
+                                        <div >{{ order.shipments[0].carrier_name }}</div>
+                                        <img :src="order.shipments[0].carrier_logo" class="w-1/2"/>    
 
                                     </td>
                                 </tr>
@@ -166,7 +166,7 @@
                                         Envio:
                                     </td>
                                     <td>
-                                        Procesando
+                                        {{ order.shipments[0].status_name }}    
                                     </td>
                                 </tr>
                             </table>
@@ -227,7 +227,11 @@ export default defineComponent({
         order: {
             type: Object,
             required: true
-        }
+        },
+        subtotal: {
+            type: Number,
+            required: true
+        },
     },
     components: {
         CheckCircleIcon,
@@ -237,8 +241,8 @@ export default defineComponent({
     data() {
 
         return {
-            orders: {},
-            items: [],
+            // orders: {},
+            // items: [],
             open: false,
             toastMessage: "",
             labelType: "info",
@@ -260,6 +264,43 @@ export default defineComponent({
         }
     },
     methods: {
+        async getShipmentLabel() {
+            try {
+                
+                const response = await axios.get(`/manager/shipments/${this.order.shipments[0].shipment_id}/documentation`, {
+                                                    params: {
+                                                        what: 'label',
+                                                        format: 'pdf'
+                                                    }
+                                                });
+
+                if (response.data && response.data.body) {
+                // Crear un Blob con el contenido Base64
+                    const byteCharacters = atob(response.data.body);
+                    const byteNumbers = new Array(byteCharacters.length);
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+                    const blob = new Blob([byteArray], {type: 'application/pdf'});
+
+                    // Crear una URL para el Blob
+                    const fileURL = URL.createObjectURL(blob);
+
+                    // Abrir el PDF en una nueva pestaña
+                    window.open(fileURL, '_blank');
+                } else {
+                    this.toastMessage = "No se pudo obtener la etiqueta del envío.";
+                    this.labelType = "error";
+                }
+
+            } catch (error) {
+                console.error('Error al obtener la etiqueta:', error);
+                this.toastMessage = "Error al obtener la etiqueta del envío.";
+                this.labelType = "error";
+            }
+        },
+            
         clearMessage() {
             this.toastMessage = ""
         },

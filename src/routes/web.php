@@ -19,10 +19,13 @@ use App\Http\Controllers\Manager\Clients\ClientController;
 use App\Http\Controllers\Manager\Products\ProductController as ManagerProductController;
 use App\Http\Controllers\Manager\Content\ContentController;
 use App\Http\Controllers\Manager\Settings\SettingsController;
+use App\Http\Controllers\Manager\Shipments\ShipmentController;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Settings;
 use App\Http\Controllers\Manager\Import\ImportController;
 
 /* Frontoffice */
+
+
 Route::get('/',[HomeController::class, 'index'])->name('home');
 
 Route::get('/nosotros',[AboutusController::class, 'index'])->name('aboutus');
@@ -53,6 +56,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orders', [OrderController::class, 'index'])->name('orders');
         Route::get('/orders/list', [OrderController::class, 'list'])->name('orders.list');
         Route::get('/orders/{order}/detail', [OrderController::class, 'detail'])->name('orders.detail');
+
+        Route::get('/shipments/{shipment}/documentation', [ShipmentController::class, 'getDocumentation']);
 
         Route::get('/clients', [ClientController::class, 'index'])->name('clients');
         Route::get('/clients/list', [ClientController::class, 'list'])->name('clients.list');

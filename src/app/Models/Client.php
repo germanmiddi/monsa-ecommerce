@@ -18,7 +18,11 @@ class Client extends Model
         'address',
         'city',
         'state',
-        'zip'
+        'zip',
+        'document',
+        'street_num',
+        'street_extras',
+        'cuit'
     ];
 
     public function orders()

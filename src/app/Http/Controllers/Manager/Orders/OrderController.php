@@ -34,7 +34,8 @@ class OrderController extends Controller
     public function detail(Order $order)
     {
         return inertia('Manager/Orders/Detail', [
-            'order' => $order->load('client', 'items', 'items.product', 'status'),
+            'order' => $order->load('client', 'items', 'items.product', 'status', 'shipments'),
+            'subtotal' => $order->items->sum(fn ($item) => $item->total),
         ]);
     }
 }

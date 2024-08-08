@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Web\Client\ClientController;
 use App\Http\Controllers\Web\Order\OrderController;
+use App\Services\DeliveryService;
 
 use App\Models\Order;
 
@@ -59,6 +61,7 @@ class CheckoutController extends Controller
         
         $clientController = new ClientController();
         $client = $clientController->store($request->customerDetails);
+        Log::info('Client created: ' . json_encode($client));
 
         if(!isset($client->id)){
             return response()->json(['message' => 'Error creating client', 'response' => $client], 500);
@@ -66,7 +69,8 @@ class CheckoutController extends Controller
         
         $orderController = new OrderController();
         $order = $orderController->store($client->id, $request->totalPrice, $request->cartItems);
-        
+        Log::info('Order created: ' . json_encode($order->content()));
+
         $response = json_decode($order->content());
 
         if($order->status() != 201){
@@ -75,7 +79,20 @@ class CheckoutController extends Controller
                 
         $newOrder = $response->order;
 
+        // Crear envío
+        $deliveryService = app(DeliveryService::class);
+        try {
+            $shipment = $deliveryService->createShipment($newOrder, $client, $request->cartItems);
+            Log::info('Shipment created: ' . json_encode($shipment));
+            // Aquí podrías actualizar la orden con los datos del envío si es necesario
+            // $orderController->updateShipmentInfo($newOrder->id, $shipment);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error creating shipment', 'error' => $e->getMessage()], 500);
+        }        
+
+
         $payment = $this->payment($request, $newOrder->id);
+        Log::info('Payment created: ' . json_encode($payment->content()));
 
         $responsePayment = json_decode($payment->content());
 
@@ -84,7 +101,8 @@ class CheckoutController extends Controller
         }
 
         return response()->json(['message'  => 'Proceso finalizado', 
-                                 'payment' => $responsePayment->payment ]);
+                                 'payment' => $responsePayment->payment,
+                                 'shipment' => $shipment ?? null ]);
 
     }
 
@@ -110,6 +128,7 @@ class CheckoutController extends Controller
 
         $params = $this->_buildPaymentData($request->all(), $order_id);
 
+        Log::info('Payment data: ' . json_encode($params));
         $http_post = Http::withHeaders([ 'Authorization' => 'Bearer ' . $token,
                                          'Content-Type'  => 'application/json'])
                            ->post($url, $params);
@@ -219,64 +238,77 @@ class CheckoutController extends Controller
      
     }
 
-    private function _buildDeliveryRequestData($request)
-    {
-        $items = array_map(function($item) {
-            return [
-                "sku" => $item['sku'],
-                "weight" => $item['peso'] == 0 ? 10 : $item['peso'],
-                "height" => $item['alto'] == 0 ? 10 : $item['alto'],
-                "width" => $item['ancho'] == 0 ? 10 : $item['ancho'],
-                "length" => $item['largo'] == 0 ? 10 : $item['largo'],
-                "description" => $item['nombre'],
-                "classification_id" => 1 //$item['classification_id']
-            ];
-        }, $request['items']);
+    // private function _buildDeliveryRequestData($request)
+    // {
+    //     $items = array_map(function($item) {
+    //         return [
+    //             "sku" => $item['sku'],
+    //             "weight" => $item['peso'] == 0 ? 10 : $item['peso'],
+    //             "height" => $item['alto'] == 0 ? 10 : $item['alto'],
+    //             "width" => $item['ancho'] == 0 ? 10 : $item['ancho'],
+    //             "length" => $item['largo'] == 0 ? 10 : $item['largo'],
+    //             "description" => $item['nombre'],
+    //             "classification_id" => 1 //$item['classification_id']
+    //         ];
+    //     }, $request['items']);
         
-        return [
-            "account_id" => "12222",
-            "origin_id" => "345752",
-            "declared_value" => $request['total'],
-            "items" => $items,
-            "destination" => [
-                "city" => $request['city'],
-                "state" => $request['state'],
-                "zipcode" => $request['zip']
-            ]
-        ];
-    }
+    //     return [
+    //         "account_id" => "12222",
+    //         "origin_id" => "345752",
+    //         "declared_value" => $request['total'],
+    //         "items" => $items,
+    //         "destination" => [
+    //             "city" => $request['city'],
+    //             "state" => $request['state'],
+    //             "zipcode" => $request['zip']
+    //         ]
+    //     ];
+    // }
     
+    // public function calcDelivery(Request $request)
+    // {
+
+    //     // Construir los datos de la solicitud
+    //     $requestData = $this->_buildDeliveryRequestData($request->form);
+
+    //     // Username y Password de la autenticación básica
+    //     $username = env('ZIPPIN_API_KEY'); 
+    //     $password = env('ZIPPIN_API_SECRET');
+    
+    //     // Hacer la solicitud a la API externa
+    //     $response = Http::withBasicAuth($username, $password)
+    //                     ->withHeaders([
+    //                         'Accept' => 'application/json',
+    //                         'Content-Type' => 'application/json'
+    //                     ])->post('https://api.zippin.com.ar/v2/shipments/quote', $requestData);
+
+    
+    //     // Verificar si la solicitud fue exitosa
+    //     if ($response->successful()) {
+    //         $data = $response->json();
+    //         $price = $data['results']['standard_delivery']['amounts']['price_incl_tax'];
+
+    //         return response()->json(['message' => 'Delivery calculated successfully', 
+    //                                  'data'    => $data['results'],
+    //                                  'price'   => $price,
+    //                                  'carrier' => $data['results']['standard_delivery']['carrier']
+    //                             ], 200);
+    //     } else {
+    //         return response()->json(['message' => 'Error calculating delivery', 'error' => $response->body()], $response->status());
+    //     }
+    // }
+
     public function calcDelivery(Request $request)
     {
+        // Inyectamos el DeliveryService solo cuando lo necesitamos
+        $deliveryService = app(DeliveryService::class);
 
-        // Construir los datos de la solicitud
-        $requestData = $this->_buildDeliveryRequestData($request->form);
-
-        // Username y Password de la autenticación básica
-        $username = env('ZIPPIN_API_KEY'); 
-        $password = env('ZIPPIN_API_SECRET');
-    
-        // Hacer la solicitud a la API externa
-        $response = Http::withBasicAuth($username, $password)
-                        ->withHeaders([
-                            'Accept' => 'application/json',
-                            'Content-Type' => 'application/json'
-                        ])->post('https://api.zippin.com.ar/v2/shipments/quote', $requestData);
-
-    
-        // Verificar si la solicitud fue exitosa
-        if ($response->successful()) {
-            $data = $response->json();
-            $price = $data['results']['standard_delivery']['amounts']['price_incl_tax'];
-
-            return response()->json(['message' => 'Delivery calculated successfully', 
-                                     'data'    => $data['results'],
-                                     'price'   => $price,
-                                     'carrier' => $data['results']['standard_delivery']['carrier']
-                                ], 200);
-        } else {
-            return response()->json(['message' => 'Error calculating delivery', 'error' => $response->body()], $response->status());
+        try {
+            $result = $deliveryService->calculateDelivery($request->form);
+            return response()->json($result, 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getCode());
         }
-    }
+    }    
     
 }

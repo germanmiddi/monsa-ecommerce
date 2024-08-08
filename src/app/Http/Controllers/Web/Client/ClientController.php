@@ -13,15 +13,19 @@ class ClientController extends Controller
     {
         DB::beginTransaction();
         try {            
-            $client = Client::firstOrCreate([
+            $client = Client::updateOrCreate([
                 'email' => $data['email']
             ], [
-                'fullname'  => $data['fullname'],
-                'cellphone' => $data['cellphone'],
-                'address'   => $data['address'] . ' ' . $data['addressNro'],
-                'city'      => $data['city'],
-                'state'     => $data['state'],
-                'zip'       => $data['zip']
+                'fullname'   => $data['fullname'],
+                'cellphone'  => $data['cellphone'],
+                'address'    => $data['address'],
+                'city'       => $data['city'],
+                'state'      => $data['state'],
+                'zip'        => $data['zip'],
+                'document'   => $data['document'],
+                'street_num' => $data['addressNro'],
+                'street_extras' => $data['addressExtras'],
+                'cuit'       => $data['cuit'],
             ]);
 
             DB::commit();

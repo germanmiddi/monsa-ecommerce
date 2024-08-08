@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('product', function (Blueprint $table) {
-            $table->float('price_public')->nullable(); // Agregar nullable si el campo puede ser opcional
+            $table->text('descripcion')->change();
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('product', function (Blueprint $table) {
-            $table->dropColumn('price_public');
+            $table->string('descripcion', 255)->change();
         });
     }
 };

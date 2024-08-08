@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class AddQueuedAtColumnToQueueMonitorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('product', function (Blueprint $table) {
-            $table->float('price_public')->nullable(); // Agregar nullable si el campo puede ser opcional
+        Schema::table(config('queue-monitor.table'), function (Blueprint $table) {
+            $table->dateTime('queued_at')->nullable()->after('status');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('product', function (Blueprint $table) {
-            $table->dropColumn('price_public');
+        Schema::table(config('queue-monitor.table'), function (Blueprint $table) {
+            $table->dropColumn('queued_at');
         });
     }
-};
+}

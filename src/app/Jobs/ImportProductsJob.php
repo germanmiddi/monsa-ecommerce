@@ -50,7 +50,7 @@ class ImportProductsJob implements ShouldQueue
                 if($product['visibilidad'] === 'oculto'){
                     $is_active = 0;
                 }
-
+                Log::info('price_public' . $product['price_public'] );
                 $productModel = Product::updateOrCreate(
                     ['externalId' => $product['idProducto']],
                     [
@@ -64,7 +64,7 @@ class ImportProductsJob implements ShouldQueue
                         'imagen' => $product['imagen'],
                         'sku'    => $product['sku'],
                         'precio' => $product['precio'],
-                        'public_price' => $product['public_price'],
+                        'price_public' => $product['price_public'],
                         'dimensiones' => $product['dimensiones'],
                         'peso'  => $product['peso'],
                         'stock' => $product['stock'],

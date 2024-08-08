@@ -1,5 +1,5 @@
 export const useFormatPrice = (price) => {
-    return price.toLocaleString('es-AR', {
+  return price.toLocaleString('es-AR', {
       style: 'currency',
       currency: 'ARS',
       minimumFractionDigits: 0,

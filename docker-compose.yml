@@ -31,8 +31,6 @@ services:
   - "3310:3306"
   volumes:
   - newmonsadata:/var/lib/mysq
-  ports: # Agregamos este bloque para mapear el puerto de la base de datos al host
-  - "3310:3306"  
   networks:
   - newmonsa
 

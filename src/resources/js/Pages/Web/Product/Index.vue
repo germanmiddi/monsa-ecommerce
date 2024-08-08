@@ -51,6 +51,11 @@
               <h3 class="sr-only">Description</h3>
               <div class="mt-5 border-t border-gray-200">
                 <dl class="sm:divide-y sm:divide-gray-200">
+                  
+                  <div>
+                    <p class="my-3 text-base text-gray-900">{{ product.descripcion }}</p>
+                  </div>
+
                   <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
                     <dt class="text-sm font-medium text-gray-500">MODELO</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ product.modelo }}</dd>

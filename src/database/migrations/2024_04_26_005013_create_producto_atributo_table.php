@@ -35,6 +35,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('producto_atributo');
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('product_atribute');
+        Schema::enableForeignKeyConstraints();
     }
 };

@@ -152,17 +152,44 @@
                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
               </div>
             </div>
+            
+            <div class="mt-6">
+              <label for="document" class="block text-sm font-medium text-gray-700">Documento</label>
+              <div class="mt-1">
+                <input type="text" id="document" name="document" v-model="form.document" autocomplete="document"
+                  class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <input id="check_factura" v-model="form.checkFactura" aria-describedby="check_factura" name="check_factura" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                </div>
+                <div class="ml-3 text-sm">
+                  <label for="label_check_factura" class="font-medium text-gray-700">Requiere Factura A</label>
+                  <p id="sublabel_check_factura-description" class="text-gray-500 mb-0">Si desea factura A, debe indicar el CUIT.</p>
+                </div>
+              </div>
+
+            </div>
+            <div class="mt-6">
+              <label for="cuit" class="block text-sm font-medium text-gray-700">CUIT</label>
+              <div class="mt-1">
+                <input type="text" id="cuit" name="cuit" v-model="form.cuit" autocomplete="cuit"
+                  class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+              </div>
+            </div>
 
           </section>
 
 
-
-          <section aria-labelledby="shipping-heading" class="mt-10">
+          <section aria-labelledby="shipping-heading" class="mt-10 pt-6 border-t border-gray-200">
             <h2 id="shipping-heading" class="text-lg font-medium text-gray-900">Dirección de Envío</h2>
 
 
             <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-3">
-              <div class="sm:col-span-3">
+              <div class="sm:col-span-2">
                 <label for="address" class="block text-sm font-medium text-gray-700">Dirección</label>
                 <div class="mt-1">
                   <input type="text" id="address" name="address" v-model="form.address" autocomplete="street-address"
@@ -170,10 +197,18 @@
                 </div>
               </div>
 
-              <div class="sm:col-span-3">
-                <label for="addressNro" class="block text-sm font-medium text-gray-700">Nro, Timbre, Dpto.</label>
+              <div>
+                <label for="addressNro" class="block text-sm font-medium text-gray-700">Nro.</label>
                 <div class="mt-1">
                   <input type="text" id="addressNro" name="addressNro" v-model="form.addressNro"
+                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label for="addressExtras" class="block text-sm font-medium text-gray-700">Timbre, Dpto, Otros</label>
+                <div class="mt-1">
+                  <input type="text" id="addressExtras" name="addressExtras" v-model="form.addressExtras"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                 </div>
               </div>
@@ -200,6 +235,7 @@
                   <input type="text" id="zip" name="zip" 
                         v-model="form.zip" autocomplete="zip"
                         class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+             
                 </div>
               </div>
             </div>
@@ -236,7 +272,7 @@
   
 <script>
 
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { ChevronRightIcon, ChevronUpIcon } from '@heroicons/vue/24/solid'
 import { TrashIcon } from '@heroicons/vue/24/outline'
 import { Popover, PopoverButton, PopoverOverlay, PopoverPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
@@ -275,6 +311,9 @@ export default {
     const totalPricewDelivery = computed(() => cart.totalPricewDel);
 
     const formattedPrice = (price) => useFormatPrice(price);
+    
+    //const formattedPrice = (price) => price;
+
     const loading = ref(false)
 
     const submitCheckout = async () => {
@@ -285,7 +324,7 @@ export default {
 
       let response = await axios.post(url, {  customerDetails: form.value,
                                               cartItems: cart.items,
-                                              totalPrice: totalPrice.value
+                                              totalPrice: totalPricewDelivery.value
                                             },
                                             {
                                               headers: {
@@ -295,6 +334,7 @@ export default {
      
       if (response.data.payment.data.checkout_url) {
         window.location.href = response.data.payment.data.checkout_url
+        // console.log(response.data.payment.data.checkout_url)
       }
       
       
@@ -341,7 +381,7 @@ export default {
     
 
     const calcDelivery = async() => {
-
+      loading.value = true
       const post = route('checkout.calcDelivery')
 
       const params = {...form.value, items: cart.items, total: cart.totalPrice};
@@ -353,6 +393,7 @@ export default {
         cart.setDelivery(data.price)
  
       }
+      loading.value = false
 
     }
 
@@ -360,6 +401,15 @@ export default {
       cart.clearCart()
     }
 
+    // Watch for changes in the zip code
+    watch(() => form.value.zip, (newZip) => {
+      if (newZip.length === 4) {
+        calcDelivery()
+      } else if (newZip.length > 4) {
+        // Reset delivery cost if zip code changes after calculation
+        cart.setDelivery(0)
+      }
+    })    
 
     return {
       items,
@@ -373,7 +423,7 @@ export default {
       removeCart,
       loading,
       calcDelivery,
-      clearCart
+      clearCart,
     }
   },
   template: 'none'

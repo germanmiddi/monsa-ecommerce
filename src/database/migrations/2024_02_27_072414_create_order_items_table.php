@@ -21,8 +21,8 @@ return new class extends Migration
             $table->decimal('price', 16, 2);
             $table->decimal('total', 16, 2);
 
-            $table->foreign('orderitems_order_id')->references('id')->on('orders');
-            $table->foreign('orderitems_product_id')->references('id')->on('product');
+            $table->foreign('orderitems_order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('orderitems_product_id')->references('id')->on('product')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

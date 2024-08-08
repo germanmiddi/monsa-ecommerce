@@ -28,7 +28,7 @@ class ImportController extends Controller
     public function import_products(){
 
         $products = $this->_get_products();
-
+        
         if(!$products) {
             return response()->json(['error' => 'An error occurred while trying to fetch products: '], 500);
         }else{
