@@ -11,10 +11,11 @@ use App\Http\Controllers\Web\Cart\CartController;
 use App\Http\Controllers\Web\Checkout\CheckoutController;
 use App\Http\Controllers\Web\Blog\BlogController;
 use App\Http\Controllers\Web\Aboutus\AboutusController;
+use App\Http\Controllers\Web\Order\OrderController;
 
 use App\Http\Controllers\Manager\Dashboard\DashboardController;
 use App\Http\Controllers\Manager\Blog\PostController;
-use App\Http\Controllers\Manager\Orders\OrderController;
+use App\Http\Controllers\Manager\Orders\OrderController as ManagerOrderController;
 use App\Http\Controllers\Manager\Clients\ClientController;
 use App\Http\Controllers\Manager\Products\ProductController as ManagerProductController;
 use App\Http\Controllers\Manager\Content\ContentController;
@@ -42,6 +43,8 @@ Route::get('/checkout/confirmation',[CheckoutController::class, 'confirmation'])
 Route::post('/checkout/calcDelivery',[CheckoutController::class, 'calcDelivery'])->name('checkout.calcDelivery');
 Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout_process');
 
+Route::get('/order/detail',[OrderController::class, 'viewDetail'])->name('order.viewDetail');
+
 /*Backoffice */
 
 Route::middleware(['auth'])->group(function () {
@@ -53,9 +56,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         
-        Route::get('/orders', [OrderController::class, 'index'])->name('orders');
-        Route::get('/orders/list', [OrderController::class, 'list'])->name('orders.list');
-        Route::get('/orders/{order}/detail', [OrderController::class, 'detail'])->name('orders.detail');
+        Route::get('/orders', [ManagerOrderController::class, 'index'])->name('orders');
+        Route::get('/orders/list', [ManagerOrderController::class, 'list'])->name('orders.list');
+        Route::get('/orders/{order}/detail', [ManagerOrderController::class, 'detail'])->name('orders.detail');
 
         Route::get('/shipments/{shipment}/documentation', [ShipmentController::class, 'getDocumentation']);
 

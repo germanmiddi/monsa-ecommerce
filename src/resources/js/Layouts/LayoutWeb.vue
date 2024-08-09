@@ -121,26 +121,55 @@
 					<div class="border-t border-gray-200 py-20">
 						<div class="grid grid-cols-1 md:grid-cols-12 md:grid-flow-col md:gap-x-8 md:gap-y-16 md:auto-rows-min">
 							<!-- Image section -->
-							<div class="col-span-1 md:col-span-2 lg:row-start-1 lg:col-start-1">
-								<!-- <img src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="" class="h-8 w-auto" /> -->
+							<div class="col-span-1 md:col-span-3">
 								<img class="h-8 w-auto" src="/images/monsa-srl-logo.png" />
+								<p class="mt-2">Monsa S.R.L.</p>
+								<p>Av. Castañares 6140 - 1439</p>
+								<p>Ciudad Autónoma de Buenos Aires, Argentina</p>
 							</div>
-	
-							<!-- Sitemap sections -->
-							
-	
-							<!-- Newsletter section -->
-							<div class="mt-12 md:mt-0 md:row-start-2 md:col-start-3 md:col-span-8 lg:row-start-1 lg:col-start-9 lg:col-span-4">
-								<h3 class="text-sm font-medium text-gray-900">Suscribite a nuestro newsletter</h3>
-								<p class="mt-6 text-sm text-gray-500">The latest deals and savings, sent to your inbox weekly.</p>
-								<form class="mt-2 flex sm:max-w-md">
-									<label for="email-address" class="sr-only">Email</label>
+
+							<div class="col-span-1 md:col-span-2">
+								<h3 class="text-sm font-medium text-gray-900">Navegación</h3>
+								<ul class="mt-6 space-y-4">
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Tienda</a></li>
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Nosotros</a></li>
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Novedades</a></li>
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Contacto</a></li>								
+								</ul>
+							</div>
+
+							<div class="col-span-1 md:col-span-3">
+								<h3 class="text-sm font-medium text-gray-900">Información Legal y Adicional</h3>
+								<ul class="mt-6 space-y-4">
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Términos y Condiciones</a></li>
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Política de Privacidad</a></li>
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Política de Devoluciones y Reembolsos</a></li>
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Política de Envíos</a></li>
+									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Preguntas Frecuentes</a></li>
+
+								</ul>
+							</div>
+							<div class="col-span-1 md:col-span-3">
+								<h3 class="text-sm font-bold text-gray-900">Suscribite a nuestro newsletter</h3>
+								<p class="mt-6 text-sm text-gray-500">Recibí las últimas novedades y promociones que tenemos para vos.</p>
+								<form class="flex">
 									<input id="email-address" type="text" autocomplete="email" required="" class="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
 									<div class="ml-4 flex-shrink-0">
-										<button type="submit" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign up</button>
+										<button type="submit" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Suscribirse</button>
 									</div>
 								</form>
+								<!-- Redes sociales -->
+								<div class="mt-6 flex space-x-4">
+									<a href="#" class="text-gray-400 hover:text-gray-500">
+										<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48"><path fill="#039be5" d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"></path><path fill="#fff" d="M26.572,29.036h4.917l0.772-4.995h-5.69v-2.73c0-2.075,0.678-3.915,2.619-3.915h3.119v-4.359c-0.548-0.074-1.707-0.236-3.897-0.236c-4.573,0-7.254,2.415-7.254,7.917v3.323h-4.701v4.995h4.701v13.729C22.089,42.905,23.032,43,24,43c0.875,0,1.729-0.08,2.572-0.194V29.036z"></path></svg>
+									</a>
+									<a href="#" class="text-gray-400 hover:text-gray-500">
+										<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48"><radialGradient id="yOrnnhliCrdS2gy~4tD8ma_Xy10Jcu1L2Su_gr1" cx="19.38" cy="42.035" r="44.899" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fd5"></stop><stop offset=".328" stop-color="#ff543f"></stop><stop offset=".348" stop-color="#fc5245"></stop><stop offset=".504" stop-color="#e64771"></stop><stop offset=".643" stop-color="#d53e91"></stop><stop offset=".761" stop-color="#cc39a4"></stop><stop offset=".841" stop-color="#c837ab"></stop></radialGradient><path fill="url(#yOrnnhliCrdS2gy~4tD8ma_Xy10Jcu1L2Su_gr1)" d="M34.017,41.99l-20,0.019c-4.4,0.004-8.003-3.592-8.008-7.992l-0.019-20	c-0.004-4.4,3.592-8.003,7.992-8.008l20-0.019c4.4-0.004,8.003,3.592,8.008,7.992l0.019,20	C42.014,38.383,38.417,41.986,34.017,41.99z"></path><radialGradient id="yOrnnhliCrdS2gy~4tD8mb_Xy10Jcu1L2Su_gr2" cx="11.786" cy="5.54" r="29.813" gradientTransform="matrix(1 0 0 .6663 0 1.849)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4168c9"></stop><stop offset=".999" stop-color="#4168c9" stop-opacity="0"></stop></radialGradient><path fill="url(#yOrnnhliCrdS2gy~4tD8mb_Xy10Jcu1L2Su_gr2)" d="M34.017,41.99l-20,0.019c-4.4,0.004-8.003-3.592-8.008-7.992l-0.019-20	c-0.004-4.4,3.592-8.003,7.992-8.008l20-0.019c4.4-0.004,8.003,3.592,8.008,7.992l0.019,20	C42.014,38.383,38.417,41.986,34.017,41.99z"></path><path fill="#fff" d="M24,31c-3.859,0-7-3.14-7-7s3.141-7,7-7s7,3.14,7,7S27.859,31,24,31z M24,19c-2.757,0-5,2.243-5,5	s2.243,5,5,5s5-2.243,5-5S26.757,19,24,19z"></path><circle cx="31.5" cy="16.5" r="1.5" fill="#fff"></circle><path fill="#fff" d="M30,37H18c-3.859,0-7-3.14-7-7V18c0-3.86,3.141-7,7-7h12c3.859,0,7,3.14,7,7v12	C37,33.86,33.859,37,30,37z M18,13c-2.757,0-5,2.243-5,5v12c0,2.757,2.243,5,5,5h12c2.757,0,5-2.243,5-5V18c0-2.757-2.243-5-5-5H18z"></path>
+										</svg>
+									</a>
+								</div>
 							</div>
+
 						</div>
 					</div>
 	
@@ -149,7 +178,8 @@
 					</div>
 				</div>
 			</footer>
-		</div>
+			<whatsappbtn links="https://whatwsapp"/>
+		</div>	
 	</template>
 	
 	<script>
@@ -172,7 +202,7 @@
 	//  import { MenuIcon, QuestionMarkCircleIcon, SearchIcon, ShoppingBagIcon, XIcon } from '@heroicons/vue/24/solid'
 	import { ShoppingBagIcon } from '@heroicons/vue/24/solid'
 	import { useCartStore } from '../Stores/useCartStore'
-
+	import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
 	const navigation = {
 		pages: [
 			{ name: 'Tienda', href: 'store' },
@@ -212,11 +242,9 @@
 			TabPanels,
 			TransitionChild,
 			TransitionRoot,
-			// MenuIcon,
-			// QuestionMarkCircleIcon,
-			// SearchIcon,
 			ShoppingBagIcon,
-			// XIcon,
+			Whatsappbtn
+
 		},
 		setup() {
 			const open = ref(false)

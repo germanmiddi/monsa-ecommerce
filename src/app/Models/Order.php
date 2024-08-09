@@ -20,6 +20,7 @@ class Order extends Model
         'delivery_traking_number',
         'delivery_status',
         'delivery_amount',
+        'subtotal',
         'total'
     ];
 

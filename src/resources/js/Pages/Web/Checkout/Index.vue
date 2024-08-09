@@ -135,7 +135,8 @@
               <div class="mt-1">
                 <input type="text" id="fullname" name="fullname" v-model="form.fullname"
                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-              </div>
+                  <p v-if="v$.form.fullname.$error" class="text-red-600 text-sm mt-1">{{ v$.form.fullname.$errors[0].$message }}</p>
+                </div>
             </div>
 
             <div class="mt-6">
@@ -143,6 +144,7 @@
               <div class="mt-1">
                 <input type="email" id="email-address" name="email-address" v-model="form.email" autocomplete="email"
                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                  <p v-if="v$.form.email.$error" class="text-red-600 text-sm mt-1">{{ v$.form.email.$errors[0].$message }}</p>
               </div>
             </div>
             <div class="mt-6">
@@ -150,6 +152,7 @@
               <div class="mt-1">
                 <input type="text" id="cellphone" name="cellphone" v-model="form.cellphone" autocomplete="phone"
                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                  <p v-if="v$.form.cellphone.$error" class="text-red-600 text-sm mt-1">{{ v$.form.cellphone.$errors[0].$message }}</p>                  
               </div>
             </div>
             
@@ -158,7 +161,8 @@
               <div class="mt-1">
                 <input type="text" id="document" name="document" v-model="form.document" autocomplete="document"
                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-              </div>
+                  <p v-if="v$.form.document.$error" class="text-red-600 text-sm mt-1">{{ v$.form.document.$errors[0].$message }}</p>
+                </div>
             </div>
 
             <div class="mt-6">
@@ -178,7 +182,9 @@
               <div class="mt-1">
                 <input type="text" id="cuit" name="cuit" v-model="form.cuit" autocomplete="cuit"
                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-              </div>
+                  <p v-if="v$.form.cuit.$error" class="text-red-600 text-sm mt-1">{{ v$.form.cuit.$errors[0].$message }}</p>
+                </div>
+
             </div>
 
           </section>
@@ -194,6 +200,7 @@
                 <div class="mt-1">
                   <input type="text" id="address" name="address" v-model="form.address" autocomplete="street-address"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <p v-if="v$.form.address.$error" class="text-red-600 text-sm mt-1">{{ v$.form.address.$errors[0].$message }}</p>
                 </div>
               </div>
 
@@ -202,6 +209,7 @@
                 <div class="mt-1">
                   <input type="text" id="addressNro" name="addressNro" v-model="form.addressNro"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <p v-if="v$.form.addressNro.$error" class="text-red-600 text-sm mt-1">{{ v$.form.addressNro.$errors[0].$message }}</p>                    
                 </div>
               </div>
 
@@ -218,6 +226,7 @@
                 <div class="mt-1">
                   <input type="text" id="city" name="city" autocomplete="address-level2" v-model="form.city"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <p v-if="v$.form.city.$error" class="text-red-600 text-sm mt-1">{{ v$.form.city.$errors[0].$message }}</p>
                 </div>
               </div>
 
@@ -226,6 +235,7 @@
                 <div class="mt-1">
                   <input type="text" id="state" name="state" autocomplete="address-level1" v-model="form.state"
                     class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <p v-if="v$.form.state.$error" class="text-red-600 text-sm mt-1">{{ v$.form.state.$errors[0].$message }}</p>
                 </div>
               </div>
 
@@ -235,7 +245,7 @@
                   <input type="text" id="zip" name="zip" 
                         v-model="form.zip" autocomplete="zip"
                         class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-             
+                  <p v-if="v$.form.zip.$error" class="text-red-600 text-sm mt-1">{{ v$.form.zip.$errors[0].$message }}</p>
                 </div>
               </div>
             </div>
@@ -279,9 +289,11 @@ import { Popover, PopoverButton, PopoverOverlay, PopoverPanel, TransitionChild, 
 import { useCartStore } from '../../../Stores/useCartStore'
 import { useFormatPrice } from '@/Composables/useFormatPrice.js'
 import { useBuildImg } from '@/Composables/useBuildImg.js'
-
 import Icons from '@/Layouts/Components/Icons.vue'
-// const formattedPrice = useFormatPrice(price);
+
+import useVuelidate from '@vuelidate/core';
+import { required, email, helpers } from '@vuelidate/validators';
+
 
 const steps = [
   { name: 'Carrito', href: '#', status: 'complete' },
@@ -309,49 +321,10 @@ export default {
     const totalPrice = computed(() => cart.totalPrice);
     const delivery = computed(() => cart.delivery);
     const totalPricewDelivery = computed(() => cart.totalPricewDel);
-
     const formattedPrice = (price) => useFormatPrice(price);
-    
-    //const formattedPrice = (price) => price;
-
     const loading = ref(false)
 
-    const submitCheckout = async () => {
-      loading.value = true
-      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-      const url = route('checkout_process')
-
-      let response = await axios.post(url, {  customerDetails: form.value,
-                                              cartItems: cart.items,
-                                              totalPrice: totalPricewDelivery.value
-                                            },
-                                            {
-                                              headers: {
-                                                        'X-CSRF-TOKEN': csrfToken 
-                                                      }
-                                            })
-     
-      if (response.data.payment.data.checkout_url) {
-        window.location.href = response.data.payment.data.checkout_url
-        // console.log(response.data.payment.data.checkout_url)
-      }
-      
-      
-      // window.location.href = "http://localhost:8899/checkout/confirmation?token=Gf1QkuOybbFGiUr%2BrmyyOg%3D%3D%3AYfuGhUBEO41o0s%2BcM1OzwA%3D%3D"
-      
-      // console.log(response.data)
-      // loading.value = false
-
-      return 
-
-    }
-
-    const removeCart = (id) => {
-      cart.removeItem(id)
-    }
-
-    let form = ref({
+    const form = ref({
       fullname: '',
       email: '',
       cellphone: '',
@@ -359,9 +332,77 @@ export default {
       city: '',
       state: '',
       zip: '',
-      addressNro: ''
-    })
-    
+      addressNro: '',
+      addressExtras: '',
+      document: '',
+      cuit: '',
+      checkFactura: false
+    });
+
+    const rules = {
+      form: {
+        fullname: { required: helpers.withMessage('El nombre es obligatorio', required) },
+        email: { 
+          required: helpers.withMessage('El email es obligatorio', required),
+          email: helpers.withMessage('Por favor, ingrese un email válido', email)
+        },
+        cellphone: { required: helpers.withMessage('El teléfono es obligatorio', required) },
+        document: { required: helpers.withMessage('El documento es obligatorio', required) },
+        cuit: { 
+          required: helpers.withMessage('El CUIT es obligatorio cuando se requiere factura A', (value) => {
+            return !form.value.checkFactura || !!value
+          })
+        },          
+        address: { required: helpers.withMessage('La dirección es obligatoria', required) },
+        addressNro: { required: helpers.withMessage('El Nro es obligatorio', required) },
+        city: { required: helpers.withMessage('La ciudad es obligatoria', required) },
+        state: { required: helpers.withMessage('La provincia es obligatoria', required) },
+        zip: { required: helpers.withMessage('El código postal es obligatorio', required) },
+     
+      }
+    }
+
+    const v$ = useVuelidate(rules, { form })
+
+    const submitCheckout = async () => {
+      const isFormCorrect = await v$.value.$validate()
+
+      if (isFormCorrect) {
+        loading.value = true
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  
+        const url = route('checkout_process')
+        try {
+
+          let response = await axios.post(url, {  customerDetails: form.value,
+                                                  cartItems: cart.items,
+                                                  totalPrice: totalPricewDelivery.value
+                                                },
+                                                {
+                                                  headers: {
+                                                            'X-CSRF-TOKEN': csrfToken 
+                                                          }
+                                                })
+        
+          if (response.data.payment.data.checkout_url) {
+            cart.clearCart()
+            console.log(response.data.payment.data.checkout_url)
+            window.location.href = response.data.payment.data.checkout_url
+          }
+        } catch (error) {
+          console.error('Error during checkout:', error)
+          // Handle error (e.g., show error message to user)
+        } finally {
+          loading.value = false
+        }
+        
+      }      
+    }
+
+    const removeCart = (id) => {
+      cart.removeItem(id)
+    }
+
     const items = computed(() =>
       cart.items.map((item) => {
         const imgList = JSON.parse(item.imagen);
@@ -383,18 +424,21 @@ export default {
     const calcDelivery = async() => {
       loading.value = true
       const post = route('checkout.calcDelivery')
-
-      const params = {...form.value, items: cart.items, total: cart.totalPrice};
-      const response = await axios.post(post, { form: params })
-      const data = response.data
-            
-      if (response.status == 200) {
-        console.log(data.price)
-        cart.setDelivery(data.price)
- 
+      try {
+        const params = {...form.value, items: cart.items, total: cart.totalPrice};
+        const response = await axios.post(post, { form: params })
+        const data = response.data
+              
+        if (response.status == 200) {
+          console.log(data.price)
+          cart.setDelivery(data.price)
+        }
+      } catch (error) {
+        console.error('Error calculating delivery:', error)
+        // Handle error (e.g., show error message to user)
+      } finally {
+        loading.value = false
       }
-      loading.value = false
-
     }
 
     const clearCart = () => {
@@ -412,6 +456,7 @@ export default {
     })    
 
     return {
+      v$,
       items,
       delivery,
       steps,

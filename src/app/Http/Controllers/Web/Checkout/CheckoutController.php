@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
+use App\Mail\OrderConfirmation;
 use App\Http\Controllers\Web\Client\ClientController;
 use App\Http\Controllers\Web\Order\OrderController;
 use App\Services\DeliveryService;
@@ -31,8 +33,7 @@ class CheckoutController extends Controller
 
     public function confirmation(Request $request)
     {
-        
-        // Asumiendo que has obtenido el token de la URL
+     
         $token = $request->token;
 
         $secretKey = env('SECRET_KEY');
@@ -43,8 +44,7 @@ class CheckoutController extends Controller
         $iv = base64_decode($iv);
 
         $order_id = openssl_decrypt($encrypted_data, $cipher, $secretKey, 0, $iv);
-        // dd($order_id);
-
+        
         return  Inertia::render('Web/Checkout/Confirmation',[ 
                                     'order' => Order::where('id', $order_id)
                                                      ->with('items', 'client', 'items.product')
@@ -82,16 +82,20 @@ class CheckoutController extends Controller
         // Crear envío
         $deliveryService = app(DeliveryService::class);
         try {
+            //Se crea el envio
             $shipment = $deliveryService->createShipment($newOrder, $client, $request->cartItems);
             Log::info('Shipment created: ' . json_encode($shipment));
-            // Aquí podrías actualizar la orden con los datos del envío si es necesario
-            // $orderController->updateShipmentInfo($newOrder->id, $shipment);
+            
+            //Se actualiza la orden con la info del envio
+            $order = $orderController->update($newOrder->id, $shipment->id);
+            $response = json_decode($order->content());
+            $newOrder = $response->order;
+
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error creating shipment', 'error' => $e->getMessage()], 500);
         }        
 
-
-        $payment = $this->payment($request, $newOrder->id);
+        $payment = $this->payment($request, $newOrder->id, $newOrder->delivery_amount);
         Log::info('Payment created: ' . json_encode($payment->content()));
 
         $responsePayment = json_decode($payment->content());
@@ -100,13 +104,18 @@ class CheckoutController extends Controller
             return response()->json(['message' => $responsePayment->message, 'error' => $responsePayment->error], 500);
         }
 
+        if($payment->status() == 200){
+            // Envía el correo electrónico de confirmación
+            Mail::to($client->email)->send(new OrderConfirmation($newOrder, $client, $shipment ?? null));
+        }
+
         return response()->json(['message'  => 'Proceso finalizado', 
-                                 'payment' => $responsePayment->payment,
+                                 'payment'  => $responsePayment->payment,
                                  'shipment' => $shipment ?? null ]);
 
     }
 
-    public function payment(Request $request, $order_id)
+    public function payment(Request $request, $order_id, $delivery_amount)
     {        
         
         $get_token_url = 'https://homoservices.apinaranja.com/security-ms/api/security/auth0/b2b/m2ms';
@@ -126,7 +135,7 @@ class CheckoutController extends Controller
 
         $url    = 'https://e3-api.ranty.io/ecommerce/payment_request/external';
 
-        $params = $this->_buildPaymentData($request->all(), $order_id);
+        $params = $this->_buildPaymentData($request->all(), $order_id, $delivery_amount);
 
         Log::info('Payment data: ' . json_encode($params));
         $http_post = Http::withHeaders([ 'Authorization' => 'Bearer ' . $token,
@@ -144,16 +153,12 @@ class CheckoutController extends Controller
                          
     }
     
-    private function _buildPaymentData($request, $order_id)
+    private function _buildPaymentData($request, $order_id, $delivery_amount)
     {
 
-        $items = $this->_generateItems($request['cartItems']);
+        $items = $this->_generateItems($request['cartItems'], $delivery_amount);
         $callback_url = $this->_generateCallbackUrl($order_id);
-
-        $total = array_reduce($items, function($carry, $item) {
-            return $carry + $item['unit_price']['value'];
-        }, 0);
-        $total = number_format($total, 2, '.', '');
+        $total = number_format($request['totalPrice'], 2, '.', '');
 
 
         return [
@@ -196,7 +201,7 @@ class CheckoutController extends Controller
 
     }
 
-    public function _generateItems($cartItems){
+    public function _generateItems($cartItems, $delivery_amount){
 
         $items = array_map(function($i){
             return[
@@ -213,6 +218,19 @@ class CheckoutController extends Controller
             ];
         }, $cartItems);
         
+        $items = array_merge($items, [
+            [
+                "id" => "883628",
+                "name" => "Envío",
+                "description" => "Envío a domicilio",
+                "quantity"    => 1,
+                "unit_price"  => [
+                    "currency" => "ARS",
+                    "value"    => $delivery_amount
+                ]
+            ]
+        ]);
+
         return $items;
     }
 
