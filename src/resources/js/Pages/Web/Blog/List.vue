@@ -1,15 +1,22 @@
 <template>
+  <!--eslint-disable  -->
+    <div class="flex-grow min-h-full mb-12 relative">
+        <!-- Fondo decorativo -->
+        <div class="absolute inset-0 bg-gradient-to-b from-monsa-blue to-blue-900 w-full z-0 h-96   overflow-hidden">
+            <div class="section px-6 py-20 md:py-60 w-full" style="background:url('/images/v.png'); opacity:0.05">
+            </div>
+        </div>
+        <!-- Contenido del post -->
+        <div class="relative z-10 pt-24">
+                <div class="flex justify-center">
+                  <div class="text-4xl text-white tracking-tight font-extrabold uppercase">Novedades</div>
+                </div>
+        </div>
+    </div>   
 <!-- This example requires Tailwind CSS v2.0+ -->
-<div class="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
-    <div class="absolute inset-0">
-      <div class="bg-white h-1/3 sm:h-2/3"></div>
-    </div>
-    <div class="relative max-w-7xl mx-auto">
-      <div class="text-center">
-        
-        <h2 class="text-3xl tracking-tight font-extrabold sm:text-4xl uppercase text-gray-800 bg-monsa-yellow py-1 px-2 rounded-sm">Novedades</h2>
-        <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa libero labore natus atque, ducimus sed.</p>
-      </div>
+<div class="relative bg-white pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+
+   <div class="relative max-w-7xl mx-auto">
 
       <div v-for="post in posts.data" :key="post.id"  class="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
         <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">

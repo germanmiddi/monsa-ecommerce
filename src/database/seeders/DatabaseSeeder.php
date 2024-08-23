@@ -23,9 +23,6 @@ class DatabaseSeeder extends Seeder
             
         ]);
         
-        
-
-        
         User::firstOrCreate([
             'email' => 'g@gmail.com'
         ], [

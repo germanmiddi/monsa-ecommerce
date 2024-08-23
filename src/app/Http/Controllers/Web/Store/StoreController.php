@@ -8,9 +8,21 @@ use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Family;
 use App\Models\Brand;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 class StoreController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!config('app.store_active')) {
+                throw new NotFoundHttpException();
+            }
+            return $next($request);
+        });
+    }
+    
     /**
      * Display the home page.
      *

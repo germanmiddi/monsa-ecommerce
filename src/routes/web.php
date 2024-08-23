@@ -12,6 +12,7 @@ use App\Http\Controllers\Web\Checkout\CheckoutController;
 use App\Http\Controllers\Web\Blog\BlogController;
 use App\Http\Controllers\Web\Aboutus\AboutusController;
 use App\Http\Controllers\Web\Order\OrderController;
+use App\Http\Controllers\Web\Contact\ContactController;
 
 use App\Http\Controllers\Manager\Dashboard\DashboardController;
 use App\Http\Controllers\Manager\Blog\PostController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\Manager\Import\ImportController;
 Route::get('/',[HomeController::class, 'index'])->name('home');
 
 Route::get('/nosotros',[AboutusController::class, 'index'])->name('aboutus');
+Route::get('/contacto',[ContactController::class, 'index'])->name('contacto');
 
 Route::get('/blog',[BlogController::class, 'list'])->name('blog.list');
 Route::get('/blog/{slug}',[BlogController::class, 'single'])->name('blog.single');

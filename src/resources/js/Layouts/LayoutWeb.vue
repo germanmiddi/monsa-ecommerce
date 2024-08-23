@@ -17,16 +17,28 @@
 							</div>
 	
 							<div class="border-t border-gray-200 py-6 px-4 space-y-6">
-								<div v-for="page in navigation.pages" :key="page.name" class="flow-root">
-									<a :href="route(page.href)" class="-m-2 p-2 block font-medium text-gray-900">{{ page.name }}</a>
+								<div class="flow-root" v-if="$page.props.show_module_store">
+									<a :href="route('store')" class="-m-2 p-2 block font-medium text-gray-900">Tienda</a>
+								</div>
+								<div class="flow-root" v-if="!$page.props.show_module_store">
+									<a :href="route('home')" class="-m-2 p-2 block font-medium text-gray-900">Inicio</a>
+								</div>
+								<div class="flow-root">
+									<a :href="route('aboutus')" class="-m-2 p-2 block font-medium text-gray-900">Nosotros</a>
+								</div>
+								<div class="flow-root">
+									<a :href="route('blog.list')" class="-m-2 p-2 block font-medium text-gray-900">Novedades</a>
+								</div>
+								<div class="flow-root">
+									<a :href="route('contacto')" class="-m-2 p-2 block font-medium text-gray-900">Contacto</a>
 								</div>
 							</div>
 	
 							<div class="border-t border-gray-200 py-6 px-4 space-y-6">
-								<div class="flow-root">
+								<!-- <div class="flow-root">
 									<a :href="route('register')" class="-m-2 p-2 block font-medium text-gray-900">Registrarse</a>
-								</div>
-								<div class="flow-root">
+								</div> -->
+								<div class="flow-root" v-if="$page.props.show_module_store">
 									<a :href="route('login')" class="-m-2 p-2 block font-medium text-gray-900">Ingresar</a>
 								</div>
 							</div>
@@ -35,23 +47,46 @@
 					</TransitionChild>
 				</Dialog>
 			</TransitionRoot>
-	
+			<!-- End Mobile menu -->
+			
+			<!-- Main Navigation -->
 			<header class="relative">
 				<nav aria-label="Top">
 					<!-- Top navigation -->
-					<div class="bg-gray-800">
+					<!-- <div class="bg-monsa-blue">
+						
 						<div class="max-w-7xl mx-auto h-10 px-4 flex items-right justify-end sm:px-6 lg:px-8">
 							<div class="flex items-center space-x-6" v-if="!this.$page.props.user">
 								<a :href="route('login')" class="text-sm font-medium text-white hover:text-gray-100">Ingresar</a>
-								<a :href="route('register')" class="text-sm font-medium text-white hover:text-gray-100">Registrarse</a>
 							</div>
 							<div v-else class="flex items-center space-x-6">
 								<a :href="route('dashboard')" class="text-sm font-medium text-white hover:text-gray-100">Administrar</a>
 								<div @click="logout" class="text-sm font-medium text-white hover:text-gray-100">Salir</div>
 							</div>
 						</div>
-					</div> 
-	
+						<div style=" background: url('/images/v.png');
+											background-size: contain;
+											opacity: 0.04;">
+						</div>
+					</div>  -->
+					<div class="bg-monsa-blue relative">
+						<!-- Fondo decorativo -->
+						<div class="absolute inset-0" style="background: url('/images/v.png'); background-size: contain; opacity: 0.04;"></div>
+						
+						<!-- Contenido del menú -->
+						<div class="relative z-10 mx-auto h-10 px-4 flex items-center justify-end sm:px-6 lg:px-8">
+							<div class="flex items-center space-x-6 w-full" v-if="!this.$page.props.user">
+								<div class="flex w-full items-center justify-end">
+									<div class="w-3/6 text-white">🚚 Envios a todo el pais. </div>
+									<a :href="route('login')" class="text-sm font-medium text-white hover:text-gray-100">Ingresar</a>
+								</div>
+							</div>
+							<div v-else class="flex items-center space-x-6">
+								<a :href="route('dashboard')" class="text-sm font-medium text-white hover:text-gray-100">Administrar</a>
+								<div @click="logout" class="text-sm font-medium text-white hover:text-gray-100 cursor-pointer">Salir</div>
+							</div>
+						</div>
+					</div>
 					<!-- Secondary navigation -->
 					<div class="bg-gray-900 bg-monsa-dark">
 						<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,7 +94,7 @@
 								<!-- Logo (lg+) -->
 								<div class="hidden lg:flex-1 lg:flex lg:items-center">
 									<a href="#">
-										<img class="w-40" src="/images/monsa-srl-logo.png" />
+										<img class="w-40" src="/images/logo-blanco.png" />
 									</a>
 								</div>
 	
@@ -67,13 +102,24 @@
 									<!-- Flyout menus -->
 									<PopoverGroup class="px-4 bottom-0 inset-x-0">
 										<div class="h-full flex justify-center space-x-8">
-											<a v-for="page in navigation.pages" :key="page.name" 
-											   :href="route(page.href)" 
-											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-yellow uppercase">{{ page.name }}</a>
+											<a v-if="$page.props.show_module_store"
+											   :href="route('store')" 
+											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Tienda</a>
+											<a v-if="!$page.props.show_module_store"
+											   :href="route('home')" 
+											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Inicio</a>
+											<a 
+											   :href="route('aboutus')" 
+											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Nosotros</a>
+											<a 
+											   :href="route('blog.list')" 
+											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Novedades</a>
+											<a 
+												:href="route('contacto')" 
+											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Contacto</a>
 										</div>
 									</PopoverGroup>
 								</div>
-	
 								<!-- Mobile menu and search (lg-) -->
 								<div class="flex-1 flex items-center lg:hidden">
 									<button type="button" class="-ml-2 bg-white p-2 rounded-md text-gray-400" @click="open = true">
@@ -97,7 +143,8 @@
 									<div class="flex items-center lg:ml-8">
 										<!-- Cart -->
 										<div class="ml-4 flow-root lg:ml-8">
-											<a :href="route('checkout')" class="group -m-2 p-2 flex items-center hover:text-monsa-yellow">
+											<a v-if="$page.props.show_module_store"
+												:href="route('checkout')" class="group -m-2 p-2 flex items-center hover:text-monsa-yellow">
 												<ShoppingBagIcon class="flex-shrink-0 h-6 w-6 text-gray-50 group-hover:text-gray-100" aria-hidden="true" />
 												<span class="ml-2 text-sm font-medium text-gray-50 group-hover:text-gray-100">{{ totalItems }}</span>
 											</a>
@@ -109,8 +156,11 @@
 					</div>
 				</nav>
 			</header>
-	
+			<!-- End Main Navigation -->
+			
 			<main>
+				<!-- <pre v-if="$page.props.show_module_store">true - {{ $page.props.show_module_store }}</pre>
+				<pre v-if="!$page.props.show_module_store">False - {{ $page.props.show_module_store }}</pre> -->
 				<slot></slot>
 
 			</main>
@@ -122,7 +172,7 @@
 						<div class="grid grid-cols-1 md:grid-cols-12 md:grid-flow-col md:gap-x-8 md:gap-y-16 md:auto-rows-min">
 							<!-- Image section -->
 							<div class="col-span-1 md:col-span-3">
-								<img class="h-8 w-auto" src="/images/monsa-srl-logo.png" />
+								<img class="h-6 w-auto" src="/images/logo-negro.png" />
 								<p class="mt-2">Monsa S.R.L.</p>
 								<p>Av. Castañares 6140 - 1439</p>
 								<p>Ciudad Autónoma de Buenos Aires, Argentina</p>
@@ -131,10 +181,10 @@
 							<div class="col-span-1 md:col-span-2">
 								<h3 class="text-sm font-medium text-gray-900">Navegación</h3>
 								<ul class="mt-6 space-y-4">
-									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Tienda</a></li>
+									<li v-if="$page.props.show_module_store"><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Tienda</a></li>
 									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Nosotros</a></li>
 									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Novedades</a></li>
-									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Contacto</a></li>								
+									<li><a :href="route('contacto')" class="text-sm text-gray-500 hover:text-gray-900">Contacto</a></li>								
 								</ul>
 							</div>
 
@@ -155,7 +205,7 @@
 								<form class="flex">
 									<input id="email-address" type="text" autocomplete="email" required="" class="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
 									<div class="ml-4 flex-shrink-0">
-										<button type="submit" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Suscribirse</button>
+										<button type="submit" class="w-full bg-monsa-blue border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Suscribirse</button>
 									</div>
 								</form>
 								<!-- Redes sociales -->
@@ -263,7 +313,7 @@
 		},
 		methods: {
 			logout() {
-                   this.$inertia.post(route('logout'));
+                   this.$inertia.get(route('logout'));
             },
 		},
 	}

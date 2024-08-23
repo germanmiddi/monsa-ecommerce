@@ -14,6 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'show_module_store' => env('SHOW_MODULE_STORE', 'false'),
+
 
     /*
     |--------------------------------------------------------------------------

@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
         {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap"> --}}
@@ -17,7 +18,7 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/v-mask/dist/v-mask.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/v-mask/dist/v-mask.min.js"></script>
 
         <!-- Scripts -->
         @routes

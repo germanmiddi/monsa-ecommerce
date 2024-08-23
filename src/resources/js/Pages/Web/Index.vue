@@ -49,13 +49,11 @@
         </div>
     </section>
 
-    <section>
-    <!-- This example requires Tailwind CSS v2.0+ -->
-        <div class="bg-white">
-            <div class="pt-32 overflow-hidden sm:pt-14">
-                <div class="bg-gray-800">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="relative pt-48 pb-16 sm:pb-24">
+    <!-- <section >
+        <div class="bg-monsa-blue">
+            <div id="background" class="pt-48 pb-16" style="background-image:url('/images/v.png'); opacity: 0.08;">
+            </div>
+            <div class="relative pt-48 pb-16 sm:pb-24" style="opacity: 1;">
                             <div>
                                 <h1 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-white md:text-4xl">
                                     {{bannerTitle}}
@@ -102,12 +100,50 @@
 
                                 </div>
                             </div>
-                        </div>
+            </div>    
+        </div>
+    </section> -->
+
+
+    <div class="bg-gray-50 relative my-60">
+    <div id="background" class="absolute inset-0 z-0" style="background-image:url('/images/v.png'); opacity: 0.02;">
+    </div>
+    <div class="relative z-10 pt-48 pb-16 sm:pb-24 max-w-7xl mx-auto px-4 lg:px-8">
+        <div>
+            <h1 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-monsa-blue md:text-4xl">
+                {{bannerTitle}}
+                <br>
+                {{bannerSubtitle}}
+                <br>
+                {{bannerTitleH1}}
+            </h1>
+            <div class="mt-6 text-base">
+                <a :href="bannerLink" class="font-semibold text-monsa-blue">Ver productos<span aria-hidden="true"> &rarr;</span></a>
+            </div>
+        </div>
+
+        <div class="absolute -top-32 left-1/2 transform -translate-x-1/2 sm:top-6 sm:translate-x-0">
+            <div class="ml-24 flex space-x-6 min-w-max sm:ml-3 lg:space-x-8">
+                <div class="flex space-x-6 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
+                    <div class="flex-shrink-0 ">
+                        <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/lluvia.png" alt="" />
+                    </div>
+                    <div class="mt-6 flex-shrink-0 sm:mt-0  ">
+                        <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cascos/46692-1.jpg" alt="" />
+                    </div>
+                </div>
+                <div class="flex space-x-6 sm:-mt-20 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
+                    <div class="flex-shrink-0 ">
+                        <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cascos/46692-1.jpg" alt="" />                                            
+                    </div>
+                    <div class="mt-6 flex-shrink-0 sm:mt-0 ">
+                        <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cubierta.jpg" alt="" />
                     </div>
                 </div>
             </div>
         </div>
-    </section>  
+    </div>    
+</div>
 
     <section>
         <div class="bg-white">
@@ -142,14 +178,14 @@
                             <div class="flex-1">
                                 <!-- <p class="text-sm font-medium text-monsa-dark">{{ post.post_category.name }}</p> -->
                                 <a :href="route('blog.single', post.slug)" class="block mt-2">
-                                    <p class="text-xl font-semibold text-gray-900">{{ post.title }}</p>
+                                    <p class="text-xl font-semibold text-gray-900 hover:text-monsa-blue">{{ post.title }}</p>
                                     
                                     <p class="mt-3 text-base text-gray-500" v-html="truncateContent(post.content)"></p>
                                 </a>
                             </div>
                             <div class="mt-6">
                                 <div class="flex items-center justify-between ">
-                                    <div class="bg-monsa-yellow text-sm text-gray-800 px-2 py-1 rounded-sm ">
+                                    <div class="bg-monsa-blue text-sm text-white px-2 py-1 rounded-sm ">
                                         <span>{{ post.post_category.name}}</span>
                                     </div>
                                     <div class="text-sm text-gray-500">
@@ -289,6 +325,7 @@ export default {
 	},
     data() {
         return {
+        
             isMobile: false, // Estado para controlar si es móvil o no
         }
     },

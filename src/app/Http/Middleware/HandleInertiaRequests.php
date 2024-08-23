@@ -43,7 +43,8 @@ class HandleInertiaRequests extends Middleware
         }
         
         return array_merge(parent::share($request), [
-            'userGroups' => $groups
+            'userGroups' => $groups,
+            'show_module_store' => config('app.show_module_store'),
         ]);        
     }
 }
