@@ -20,35 +20,22 @@
 
     <section aria-labelledby="trending-heading">
         <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 sm:py-32 lg:pt-32 lg:px-8">
-            <div class="md:flex md:items-center md:justify-between">
+            <div class="md:flex md:items-center md:justify-between mb-8">
                 <h2 id="favorites-heading" class="text-3xl font-extrabold tracking-tight text-gray-900">Destacados del Mes</h2>
-                <a href="#" class="hidden text-sm font-medium text-indigo-600 hover:text-indigo-500 md:block">Todos los destacados<span aria-hidden="true"> &rarr;</span></a>
+                <!-- <a href="#" class="hidden text-sm font-medium text-indigo-600 hover:text-indigo-500 md:block">Todos los destacados<span aria-hidden="true"> &rarr;</span></a> -->
             </div>
 
-            <!-- <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
-                <div v-for="product in trendingProducts" :key="product.id" class="group relative">
-                    <div class="w-full h-56 rounded-md overflow-hidden group-hover:opacity-75 lg:h-72 xl:h-80 bg-gray-100 flex items-center">
-                        <img style="mix-blend-mode: multiply" :src="product.imageSrc" :alt="product.imageAlt" class="m-auto w-2/3 h-2/3 object-center object-cover" />
-                    </div>                
-                    <h3 class="mt-4 text-sm text-gray-700">
-                        <a :href="product.href">
-                            <span class="absolute inset-0" />
-                            {{ product.name }}
-                        </a>
-                    </h3>
-                    <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
-                    <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }}</p>
-                </div>
-            </div> -->
+            <SliderProducts2 :productItems="products"/>
 
-            <SliderProducts :productItems="products"/>
-
-            <div class="mt-8 text-sm md:hidden">
+            <!-- <div class="mt-8 text-sm md:hidden">
                 <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Todos los destacados<span aria-hidden="true"> &rarr;</span></a>
-            </div>
+            </div> -->
         </div>
     </section>
 
+    <!-- <section>
+        <CarouselProducts :productItems="products" />
+    </section> -->
     <!-- <section >
         <div class="bg-monsa-blue">
             <div id="background" class="pt-48 pb-16" style="background-image:url('/images/v.png'); opacity: 0.08;">
@@ -103,61 +90,59 @@
             </div>    
         </div>
     </section> -->
+        <!-- Fondo decorativo -->
 
 
-    <div class="bg-gray-50 relative my-60">
-    <div id="background" class="absolute inset-0 z-0" style="background-image:url('/images/v.png'); opacity: 0.02;">
+    <div class="relative my-24 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-monsa-blue to-blue-900 w-full z-0 h-400px    overflow-hidden">
+            <div class="section px-6 py-20 md:py-60 w-full" style="background:url('/images/v.png'); opacity:0.05">
+            </div>
+        </div>        
+
+        <div class="relative pt-48 pb-16 sm:pb-24 max-w-7xl mx-auto px-4 lg:px-8 ">
+
+            <div class="absolute -top-32 left-1/2 transform -translate-x-1/2 sm:top-6 sm:translate-x-0">
+                <div class="ml-24 flex space-x-6 min-w-max sm:ml-3 lg:space-x-8">
+                    <div class="flex space-x-6 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
+                        <div class="flex-shrink-0 opacity-30 ">
+                            <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/lluvia.png" alt="" />
+                        </div>
+                        <div class="mt-6 flex-shrink-0 sm:mt-0  opacity-30">
+                            <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cascos/46692-1.jpg" alt="" />
+                        </div>
+                    </div>
+                    <div class="flex space-x-6 sm:-mt-20 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
+                        <div class="flex-shrink-0 opacity-30">
+                            <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cascos/46692-1.jpg" alt="" />                                            
+                        </div>
+                        <div class="mt-6 flex-shrink-0 sm:mt-0 opacity-30">
+                            <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cubierta.jpg" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="isolate opacity-100 text-center">
+                <h1 id="sale-heading" class="text-6xl  font-extrabold tracking-tight text-white md:text-4xl">
+                    {{bannerTitle}}
+                    <br>
+                    {{bannerSubtitle}}
+                    <br>
+                    {{bannerTitleH1}}
+                </h1>
+                <div class="mt-6 text-base w-full flex items-center justify-center  ">
+                    <a :href="bannerLink" class="font-semibold text-white bg-monsa-blue rounded-xl px-4 py-3">
+                        <div class="" >Ver productos</div>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>    
     </div>
-    <div class="relative z-10 pt-48 pb-16 sm:pb-24 max-w-7xl mx-auto px-4 lg:px-8">
-        <div>
-            <h1 id="sale-heading" class="text-4xl font-extrabold tracking-tight text-monsa-blue md:text-4xl">
-                {{bannerTitle}}
-                <br>
-                {{bannerSubtitle}}
-                <br>
-                {{bannerTitleH1}}
-            </h1>
-            <div class="mt-6 text-base">
-                <a :href="bannerLink" class="font-semibold text-monsa-blue">Ver productos<span aria-hidden="true"> &rarr;</span></a>
-            </div>
-        </div>
 
-        <div class="absolute -top-32 left-1/2 transform -translate-x-1/2 sm:top-6 sm:translate-x-0">
-            <div class="ml-24 flex space-x-6 min-w-max sm:ml-3 lg:space-x-8">
-                <div class="flex space-x-6 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
-                    <div class="flex-shrink-0 ">
-                        <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/lluvia.png" alt="" />
-                    </div>
-                    <div class="mt-6 flex-shrink-0 sm:mt-0  ">
-                        <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cascos/46692-1.jpg" alt="" />
-                    </div>
-                </div>
-                <div class="flex space-x-6 sm:-mt-20 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
-                    <div class="flex-shrink-0 ">
-                        <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cascos/46692-1.jpg" alt="" />                                            
-                    </div>
-                    <div class="mt-6 flex-shrink-0 sm:mt-0 ">
-                        <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cubierta.jpg" alt="" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>    
-</div>
 
-    <section>
-        <div class="bg-white">
-            <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:py-16 lg:px-8">
-                <h2 class="text-3xl mx-auto tracking-tight font-extrabold text-gray-900 sm:text-4xl">Nuestras Marcas</h2>
-                <div class="mt-12 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-8">
-                    <div v-for="item in brands" :key="item.id" class="col-span-1 flex justify-center items-center py-5 px-6 bg-gray-50">
-                        <img class="max-h-20" style="mix-blend-mode: multiply;" 
-                            :src="`/storage/${item.image}`" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <section>
         <div class="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
@@ -206,6 +191,8 @@
 <script>
 import Slider from './Home/Slider.vue'
 import SliderProducts from './Home/SliderProducts.vue'
+import SliderProducts2 from './Home/SliderProducts2.vue'
+import CarouselProducts from './Home/CarouselProducts.vue'
 
 const old_posts = [
   {
@@ -309,7 +296,9 @@ export default {
 
     components:{
         Slider,
-        SliderProducts
+        SliderProducts,
+        CarouselProducts,
+        SliderProducts2
     },
 
     setup(props) {
@@ -367,3 +356,41 @@ export default {
 }
 </script>
 
+
+<style scoped>
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes marquee2 {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes marqueeright {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes marquee2right {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee2 {
+  animation: marquee2 40s linear infinite;
+}
+
+.animate-marqueeright {
+  animation: marqueeright 40s linear infinite;
+}
+
+.animate-marquee2right {
+  animation: marquee2right 40s linear infinite;
+}
+</style>

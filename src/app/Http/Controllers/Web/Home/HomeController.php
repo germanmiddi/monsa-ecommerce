@@ -25,7 +25,7 @@ class HomeController extends Controller
 
         $post = Post::with('post_category')->get()->toArray();
         $products = Product::whereHas('labels', function ($query) {
-            $query->where('label_id', 13);
+            $query->where('slug', 'carrousel_home');
         })->get();
 
         // Add your logic here
