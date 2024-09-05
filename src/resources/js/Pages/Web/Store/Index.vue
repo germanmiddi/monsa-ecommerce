@@ -70,7 +70,7 @@
         </Dialog>
       </TransitionRoot>
 
-      <main class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative z-10 flex items-baseline justify-between pt-12 pb-6 border-b border-gray-200">
           <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Tienda</h1>
           <div class="w-1/2">
@@ -190,9 +190,16 @@
               <!-- <div class="border-4 border-dashed border-gray-200 rounded-lg h-96 lg:h-full" /> -->
               <!-- /End replace -->
               
-              <button class="btn-monsa-xl mx-auto mt-4"
+              <!-- <button class="btn-monsa-xl mx-auto mt-4"
                       v-if="visibleCount < filteredProducts.length" 
-                      @click="loadMore">Ver más</button>
+                      @click="loadMore">Ver más</button> -->
+
+              <button @click="loadMore" v-if="visibleCount < filteredProducts.length" 
+                       class="flex items-center justify-center mt-20
+                              uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8 mx-auto w-[250px]
+                              hover:border-[#232323] hover:bg-white hover:text-[#232323]">Ver más</button>
+
+
 
             </div>
           </div>

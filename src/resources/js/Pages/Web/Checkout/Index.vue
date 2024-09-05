@@ -5,17 +5,17 @@
     <div class="hidden lg:block fixed top-0 left-0 w-1/2 h-full bg-white" aria-hidden="true" />
     <div class="hidden lg:block fixed top-0 right-0 w-1/2 h-full bg-gray-50" aria-hidden="true" />
 
-    <header class="relative bg-white border-b border-gray-200 text-sm font-medium text-gray-700">
+    <header class="relative bg-monsa-blue border-b  text-sm font-medium text-gray-50">
       <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="relative flex items-center sm:justify-center">
-          <a href="#" class="absolute -mt-4 left-0 top-1/2 font-exo text-3xl font-extrabold text-gray-900">
-            MONSA
+          <!-- <a href="#" class="absolute -mt-4 left-0 top-1/2 font-exo text-3xl font-extrabold text-gray-900"></a> -->
+          <img class="absolute left-0 w-40" src="/images/logo-blanco.png" alt="Monsa"/>
 
-          </a>
+          
           <nav aria-label="Progress" class="hidden sm:block">
             <ol role="list" class="flex space-x-4">
               <li v-for="(step, stepIdx) in steps" :key="step.name" class="flex items-center">
-                <a v-if="step.status === 'current'" :href="step.href" aria-current="page" class="text-indigo-600">{{
+                <a v-if="step.status === 'current'" :href="step.href" aria-current="page" class="text-white font-bold underline">{{
                   step.name }}</a>
                 <a v-else :href="step.href">{{ step.name }}</a>
                 <ChevronRightIcon v-if="stepIdx !== steps.length - 1" class="w-5 h-5 text-gray-300 ml-4"
@@ -263,11 +263,10 @@
             </section> -->
 
           <div class="mt-10 pt-6 border-t border-gray-200 sm:flex sm:items-center sm:justify-between">
-            <button @click.prevent="submitCheckout" type="submit" class="w-full bg-monsa-yellow border border-transparent rounded-md shadow-sm 
-                                          py-2 px-4 text-sm font-medium  
-                                          text-monsa-dark-light hover:bg-monsa-dark-light hover:text-monsa-yellow
-                                          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 
-                                          focus:ring-monsa-yellow sm:ml-6 sm:order-last sm:w-auto">
+            <button @click.prevent="submitCheckout" type="submit" class="w-32 bg-[#232323] border border-transparent rounded-md shadow-sm 
+                                          py-2 px-4 text-sm font-medium  uppercase
+                                          text-white hover:bg-white hover:text-[#232323] hover:border-[#232323]
+                                          sm:ml-6 sm:order-last sm:w-auto">
                                           <Icons v-if="loading" name="loading" class="w-5 h-5"> </Icons>
                                           <label v-else>Continuar</label> 
             </button>

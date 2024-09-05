@@ -31,9 +31,11 @@
           <div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
             <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">{{ product.nombre }}</h1>
   
-            <div class="mt-3">
-              <h2 class="sr-only">Product information</h2>
-              <p class="text-3xl text-gray-900">{{ formatPrice(product.price_public) }}</p>
+            <div class="mt-3 flex justify-between items-center">
+              <div class="text-3xl text-gray-900">{{ formatPrice(product.price_public) }}</div>
+              <button @click.prevent="handleAddToCart"
+                        class="uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8
+                               hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
             </div>
   
             <!-- Reviews -->
@@ -92,11 +94,13 @@
               </div> -->
   
               <div class="mt-10 flex sm:flex-col1">
-                <button @click.prevent="handleAddToCart"
-                        class="max-w-xs flex-1 bg-monsa-yellow border border-transparent rounded-md py-3 px-8 flex items-center justify-center 
+                <!-- <button class="max-w-xs flex-1 bg-monsa-yellow border border-transparent rounded-md py-3 px-8 flex items-center justify-center 
                                text-base font-medium text-monsa-dark-light hover:bg-monsa-dark-light hover:text-monsa-yellow focus:outline-none 
-                               focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">Agregar al carrito</button>
-  
+                               focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">Agregar al carrito</button> -->
+                <button @click.prevent="handleAddToCart"
+                        class="uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8
+                               hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
+
                 <!-- <button type="button" class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
                   <HeartIcon class="h-6 w-6 flex-shrink-0" aria-hidden="true" />
                   <span class="sr-only">Add to favorites</span>
@@ -169,7 +173,8 @@
       const totalPrice = computed(() => cart.calculatedTotalPrice);
 
       const formatPrice = (price_public) => {
-        
+        // console.log(price_public);
+        // return
         const formattedPrice = price_public.toLocaleString('es-AR', {
           style: 'currency',
           currency: 'ARS',

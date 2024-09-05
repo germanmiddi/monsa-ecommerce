@@ -15,12 +15,12 @@ class StoreController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if (!config('app.store_active')) {
-                throw new NotFoundHttpException();
-            }
-            return $next($request);
-        });
+        // $this->middleware(function ($request, $next) {
+        //     if (!config('app.store_active')) {
+        //         throw new NotFoundHttpException();
+        //     }
+        //     return $next($request);
+        // });
     }
     
     /**
@@ -38,7 +38,7 @@ class StoreController extends Controller
             'products' => Product::with('family', 'brand')
                                     ->whereIn('idFamily', Family::where('active', true)->pluck('id'))
                                     ->whereIn('idBrand', Brand::where('active', true)->pluck('id'))
-                                    //->limit(50)
+                                    ->where('price_public', '>', 0)  
                                     ->active()
                                     ->get()
 

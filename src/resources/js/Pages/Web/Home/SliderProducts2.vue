@@ -58,7 +58,7 @@
         },
         // 1024 and up
         1024: {
-          itemsToShow: 4.3,
+          itemsToShow: 3.5,
           snapAlign: 'start',
         },
       }

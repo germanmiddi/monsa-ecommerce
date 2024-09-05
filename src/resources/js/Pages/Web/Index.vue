@@ -16,20 +16,21 @@
     <div v-else >
         <img v-for="item in sliderDesktop" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />   
     </div> -->
-    
 
-    <section aria-labelledby="trending-heading">
+    <section aria-labelledby="trending-heading" class="relative">
         <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 sm:py-32 lg:pt-32 lg:px-8">
-            <div class="md:flex md:items-center md:justify-between mb-8">
-                <h2 id="favorites-heading" class="text-3xl font-extrabold tracking-tight text-gray-900">Destacados del Mes</h2>
-                <!-- <a href="#" class="hidden text-sm font-medium text-indigo-600 hover:text-indigo-500 md:block">Todos los destacados<span aria-hidden="true"> &rarr;</span></a> -->
+            <div class="flex h-[353px] "> <!-- Set a fixed height or use h-screen for full viewport height -->
+            <!-- Primer contenedor que ocupa todo el alto -->
+            <div class="w-1/6 bg-cover bg-center mr-4 flex-shrink-0 flex items-center justify-center rounded-xl text-white font-bold text-xl 
+                        hover:bg-left-top transition-all duration-300" 
+                 style="background-image: url('images/banner-moto-1.png');">
+                <span class="bg-black bg-opacity-50 p-2 text-center text-3xl">Productos<br>Destacados</span>
             </div>
-
-            <SliderProducts2 :productItems="products"/>
-
-            <!-- <div class="mt-8 text-sm md:hidden">
-                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Todos los destacados<span aria-hidden="true"> &rarr;</span></a>
-            </div> -->
+            <!-- Slider ocupa el resto del ancho -->
+            <div class="w-5/6 overflow-hidden">
+                <SliderProducts2 :productItems="products" class="h-full"/>
+            </div>
+            </div>
         </div>
     </section>
 
@@ -99,7 +100,7 @@
             </div>
         </div>        
 
-        <div class="relative pt-48 pb-16 sm:pb-24 max-w-7xl mx-auto px-4 lg:px-8 ">
+        <div class="relative py-40 sm:py-24 max-w-7xl mx-auto px-4 lg:px-8 ">
 
             <div class="absolute -top-32 left-1/2 transform -translate-x-1/2 sm:top-6 sm:translate-x-0">
                 <div class="ml-24 flex space-x-6 min-w-max sm:ml-3 lg:space-x-8">
@@ -123,17 +124,20 @@
             </div>
 
             <div class="isolate opacity-100 text-center">
-                <h1 id="sale-heading" class="text-6xl  font-extrabold tracking-tight text-white md:text-4xl">
-                    {{bannerTitle}}
-                    <br>
-                    {{bannerSubtitle}}
-                    <br>
-                    {{bannerTitleH1}}
-                </h1>
-                <div class="mt-6 text-base w-full flex items-center justify-center  ">
-                    <a :href="bannerLink" class="font-semibold text-white bg-monsa-blue rounded-xl px-4 py-3">
-                        <div class="" >Ver productos</div>
-                    </a>
+                <div class=" rounded-xl mx-auto py-10 max-w-4xl promo-banner" >
+                    <h1 id="sale-heading" class="text-6xl  font-extrabold tracking-tight text-white">
+                        {{bannerTitle}}
+                        <br>
+                        {{bannerSubtitle}}
+                        <br>
+                        {{bannerTitleH1}}
+                    </h1>
+                    <div class="mt-6 text-base w-full flex items-center justify-center  ">
+                        <a :href="bannerLink" class="font-semibold text-white bg-monsa-blue rounded-xl px-4 py-3">
+                            <div class="" >Ver productos</div>
+                        </a>
+                    </div>
+
                 </div>
             </div>
 
@@ -141,8 +145,20 @@
         </div>    
     </div>
 
+    <section class="my-32">
+        <Vue3Marquee :pause-on-hover="true">
+            <div class="bg-gray-100 border border-gray-200 rounded-xl w-48 mx-5 overflow-hidden" v-for="brand in randomBrands" :key="brand">
+                <img :src="`/storage/${brand.image}`"  />
+            </div>
+        </Vue3Marquee>
 
+        <Vue3Marquee :direction="'reverse'" class="mt-10" :pause-on-hover="true">
+            <div class="bg-gray-100 border border-gray-200 rounded-xl w-48 mx-5 overflow-hidden" v-for="brand in randomBrands2" :key="brand">
+                <img :src="`/storage/${brand.image}`"  />
+            </div>
+        </Vue3Marquee>
 
+    </section>
 
     <section>
         <div class="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
@@ -193,6 +209,7 @@ import Slider from './Home/Slider.vue'
 import SliderProducts from './Home/SliderProducts.vue'
 import SliderProducts2 from './Home/SliderProducts2.vue'
 import CarouselProducts from './Home/CarouselProducts.vue'
+import { Vue3Marquee } from 'vue3-marquee'
 
 const old_posts = [
   {
@@ -298,7 +315,8 @@ export default {
         Slider,
         SliderProducts,
         CarouselProducts,
-        SliderProducts2
+        SliderProducts2,
+        Vue3Marquee
     },
 
     setup(props) {
@@ -312,6 +330,14 @@ export default {
             bannerLink
         }
 	},
+    computed: {
+        randomBrands() {
+            return [...this.brands].sort(() => Math.random() - 0.5);
+        },
+        randomBrands2() {
+            return [...this.brands].sort(() => Math.random() - 0.5);
+        }
+    },    
     data() {
         return {
         
@@ -348,49 +374,15 @@ export default {
     beforeUnmount() { // o `destroyed` para Vue 2
         window.removeEventListener('resize', this.checkMobile); // Limpiar listener
     },
-    computed: {
-
-    },
 
     layout: 'LayoutWeb' // Define the layout for this page
 }
 </script>
 
-
-<style scoped>
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
+<style> 
+.promo-banner {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
 }
 
-@keyframes marquee2 {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes marqueeright {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes marquee2right {
-  from { transform: translateX(0); }
-  to { transform: translateX(100%); }
-}
-
-.animate-marquee {
-  animation: marquee 40s linear infinite;
-}
-
-.animate-marquee2 {
-  animation: marquee2 40s linear infinite;
-}
-
-.animate-marqueeright {
-  animation: marqueeright 40s linear infinite;
-}
-
-.animate-marquee2right {
-  animation: marquee2right 40s linear infinite;
-}
 </style>
