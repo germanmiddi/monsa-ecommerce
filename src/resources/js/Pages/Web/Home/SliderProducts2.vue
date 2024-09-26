@@ -3,7 +3,7 @@
       <Slide v-for="slide in productItems" :key="slide">
         
         <!-- <a class="carousel__item" @click="goUrl(slide.id)"> -->
-        <a class="carousel__item overflow-hidden mx-2 flex flex-col items-center bg-gray-100 rounded-xl">
+        <div @click="goUrl(slide.id)" class="carousel__item overflow-hidden mx-2 flex flex-col items-center bg-gray-100 rounded-xl">
             <div class="w-60 h-60 overflow-hidden">
                 <img class="img-item w-full h-full object-cover" 
                      style="mix-blend-mode: multiply"
@@ -15,7 +15,7 @@
             <div class="overflow-hidden h-12 px-2">
                 <div class="font-extrabold text-2xl">{{ formatPrice(slide.precio) }}</div>
             </div>
-        </a>
+        </div>
       </Slide>
   
       <template #addons>
@@ -74,8 +74,8 @@
             }
         },  
         goUrl(id){
-            // let url = route('product', id);
-            // window.location.href = url;
+            let url = route('product', id);
+            window.location.href = url;
         },
         truncateText(text, length) {
             if (text.length <= length) return text;
