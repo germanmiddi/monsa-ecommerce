@@ -38,17 +38,6 @@
                                hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
             </div>
   
-            <!-- Reviews -->
-            <!-- <div class="mt-3">
-              <h3 class="sr-only">Reviews</h3>
-              <div class="flex items-center">
-                <div class="flex items-center">
-                  <StarIcon v-for="rating in [0, 1, 2, 3, 4]" :key="rating" :class="[product.rating > rating ? 'text-monsa-yellow' : 'text-gray-300', 'h-5 w-5 flex-shrink-0']" aria-hidden="true" />
-                </div>
-                <p class="sr-only">{{ product.rating }} out of 5 stars</p>
-              </div>
-            </div> -->
-  
             <div class="mt-6">
               <h3 class="sr-only">Description</h3>
               <div class="mt-5 border-t border-gray-200">
@@ -74,42 +63,24 @@
             </div>
   
             <form class="mt-6">
-              <!-- Colors -->
-              <!-- <div>
-                <h3 class="text-sm text-gray-600">Color</h3>
-  
-                <RadioGroup v-model="selectedColor" class="mt-2">
-                  <RadioGroupLabel class="sr-only"> Choose a color </RadioGroupLabel>
-                  <div class="flex items-center space-x-3">
-                    <RadioGroupOption as="template" v-for="color in product.colors" :key="color.name" :value="color" v-slot="{ active, checked }">
-                      <div :class="[color.selectedColor, active && checked ? 'ring ring-offset-1' : '', !active && checked ? 'ring-2' : '', '-m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none']">
-                        <RadioGroupLabel as="p" class="sr-only">
-                          {{ color.name }}
-                        </RadioGroupLabel>
-                        <span aria-hidden="true" :class="[color.bgColor, 'h-8 w-8 border border-black border-opacity-10 rounded-full']" />
-                      </div>
-                    </RadioGroupOption>
-                  </div>
-                </RadioGroup>
-              </div> -->
-  
               <div class="mt-10 flex sm:flex-col1">
-                <!-- <button class="max-w-xs flex-1 bg-monsa-yellow border border-transparent rounded-md py-3 px-8 flex items-center justify-center 
-                               text-base font-medium text-monsa-dark-light hover:bg-monsa-dark-light hover:text-monsa-yellow focus:outline-none 
-                               focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">Agregar al carrito</button> -->
                 <button @click.prevent="handleAddToCart"
                         class="uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8
                                hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
-
-                <!-- <button type="button" class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
-                  <HeartIcon class="h-6 w-6 flex-shrink-0" aria-hidden="true" />
-                  <span class="sr-only">Add to favorites</span>
-                </button> -->
               </div>
             </form>
  
 
           </div>
+
+          <div class="mt-20 col-span-2 border-t border-gray-200 pt-20">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-900 mb-10">También te puede interesar</h2>
+            <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-8">
+              <Item v-for="product in relatedProducts" :key="product.id" class="group relative" :product="product"></Item>
+
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -136,6 +107,7 @@
   import { StarIcon } from '@heroicons/vue/24/solid'
   import { HeartIcon, MinusIcon, PlusIcon } from '@heroicons/vue/24/outline'
   import { useCartStore } from '../../../Stores/useCartStore'
+  import Item from '../../../Layouts/Components/Product/Item.vue'
  
 
   export default {
@@ -144,9 +116,14 @@
         type: Object,
         required: true,
       },
+      relatedProducts: {
+        type: Array,
+        required: true,
+      },
     },
 
     components: {
+      Item,
       Disclosure,
       DisclosureButton,
       DisclosurePanel,
@@ -219,9 +196,9 @@
         return images;
       } 
       
-
       return {
         product : {...props.product, images: images()},
+        relatedProducts: props.relatedProducts,
         selectedColor,
         formatPrice,
         handleAddToCart,

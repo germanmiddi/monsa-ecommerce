@@ -20,9 +20,14 @@ class ProductController extends Controller
     {
         $prod = $product->load('atributes', 'atributes.atribute');
 
+        $relatedProducts = Product::where('idFamily', $prod->idFamily)
+                                  ->where('id', '!=', $prod->id)
+                                  ->limit(4)
+                                  ->get();
         // Add your logic here
-        return  Inertia::render('Web/Product/Index', [
-            'product' => $prod
+        return Inertia::render('Web/Product/Index', [
+            'product' => $prod,
+            'relatedProducts' => $relatedProducts
         ]);
         
     }
