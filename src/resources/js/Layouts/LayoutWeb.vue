@@ -187,7 +187,7 @@
 									<div class="col-span-3 md:col-span-2">
 										<h3 class="text-sm font-bold">Información Legal y Adicional</h3>
 										<ul class="mt-6 space-y-2">
-											<li><a href="#" class="text-sm hover:underline">Términos y Condiciones</a></li>
+											<li><a :href="route('page', 'terminos-y-condiciones')" class="text-sm hover:underline">Términos y Condiciones</a></li>
 											<li><a href="#" class="text-sm hover:underline">Política de Privacidad</a></li>
 											<li><a href="#" class="text-sm hover:underline">Política de Devoluciones y Reembolsos</a></li>
 											<li><a href="#" class="text-sm hover:underline">Política de Envíos</a></li>
@@ -210,6 +210,9 @@
 											<button type="submit" class="w-full bg-white border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-monsa-blue hover:bg-monsa-blue hover:text-white hover:border-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Suscribirse</button>
 										</div>
 									</form>	
+								</div>
+								<div class="mt-8 w-16"> 
+									<a href="http://qr.afip.gob.ar/?qr=TCwMdwjOQ0Ro_jSB62EtYw,," target="_F960AFIPInfo"><img src="http://www.afip.gob.ar/images/f960/DATAWEB.jpg" border="0"></a>
 								</div>
 							</div>
 						</div>

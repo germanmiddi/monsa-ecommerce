@@ -24,6 +24,7 @@ use App\Http\Controllers\Manager\Settings\SettingsController;
 use App\Http\Controllers\Manager\Shipments\ShipmentController;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Settings;
 use App\Http\Controllers\Manager\Import\ImportController;
+use App\Http\Controllers\Web\Pages\PagesController;
 
 /* Frontoffice */
 
@@ -46,6 +47,11 @@ Route::post('/checkout/calcDelivery',[CheckoutController::class, 'calcDelivery']
 Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout_process');
 
 Route::get('/order/detail',[OrderController::class, 'viewDetail'])->name('order.viewDetail');
+
+Route::get('/{slug}',[PagesController::class, 'single'])->name('page'); 
+
+
+
 
 /*Backoffice */
 
@@ -91,7 +97,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/contenido/about/store', [ContentController::class, 'aboutStore'])->name('content.about.store');
         
-        
+        Route::post('/contenido/legales/store', [ContentController::class, 'legalesStore'])->name('content.legales.store');
         Route::get('/contenido/brand/list', [ContentController::class, 'brandList'])->name('content.brand.list');
         Route::post('/contenido/brand/store', [ContentController::class, 'brandStore'])->name('content.brand.store');
         Route::post('/contenido/{contentBrand}/brand', [ContentController::class, 'brandDelete'])->name('content.brand.delete');
@@ -116,6 +122,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('import/families',  [ImportController::class, 'import_families'])->name('import.families');
         Route::get('import/brands',    [ImportController::class, 'import_brands'])->name('import.brands');
         Route::get('import/atributes', [ImportController::class, 'import_atributes'])->name('import.atributes');
+
+        Route::get('/pages/list',[PagesController::class, 'list'])->name('pages.list');
+        Route::post('/pages/store',[PagesController::class, 'store'])->name('pages.store');
+        Route::get('/pages/{id}',[PagesController::class, 'edit'])->name('pages.edit');
+
+        Route::post('/pages/update',[PagesController::class, 'update'])->name('pages.update');
 
     });
 });

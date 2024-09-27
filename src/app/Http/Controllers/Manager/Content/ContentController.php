@@ -264,4 +264,24 @@ class ContentController extends Controller
         }
     }
 
+    public function legalesStore(Request $request)
+    {
+        DB::beginTransaction();    
+        try{
+            $input_id = $request->input('id');
+            $input_content = $request->input('content');
+
+            $content = Content::find($input_id);
+            $content->content = $input_content;
+            $content->save();
+    
+            DB::commit();
+            return response()->json(['message' => 'Legales created successfully'], 200);
+        }catch(\Exception $e){
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error creating legales', 
+                                     'detail'  => $msg ], 500);
+        }
+    }
 }
