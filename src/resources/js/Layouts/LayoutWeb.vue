@@ -188,10 +188,10 @@
 										<h3 class="text-sm font-bold">Información Legal y Adicional</h3>
 										<ul class="mt-6 space-y-2">
 											<li><a :href="route('page', 'terminos-y-condiciones')" class="text-sm hover:underline">Términos y Condiciones</a></li>
-											<li><a href="#" class="text-sm hover:underline">Política de Privacidad</a></li>
-											<li><a href="#" class="text-sm hover:underline">Política de Devoluciones y Reembolsos</a></li>
-											<li><a href="#" class="text-sm hover:underline">Política de Envíos</a></li>
-											<li><a href="#" class="text-sm hover:underline">Preguntas Frecuentes</a></li>
+											<li><a :href="route('page', 'politica-de-privacidad')" class="text-sm hover:underline">Política de Privacidad</a></li>
+											<li><a :href="route('page', 'politica-de-devoluciones-y-reembolsos')" class="text-sm hover:underline">Política de Devoluciones y Reembolsos</a></li>
+											<li><a :href="route('page', 'politica-de-envios')" class="text-sm hover:underline">Política de Envíos</a></li>
+											<li><a :href="route('page', 'preguntas-frecuentes')" class="text-sm hover:underline">Preguntas Frecuentes</a></li>
 										</ul>
 									</div>
 								</div>
