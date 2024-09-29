@@ -12,10 +12,10 @@ export const useCartStore = defineStore('cart', {
       return this.items.length;
     },
     totalPrice() {
-      return this.items.reduce((total, item) => total + item.price_public, 0);
+      return this.items.reduce((total, item) => total + item.sale_price, 0);
     },
     totalPricewDel() {
-      return this.items.reduce((total, item) => total + item.price_public, 0) + parseFloat(this.delivery);
+      return this.items.reduce((total, item) => total + item.sale_price, 0) + parseFloat(this.delivery);
     },
   },
   actions: {

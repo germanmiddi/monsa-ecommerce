@@ -14,10 +14,11 @@
                 </div>
 
                 <div class="flex">
-                    <!-- <button v-if="this.order.ship_status != 'finished'" @click="createShipmentDhl" class="btn-default">
-                        <span>Crear Envio DHL</span>
-                        <div v-if="this.loadingDhl == true" ><Icons name="cog" class="ml-2 w-6 h-6 animate-spin"/></div>
+                    <button v-if="this.order.payment_status != 'APPROVED'" @click="requestPaymentStatus" class="btn-default">
+                        <span>Consultar Pago</span>
+                        <div v-if="this.loadingPaymentStatus == true" ><Icons name="cog" class="ml-2 w-6 h-6 animate-spin"/></div>
                     </button>
+                    <!--
                     <button v-if="this.order.bill_status != 'finished'" @click="createInvoice" class="btn-default">
                         <span>Emitir Factura</span>
                         <div v-if="this.loading == true" ><Icons name="cog" class="ml-2 w-6 h-6 animate-spin"/></div>
@@ -25,9 +26,10 @@
                     <!-- <a href="#" class="btn-default">
                         <span>Imprimir</span>
                     </a> -->
-                    <a href="#" class="btn-default">
+
+                    <button v-if="this.order.order_status_id < 4" @click="updateStatus" class="btn-default">
                         <span>Finalizar</span>
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -158,7 +160,7 @@
                                         Pago:
                                     </td>
                                     <td>
-                                        {{ order.status.name }}
+                                        {{ order.payment_status }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -304,6 +306,18 @@ export default defineComponent({
         clearMessage() {
             this.toastMessage = ""
         },
+
+        async updateStatus() {
+            try {
+                const response = await axios.post(`/manager/orders/${this.order.id}/updateStatus`);
+                this.toastMessage = "Estado del pedido actualizado";
+                this.labelType = "success";
+            } catch (error) {
+                console.error('Error al actualizar el estado:', error);
+                this.toastMessage = "Error al actualizar el estado del pedido";
+                this.labelType = "error";
+            }
+        }
     },
 })
 </script>

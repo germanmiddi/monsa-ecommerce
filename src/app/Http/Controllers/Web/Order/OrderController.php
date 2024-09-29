@@ -10,7 +10,7 @@ use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Shipment;
-
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -20,11 +20,11 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
 
-            $order = Order::create([
-                'order_status_id'      => 1,
+            $order = Order::create(attributes: [
+                'order_status_id'      => 3,
                 'order_client_id'      => $client_id,
-                'payment_status'       => 'pending',
-                'subtotal'             => array_sum(array_column($cartItems, 'price_public')),
+                'payment_status'       => 'PENDING',
+                'subtotal'             => array_sum(array_column($cartItems, 'sale_price')),
                 'total'                => $totalPrice                
             ]);
 
@@ -33,9 +33,15 @@ class OrderController extends Controller
                     'orderitems_order_id'   => $order->id,
                     'orderitems_product_id' => $item['id'],
                     'quantity'   => 1, //$item['quantity'],
-                    'price'      => $item['price_public'],
-                    'total'      => $item['price_public']
+                    'price'      => $item['sale_price'],
+                    'total'      => $item['sale_price']
                 ]);
+
+                $product = Product::find($item['id']);
+                $product->update([
+                    'stock_reservado' => $product->stock_reservado + 1
+                ]);
+
             }
 
             DB::commit();

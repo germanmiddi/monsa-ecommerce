@@ -36,65 +36,97 @@
                     </div>
                 </div>
     
-                <!-- <div class="content flex-grow flex flex-col">
+                <div class="mt-2 mb-4">
+                <div class="shadow sm:rounded-md sm:overflow-hidden">
+                    <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+                        <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+                            <div class="">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <button v-if="Object.keys(this.filter).length"
+                                    class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
+                                    @click="clearFilter">Limpiar Filtro</button>
+                                <button type="button"
+                                    class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-blue-200 text-blue-900 hover:bg-blue-600 hover:text-white"
+                                    @click="getOrders()">Aplicar Filtro</button>
 
-                    <div class="content flex-grow flex flex-col">
-                        <div v-for="post in posts.data" :key="post.id" 
-                            class="rounded-md shadow bg-white mt-2 mb-4 w-4/5 mx-auto py-5 px-4 overflow-auto ">
-                            <div class="text-gray-800 text-sm">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0">
-                                        <img class="rounded-3xl h-32 w-32" :src="`/storage/${post.image}`" alt="">
-                                    </div>    
-                                    <div class="ml-8">
-                                        <div class="mb-3 text-lg uppercase font-bold text-blue-800">{{ post.title }}</div>
-                                        <span class="mt-3 font-bold bg-gray-100 px-2 py-1 text-center ">{{ post.post_category_id }}</span>
-                                        <div class="mt-3">Creado: <span class="font-bold">{{ post.created_at }}</span> - Estado: <span class="font-bold">{{ post.post_status_id }}</span></div> 
-                                    </div>
-                                </div>
-                                
-                                
-                                <div class="mt-3 overflow-wrap-normal" v-html="post.content"></div>
-                                <button @click="editPost(post.id)" class="mt-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Editar
-                                </button>
+                                <label class="text-sm font-medium text-gray-700 mr-2 ml-4" for="">Ver: </label>
+                                <select class="text-sm border-gray-300 rounded-md" v-model="length"
+                                    @change="getOrders">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
                             </div>
                         </div>
-                    
-                        <Pagination :links="posts.links" class="flex justify-end mx-5 mb-5" />
+                        <hr>
+                        <div class="grid grid-cols-12 gap-6">
+                            <div class="col-span-12 sm:col-span-2">
+                                <label for="id" class="block text-sm font-medium text-gray-700">Nro Orden</label>
+                                <input v-model="filter.id" type="number" name="id" id="id" autocomplete="off"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="delivery_number" class="block text-sm font-medium text-gray-700">Delivery Number</label>
+                                <input v-model="filter.delivery_number" type="text" name="delivery_number" id="delivery_number" autocomplete="off"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="cliente" class="block text-sm font-medium text-gray-700">Cliente</label>
+                                <input v-model="filter.cliente" type="text" name="cliente" id="cliente" autocomplete="off"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="producto" class="block text-sm font-medium text-gray-700">Producto</label>
+                                <input v-model="filter.producto" type="text" name="producto" id="producto" autocomplete="off"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            </div>
+                        </div>
                     </div>
-        
-                </div> -->
+
+                </div>
+            </div>
 
                 <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
                     <table class="w-full whitespace-nowrap">
                         <tr class="text-left font-bold bg-blue-500 text-white">
-                            <th class="px-6 py-3 text-center">Fecha</th>
-                            <th class="px-6 py-3 text-center">Cliente</th>
-                            <th class="px-6 py-3 text-center">Producto</th>
-                            <th class="px-6 py-3 text-center">Total</th>
-                            <th class="px-6 py-3 ">Estado</th>
-                            <th class="px-6 py-3 text-center">Acciones</th>
+                            <th class="px-5 py-3 text-center">ID</th>
+                            <th class="px-5 py-3 text-center">Envío</th>
+                            <th class="px-5 py-3 text-center">Fecha</th>
+                            <th class="px-5 py-3 text-center">Cliente</th>
+                            <th class="px-5 py-3 text-center">Estado</th>
+                            <th class="px-5 py-3 text-center">Producto</th>
+                            <th class="px-5 py-3 text-center">Total</th>
+                            <th class="px-5 py-3 text-center">Acciones</th>
                         </tr>
                         <tr v-for="order in orders.data" :key="order.id"
-                            class="hover:bg-gray-100 focus-within:bg-gray-100 text-sm ">
-                            <td class="border-t px-6 py-4 text-center">
+                            class="hover:bg-gray-100 focus-within:bg-gray-100 text-xs ">
+                            <td class="border-t px-5 py-4 text-center">
+                                {{ order.id }}
+                            </td>
+                            <td class="border-t px-5 py-4 text-center">
+                                {{ order.delivery }}
+                            </td>
+                            <td class="border-t px-5 py-4 text-center">
                                 {{ order.created_at }}
                             </td>
-                            <td class="border-t px-6 py-4 text-center">
+                            <td class="border-t px-5 py-4 text-center">
                                 {{ order.client.fullname }}
                             </td>
-                            <td class="border-t px-6 py-4 text-center">
-                                {{ order.items[0].quantity }} x 
-                                {{ order.items[0].product.nombre }}
-                            </td>
-                            <td class="border-t px-6 py-4 text-center">
+                            <td class="border-t px-5 py-4 text-center">
                                 {{ order.status.name }}
                             </td>
-                            <td class="border-t px-6 py-4 text-center">
+                            <td class="border-t px-5 py-4 text-left">
+                                {{ order.items[0].quantity }} x 
+                                {{ order.items[0].product.nombre.substring(0, 30) }}
+                            </td>
+                            <td class="border-t px-5 py-4 text-right">
                                 {{ formattedPrice( Number(order.total) ) }}
                             </td>
-                            <td class="border-t px-6 py-4 ">
+                            <td class="border-t px-5 py-4 ">
                                 <div class="flex justify-center">
                                     <a :href="route('orders.detail', order.id)" class="text-xs font-semibold bg-blue-200 text-blue-800 rounded-md py-1 px-2 ">DETALLE</a>
                                 </div>                                    
@@ -112,6 +144,26 @@
                             
                         </tr>
                     </table>
+                    <hr>
+                    <div class="flex justify-between mx-5 my-3 px-2 items-center text-sm">
+                        <div>
+                            Mostrando: {{ this.orders.from }} a {{ this.orders.to }} - Entradas encontradas:
+                            {{ this.orders.total }}
+                        </div>
+
+                        <div class="flex flex-wrap -mb-1">
+                            <template v-for="link in orders.links">
+                                <div v-if="link.url === null"
+                                    class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded-md"
+                                    v-html="link.label"> </div>
+                                <div v-else
+                                    class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border border-gray-300 rounded-md hover:bg-blue-500 hover:text-white cursor-pointer"
+                                    :class="{ 'bg-blue-500': link.active }, { 'text-white': link.active }"
+                                    @click="getOrdersPaginate(link.url)" v-html="link.label"> </div>
+                            </template>
+                        </div>
+                    </div>
+
                 </div>
                 <Pagination :links="orders.links" class="flex justify-end mx-5 mb-5" />
             </div>
@@ -166,6 +218,8 @@ import { ChevronDownIcon } from '@heroicons/vue/20/solid'
                 labelType: "info",
                 message: "",
                 showToast: false,
+                filter: {},
+                length: 15,
             }
         },
         setup() {
@@ -176,19 +230,49 @@ import { ChevronDownIcon } from '@heroicons/vue/20/solid'
         },    
         methods: {
             async getOrders() {
-                let response = await axios.get(route('orders.list'))
-                this.orders = response.data
+
+                let filter = `&length=${this.length}`
+
+                if (this.filter.id) {
+                    filter += `&id=${this.filter.id}`
+                }
+
+                if (this.filter.delivery_number) {
+                    filter += `&delivery_number=${this.filter.delivery_number}`
+                }
+
+                if (this.filter.cliente) {
+                    filter += `&cliente=${this.filter.cliente}`
+                }
+
+                if (this.filter.producto) {
+                    filter += `&producto=${this.filter.producto}`
+                }
+
+                const get = `${route('orders.list')}?${filter}`
+
+                const response = await fetch(get, { method: 'GET' })
+                this.orders = await response.json()
 
             },
-            editPost(postId) {
-                // Redirige a la página de edición del post con el ID correspondiente
-                this.$inertia.visit(route('posts.edit', { id: postId }));
-            }, 
 
             clearMessage() {
                 this.toastMessage = ""
             },
+
+            async getOrdersPaginate(link) {
+
+                var get = `${link}`;
+                const response = await fetch(get, { method: 'GET' })
+
+                this.orders = await response.json()
+            },
             
+            clearFilter() {
+                this.filter = {}
+                this.length = 15
+                this.getOrders()
+            },            
 
         },
     

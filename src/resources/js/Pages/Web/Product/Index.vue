@@ -1,7 +1,7 @@
 
 <template>
   <div class="bg-white">
-      <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div class="max-w-2xl mx-auto pt-12 pb-16 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
         <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
           <!-- Image gallery -->
           <TabGroup as="div" class="flex flex-col-reverse">
@@ -29,10 +29,17 @@
   
           <!-- Product info -->
           <div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
+            <div v-if="product.promo_active && product.promo_text" class="mb-4">
+              <span class="text-white bg-monsa-blue rounded-sm p-2 font-semibold text-xl">{{product.promo_text}}</span>
+            </div>
             <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">{{ product.nombre }}</h1>
   
             <div class="mt-3 flex justify-between items-center">
-              <div class="text-3xl text-gray-900">{{ formatPrice(product.price_public) }}</div>
+              <div v-if="product.promo_active && product.promo_text" class="flex justify-start  items-center">
+                <p class="text-2xl font-medium line-through text-gray-700">{{formatPrice(product.price_public) }}</p>
+                <p class="text-3xl font-bold text-gray-900 ml-4">{{formatPrice(product.promo_price) }}</p>
+              </div>
+              <div v-else class="text-3xl text-gray-900">{{ formatPrice(product.price_public) }}</div>
               <button @click.prevent="handleAddToCart"
                         class="uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8
                                hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
@@ -42,9 +49,8 @@
               <h3 class="sr-only">Description</h3>
               <div class="mt-5 border-t border-gray-200">
                 <dl class="sm:divide-y sm:divide-gray-200">
-                  
                   <div>
-                    <p class="my-3 text-base text-gray-900">{{ product.descripcion }}</p>
+                    <div class="my-3 text-xl text-gray-900" v-html="product.descripcion"></div>
                   </div>
 
                   <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -208,3 +214,8 @@
     
   }
   </script>
+  <style>
+    p{
+      @apply my-3 text-xl text-gray-700;
+    }
+  </style>

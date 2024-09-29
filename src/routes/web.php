@@ -62,11 +62,12 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('home'); 
         })->name('logout');
 
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         
         Route::get('/orders', [ManagerOrderController::class, 'index'])->name('orders');
         Route::get('/orders/list', [ManagerOrderController::class, 'list'])->name('orders.list');
         Route::get('/orders/{order}/detail', [ManagerOrderController::class, 'detail'])->name('orders.detail');
+        Route::post('/orders/{order}/updateStatus', [ManagerOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
         Route::get('/shipments/{shipment}/documentation', [ShipmentController::class, 'getDocumentation']);
 

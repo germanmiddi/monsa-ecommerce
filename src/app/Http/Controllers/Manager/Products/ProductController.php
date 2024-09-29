@@ -122,10 +122,18 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        
         try{
             $product->is_active = $request->is_active;
             $product->promo_text = $request->promo_text;
+            $product->promo_active = $request->promo_active;
+            $product->promo_price = $request->promo_price;
+            $product->promo_start_date = $request->promo_start_date;
+            $product->promo_end_date = $request->promo_end_date;
+            $product->stock_disponible = $request->stock_disponible;
+            $product->descripcion = $request->descripcion;
             $labelIds = array();
+            
             //Obtengo los ID de las etiquetas.
             foreach ($request->labelDetails as $value) {
                 // Buscar el Lable por nombre

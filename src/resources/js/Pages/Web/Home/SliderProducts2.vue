@@ -13,7 +13,7 @@
                 <div>{{ truncateText(slide.nombre, 20) }}</div>
             </div>
             <div class="overflow-hidden h-12 px-2">
-                <div class="font-extrabold text-2xl">{{ formatPrice(slide.precio) }}</div>
+                <div class="font-extrabold text-2xl">{{ formatPrice(slide.price_public) }}</div>
             </div>
         </div>
       </Slide>

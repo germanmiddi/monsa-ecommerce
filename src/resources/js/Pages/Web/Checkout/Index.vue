@@ -48,7 +48,7 @@
                   <TrashIcon class="w-5 " />Eliminar
                 </button>
               </div>
-              <p class="flex-none text-base font-medium">{{ formattedPrice(product.price_public) }}</p>
+              <p class="flex-none text-base font-medium">{{ formattedPrice(product.sale_price) }}</p>
             </li>
           </ul>
 
@@ -270,7 +270,12 @@
                                           <Icons v-if="loading" name="loading" class="w-5 h-5"> </Icons>
                                           <label v-else>Continuar</label> 
             </button>
-            <p class="mt-4 text-center text-sm text-gray-500 sm:mt-0 sm:text-left">Será redirigido a la ventana del pago.
+            
+
+            <p v-if="!processErrorMsg" class="mt-4 text-center text-sm text-gray-500 sm:mt-0 sm:text-left">Será redirigido a la ventana del pago.
+            </p>
+            <p v-else class="mt-4 text-center text-sm text-red-500 sm:mt-0 sm:text-left">
+              {{ processErrorMsg }}
             </p>
           </div>
         </div>
@@ -322,6 +327,7 @@ export default {
     const totalPricewDelivery = computed(() => cart.totalPricewDel);
     const formattedPrice = (price) => useFormatPrice(price);
     const loading = ref(false)
+    const processErrorMsg = ref('')
 
     const form = ref({
       fullname: '',
@@ -335,7 +341,7 @@ export default {
       addressExtras: '',
       document: '',
       cuit: '',
-      checkFactura: false
+      checkFactura: false,
     });
 
     const rules = {
@@ -385,12 +391,13 @@ export default {
         
           if (response.data.payment.data.checkout_url) {
             cart.clearCart()
+            processErrorMsg.value = ''
             console.log(response.data.payment.data.checkout_url)
             window.location.href = response.data.payment.data.checkout_url
           }
         } catch (error) {
           console.error('Error during checkout:', error)
-          // Handle error (e.g., show error message to user)
+          processErrorMsg.value = error.response.data.message
         } finally {
           loading.value = false
         }
@@ -431,10 +438,11 @@ export default {
         if (response.status == 200) {
           console.log(data.price)
           cart.setDelivery(data.price)
+          processErrorMsg.value = ''
         }
       } catch (error) {
         console.error('Error calculating delivery:', error)
-        // Handle error (e.g., show error message to user)
+        processErrorMsg.value = error.response.data.message
       } finally {
         loading.value = false
       }
@@ -468,6 +476,7 @@ export default {
       loading,
       calcDelivery,
       clearCart,
+      processErrorMsg
     }
   },
   template: 'none'

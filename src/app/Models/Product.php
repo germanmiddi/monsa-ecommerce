@@ -10,6 +10,8 @@ class Product extends Model
     use HasFactory;
     protected $table = 'product';
 
+    protected $appends = ['sale_price', 'stock_real'];
+
     public $fillable = [
                     'idFamily',
                     'idBrand',
@@ -40,13 +42,22 @@ class Product extends Model
                     'largo',
                     'externalId',
                     'is_active',
-                    'promo_text'];
+                    'promo_text',
+                    'promo_active',
+                    'promo_price',
+                    'promo_start_date',
+                    'promo_end_date',
+                    'stock_disponible',
+                    'stock_reservado'
+                
+                ];
 
     protected $casts = [
         'imagen' => 'array', // Cast para las imágenes
         'dimensiones' => 'array', // Cast para las dimensiones
         'search' => 'array', // Cast para los términos de búsqueda
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'promo_active' => 'boolean',
     ];
 
     public function family()
@@ -71,6 +82,16 @@ class Product extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', '1');
+    }
+
+    public function getSalePriceAttribute()
+    {
+        return $this->promo_active ? $this->promo_price : $this->price_public;
+    }
+
+    public function getStockRealAttribute()
+    {
+        return $this->stock_disponible - $this->stock_reservado;
     }
 
 }

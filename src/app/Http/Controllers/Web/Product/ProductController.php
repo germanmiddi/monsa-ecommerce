@@ -18,6 +18,7 @@ class ProductController extends Controller
      */
     public function index(Product $product)
     {
+        // dd($product);
         $prod = $product->load('atributes', 'atributes.atribute');
 
         $relatedProducts = Product::where('idFamily', $prod->idFamily)

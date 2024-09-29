@@ -13,6 +13,7 @@ use App\Mail\OrderConfirmation;
 use App\Http\Controllers\Web\Client\ClientController;
 use App\Http\Controllers\Web\Order\OrderController;
 use App\Services\DeliveryService;
+use App\Services\PaymentService;
 
 use App\Models\Order;
 
@@ -92,12 +93,14 @@ class CheckoutController extends Controller
             $newOrder = $response->order;
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error creating shipment', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Error al crear el envío', 'error' => $e->getMessage()], 500);
         }        
 
         $payment = $this->payment($request, $newOrder->id, $newOrder->delivery_amount);
         Log::info('Payment created: ' . json_encode($payment->content()));
 
+        $paymentService = app(PaymentService::class);
+        $response_storepayment = $paymentService->store($newOrder->id, $payment->content());
         $responsePayment = json_decode($payment->content());
 
         if($payment->status() != 200){
@@ -142,12 +145,14 @@ class CheckoutController extends Controller
                                          'Content-Type'  => 'application/json'])
                            ->post($url, $params);
         
+
         if($http_post->status() != 200){
-            return response()->json(['message' => 'Error creating payment method', 'error' => $http_token], 500);
+            Log::error('Error creating payment method: ' . json_encode($http_post));
+            return response()->json(['message' => 'Error creando el metodo de pago', 'error' => $http_token], 500);
         }
 
         $response = json_decode($http_post);
-        
+        Log::info('Payment created successfully: ' . json_encode($response));
         return response()->json(['message' => 'Payment created successfully', 'payment' => $response], 200);
         
                          
@@ -159,7 +164,6 @@ class CheckoutController extends Controller
         $items = $this->_generateItems($request['cartItems'], $delivery_amount);
         $callback_url = $this->_generateCallbackUrl($order_id);
         $total = number_format($request['totalPrice'], 2, '.', '');
-
 
         return [
                     "store_id" => "YqzLxzVobkr6Xqk7JGZmzZsHqmTOAL37",
@@ -212,7 +216,7 @@ class CheckoutController extends Controller
                 "quantity"    => 1,
                 "unit_price"  => [
                     "currency" => "ARS",
-                    "value"    => $i['price_public'] . ".00"
+                    "value"    => $i['sale_price'] . ".00"
                     // "value"    => "299.00"
                 ]
             ];
