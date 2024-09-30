@@ -18,23 +18,7 @@ services:
   networks:
     - monsaecommerce-net
 
- monsaecommerce_db:
-  image: mariadb
-  container_name: monsaecommerce-db
-  restart: unless-stopped
-  environment:
-    MYSQL_DATABASE: monsaecommercedb
-    MYSQL_ROOT_PASSWORD: 123123
-    MYSQL_PASSWORD: 123123
-    MYSQL_USER: root
-  ports: # Agregamos este bloque para mapear el puerto de la base de datos al host
-  - "3310:3306"
-  volumes:
-  - newmonsadata:/var/lib/mysq
-  networks:
-  - newmonsa
-
-monsaecommerce_www:
+ monsaecommerce_www:
   image: nginx
   env_file: .env
   container_name: monsaecommerce-www
@@ -51,8 +35,3 @@ networks:
   monsaecommerce-net:
     name: monsaecommerce-net
     driver: bridge
-
-volumes:
- newmonsadata:
-   name: newmonsadata
-   external: true
