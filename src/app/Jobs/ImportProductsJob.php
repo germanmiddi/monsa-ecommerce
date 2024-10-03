@@ -51,35 +51,58 @@ class ImportProductsJob implements ShouldQueue
                     $is_active = 0;
                 }
                 Log::info('price_public' . $product['price_public'] );
-                $productModel = Product::updateOrCreate(
-                    ['externalId' => $product['idProducto']],
-                    [
-                        'idProducto' => $product['idProducto'],
-                        'idFamily' => $id_family,
-                        'idBrand'   => $id_brand,
-                        'nombre'    => $product['nombre'],
-                        'slug'      => $product['slug'],
-                        'modelo'    => $product['modelo'],
-                        'descripcion' => $product['descripcion'],
-                        'imagen' => $product['imagen'],
-                        'sku'    => $product['sku'],
-                        'precio' => $product['precio'],
-                        'price_public' => $product['price_public'],
-                        'dimensiones' => $product['dimensiones'],
-                        'peso'  => $product['peso'],
-                        'stock' => $product['stock'],
-                        'stock_quantity' => $product['stock_quantity'],
-                        'visibilidad'    => $product['visibilidad'],
-                        'state'  => $product['state'],
-                        'show'   => $product['show'],
-                        'search' => $product['search'],
-                        'alto'   => $product['alto'],
-                        'ancho'  => $product['ancho'],
-                        'largo'  => $product['largo'],
-                        'externalId' => $product['idProducto'],
-                        'is_active' => $is_active
-                    ]
-                );
+                
+                $productLocal = Product::where('externalId', $product['idProducto'])->first();  
+
+                if($productLocal){
+                    //update some fields
+                    $productModel = Product::update(
+                        ['id' => $productLocal->id],
+                        [
+                            'nombre'    => $product['nombre'],
+                            'modelo'    => $product['modelo'],
+                            'precio'    => $product['precio'],
+                            'imagen'    => $product['imagen'],
+                            'price_public' => $product['price_public'],
+                            'peso'   => $product['peso'],
+                            'search' => $product['search'],
+                            'alto'   => $product['alto'],
+                            'ancho'  => $product['ancho'],
+                            'largo'  => $product['largo'],
+                            'updated_at' => now(),
+                        ]
+                    );
+                }else{
+                    //create whole product 
+                    $productModel = Product::create(
+                        [
+                            'idProducto'  => $product['idProducto'],
+                            'idFamily'    => $id_family,
+                            'idBrand'     => $id_brand,
+                            'nombre'      => $product['nombre'],
+                            'slug'        => $product['slug'],
+                            'modelo'      => $product['modelo'],
+                            'descripcion' => $product['descripcion'],
+                            'imagen'      => $product['imagen'],
+                            'sku'         => $product['sku'],
+                            'precio'      => $product['precio'],
+                            'price_public'=> $product['price_public'],
+                            'dimensiones' => $product['dimensiones'],
+                            'peso'        => $product['peso'],
+                            'stock'       => $product['stock'],
+                            'stock_quantity' => $product['stock_quantity'],
+                            'visibilidad'    => $product['visibilidad'],
+                            'state'      => $product['state'],
+                            'show'       => $product['show'],
+                            'search'     => $product['search'],
+                            'alto'       => $product['alto'],
+                            'ancho'      => $product['ancho'],
+                            'largo'      => $product['largo'],
+                            'externalId' => $product['idProducto'],
+                            'is_active'  => $is_active
+                        ]
+                    );
+                }
 
                 if(!$productModel){
                     Log::error('Failed to store product: ' . json_encode($product));
@@ -118,6 +141,6 @@ class ImportProductsJob implements ShouldQueue
 
         Log::info("Se importaron $count productos");
         Log::error("Hubo errores al importar los siguientes productos ");
-        // Puedes decidir qué hacer con los resultados aquí, como enviar un email, etc.
+        
     }
 }
