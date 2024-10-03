@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             PostCategoriesTableSeeder::class,
             PostStatusesTableSeeder::class,
             OrderStatusTableSeeder::class,
-            
+            PagesLegalesTableSeeder::class,
         ]);
         
         User::firstOrCreate([
