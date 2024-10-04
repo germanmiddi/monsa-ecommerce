@@ -75,7 +75,7 @@ class DeliveryService
         $items = array_map(function($item) {
             return [
                 "sku" => $item['sku'],
-                "weight" => $item['peso'] == 0 ? 10 : $item['peso'] / 1000 ,
+                "weight" => $item['peso'] == 0 ? 10 : $item['peso'],
                 "height" => $item['alto'] == 0 ? 10 : $item['alto'],
                 "width" => $item['ancho'] == 0 ? 10 : $item['ancho'],
                 "length" => $item['largo'] == 0 ? 10 : $item['largo'],
@@ -122,7 +122,7 @@ class DeliveryService
             'items' => array_map(function($item) {
                 return [
                     'sku' => $item['sku'] ?? null,
-                    "weight" => $item['peso'] == 0 ? 10 : $item['peso'] / 1000 ,
+                    "weight" => $item['peso'] == 0 ? 10 : $item['peso'] ,
                     "height" => $item['alto'] == 0 ? 10 : $item['alto'],
                     "width" => $item['ancho'] == 0 ? 10 : $item['ancho'],
                     "length" => $item['largo'] == 0 ? 10 : $item['largo'],                    
