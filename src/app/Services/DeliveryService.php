@@ -24,9 +24,10 @@ class DeliveryService
     public function calculateDelivery(array $form)
     {
         $requestData = $this->buildCalcDeliveryRequestData($form);
+        Log::info('Request data: ' . json_encode($requestData));
 
         $response = $this->makeApiCall('post', '/shipments/quote', $requestData);
-
+        Log::info('Response: ' . json_encode($response->json()));
         if ($response->successful()) {
             $data = $response->json();
             $price = $data['results']['standard_delivery']['amounts']['price_incl_tax'];
