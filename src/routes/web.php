@@ -117,6 +117,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('settings/label/update/{label}', [SettingsController::class, 'labelUpdate'])->name('settings.label.update');
         Route::post('settings/label/store', [SettingsController::class, 'labelStore'])->name('settings.label.store');
 
+        Route::get('settings/import', [SettingsController::class, 'importData'])->name('settings.import');
+        
+        
         Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');
 
         Route::get('import/products',  [ImportController::class, 'import_products'])->name('import.products');

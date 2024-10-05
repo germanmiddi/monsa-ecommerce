@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Entidad;
 use App\Models\Manager\Tramite;
-
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\Client;
 class DashboardController extends Controller
 {
     /**
@@ -21,7 +23,32 @@ class DashboardController extends Controller
     public function index()
     {
 
-        return  Inertia::render('Manager/Dashboard/Index');
+        $current_month = Carbon::now()->month;
+        $current_year = Carbon::now()->year;
+
+        $clients = Client::whereMonth('created_at', $current_month)
+                        ->whereYear('created_at', $current_year)
+                        ->count();
+
+        $orders = Order::whereMonth('created_at', $current_month)
+            ->whereYear('created_at', $current_year)
+            ->get();
+
+        $pending_orders = $orders->where('status', 1)->count();
+        $processing_orders = $orders->where('status', 3)->count();
+        $delivered_orders = $orders->where('status', 4)->count();
+
+        $total_orders = $orders->count();
+        $total_sales = $orders->sum('total');
+
+        return Inertia::render('Manager/Dashboard/Index', [
+                            'pending_orders' => $pending_orders,
+                            'processing_orders' => $processing_orders,
+                            'delivered_orders' => $delivered_orders,
+                            'total_orders' => $total_orders,
+                            'total_sales' => $total_sales,
+                            'clients' => $clients,
+                        ]);
     }
 
     /**

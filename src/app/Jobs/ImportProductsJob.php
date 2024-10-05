@@ -15,7 +15,8 @@ use App\Models\Family;
 use App\Models\Brand;
 use App\Models\Atribute;
 use App\Models\ProductAtribute;
-
+use App\Models\Setting;
+use Carbon\Carbon;
 
 class ImportProductsJob implements ShouldQueue
 {
@@ -56,9 +57,7 @@ class ImportProductsJob implements ShouldQueue
 
                 if($productLocal){
                     //update some fields
-                    $productModel = Product::update(
-                        ['id' => $productLocal->id],
-                        [
+                    $productLocal->update([
                             'nombre'    => $product['nombre'],
                             'modelo'    => $product['modelo'],
                             'precio'    => $product['precio'],
@@ -72,6 +71,12 @@ class ImportProductsJob implements ShouldQueue
                             'updated_at' => now(),
                         ]
                     );
+
+                    if(!$productLocal){
+                        Log::error('Failed to update product: ' . json_encode($productLocal));
+                    }else{
+                        Log::info('Product updated: ' . json_encode($productLocal));
+                    }
                 }else{
                     //create whole product 
                     $productModel = Product::create(
@@ -138,6 +143,10 @@ class ImportProductsJob implements ShouldQueue
             }
 
         }
+
+        $setting = Setting::where('key', 'last_import_product')->first();
+        $setting->value = Carbon::now()->format('d-m-Y H:i:s');
+        $setting->save();
 
         Log::info("Se importaron $count productos");
         Log::error("Hubo errores al importar los siguientes productos ");

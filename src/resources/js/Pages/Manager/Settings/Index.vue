@@ -77,13 +77,6 @@ export default {
 			selectedIndex: 0
 		}
 	},
-	watch: {
-
-	},
-
-	created() {
-
-	},
     methods: {
 		clearMessage() {
 			this.toastMessage = "";

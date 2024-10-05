@@ -8,9 +8,6 @@
                         <div class="md:col-span-3">
                             <div class="px-4 sm:px-0 flex justify-between items-center mb-3">
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">Configuración General</h3>
-                                <!-- <input type="text" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 w-96  shadow-sm sm:text-sm border-gray-300 rounded-md"  placeholder="Buscar"/>
-                                <button class="btn-blue"> Nueva Locacion</button> -->
-                                
                             </div>
                         </div>
                     </div>                        
@@ -18,32 +15,32 @@
 
                         <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
                             <div>
-                                Sincronizacion de Familias<br>
-                                <span class="text-gray-400 text-sm">Última ejecución 01/04/2024 - 14:33 </span>
+                                Sincronización de Familias<br>
+                                <span class="text-gray-400 text-sm">Última ejecución {{ lastImportFamilies }}</span>
                             </div>
                             <button @click="getFamilies()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
                         </div>
 
                         <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
                             <div>
-                                Sincronizacion de Marcas<br>
-                                <span class="text-gray-400 text-sm">Última ejecución 01/04/2024 - 14:33 </span>
+                                Sincronización de Marcas<br>
+                                <span class="text-gray-400 text-sm">Última ejecución {{ lastImportBrands }}</span>
                             </div>
                             <button @click="getBrands()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
                         </div>
 
                         <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
                             <div>
-                                Sincronizacion de Atributos<br>
-                                <span class="text-gray-400 text-sm">Última ejecución 01/04/2024 - 14:33 </span>
+                                Sincronización de Atributos<br>
+                                <span class="text-gray-400 text-sm">Última ejecución {{ lastImportAtributes }}</span>
                             </div>
                             <button @click="getAtributes()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
                         </div>
 
                         <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
                             <div>
-                                Sincronizacion de Productos<br>
-                                <span class="text-gray-400 text-sm">Última ejecución 01/04/2024 - 14:33 </span>
+                                Sincronización de Productos<br>
+                                <span class="text-gray-400 text-sm">Última ejecución {{ lastImportProducts }}</span>
                             </div>
                             <button @click="getProducts()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
                         </div>
@@ -65,12 +62,21 @@ export default {
         return {
             toastMessage: "",
 			labelType:    "info",
+            lastImportProducts: null,
+            lastImportFamilies: null,
+            lastImportBrands: null,
+            lastImportAtributes: null,
         }
     },
+    created() {
+        this.getSettings()
+    },
+
     methods: {
         clearMessage() {
 			this.toastMessage = "";
 		},
+
         async getFamilies() {
 
             const url = route('import.families')
@@ -80,6 +86,7 @@ export default {
                 if (response.status == 200) {
 					this.toastMessage = response.data.message
                     this.labelType = 'success'
+                    this.getSettings()
 				} else {
                     this.toastMessage = response.data.message
                     this.labelType = 'danger'
@@ -90,15 +97,16 @@ export default {
             }
             
         },
+
         async getBrands() {
 
             const url = route('import.brands')
-            
             try {
                 const response = await axios.get(url)
                 if (response.status == 200) {
 					this.toastMessage = response.data.message
                     this.labelType = 'success'
+                    this.getSettings()
 				} else {
                     this.toastMessage = response.data.message
                     this.labelType = 'danger'
@@ -107,18 +115,18 @@ export default {
                 this.toastMessage = 'Se ha producido un error al procesar | Comuniquese con el administrador'
                 this.labelType = 'danger'
             }
-
         },
 
         async getAtributes() {
 
             const url = route('import.atributes')
-            
+           
             try {
                 const response = await axios.get(url)
                 if (response.status == 200) {
 					this.toastMessage = response.data.message
                     this.labelType = 'success'
+                    this.getSettings()
 				} else {
                     this.toastMessage = response.data.message
                     this.labelType = 'danger'
@@ -142,6 +150,7 @@ export default {
                 if (response.status == 200) {
 					this.toastMessage = response.data.message
                     this.labelType = 'success'
+                    this.getSettings()
 				} else {
                     this.toastMessage = response.data.message
                     this.labelType = 'danger'
@@ -150,6 +159,18 @@ export default {
                 this.toastMessage = 'Se ha producido un error al procesar | Comuniquese con el administrador'
                 this.labelType = 'danger'
             }
+
+        },
+
+        async getSettings() {
+            const url = route('settings.import')
+            const response = await axios.get(url)
+            console.log(response.data)
+
+            this.lastImportFamilies = response.data.find(setting => setting.key === 'last_import_families')?.value   
+            this.lastImportProducts = response.data.find(setting => setting.key === 'last_import_product')?.value
+            this.lastImportBrands = response.data.find(setting => setting.key === 'last_import_brand')?.value
+            this.lastImportAtributes = response.data.find(setting => setting.key === 'last_import_attributes')?.value
 
         }
     }

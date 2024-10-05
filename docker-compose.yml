@@ -1,51 +1,50 @@
-version: '3.7'
-
 services:
- monsaecommerce_app:
-  env_file: .env
-  build:
-   args:
-    user: ${USER}
-    uid: ${UID}
-   context: ./
-   dockerfile: Dockerfile
-  image: monsaecommerce_app
-  container_name: monsaecommerce-app
-  restart: unless-stopped
-  working_dir: /usr/share/nginx/html
-  volumes:
-    - ${WORK_DIR_SRC}:/usr/share/nginx/html
-  networks:
-    - monsaecommerce-net
+  monsaecommerce_app:
+    env_file: .env
+    build:
+      args:
+        user: ${USER}
+        uid: ${UID}
+      context: ./
+      dockerfile: Dockerfile
+    image: monsaecommerce_app
+    container_name: monsaecommerce-app
+    restart: unless-stopped
+    working_dir: /usr/share/nginx/html
+    volumes:
+      - ${WORK_DIR_SRC}:/usr/share/nginx/html
+    networks:
+      - monsaecommerce-net
 
- monsaecommerce_db:
-  image: mariadb
-  container_name: monsaecommerce-db
-  restart: unless-stopped
-  environment:
-    MYSQL_DATABASE: monsaecommercedb
-    MYSQL_ROOT_PASSWORD: 123123
-    MYSQL_PASSWORD: 123123
-    MYSQL_USER: root
-  ports: # Agregamos este bloque para mapear el puerto de la base de datos al host
-  - "3310:3306"
-  volumes:
-  - newmonsadata:/var/lib/mysq
-  networks:
-  - newmonsa
+  monsaecommerce_db:
+    image: mariadb
+    container_name: monsaecommerce-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: monsaecommercedb
+      MYSQL_ROOT_PASSWORD: 123123
+      MYSQL_PASSWORD: 123123
+      MYSQL_USER: root
+    ports:
+      # Agregamos este bloque para mapear el puerto de la base de datos al host
+      - "3310:3306"
+    volumes:
+      - newmonsadata:/var/lib/mysq
+    networks:
+      - monsaecommerce-net
 
-monsaecommerce_www:
-  image: nginx
-  env_file: .env
-  container_name: monsaecommerce-www
-  restart: unless-stopped
-  volumes:
-  - ${WORK_DIR_SRC}:/usr/share/nginx/html
-  - ${WORK_DIR}:/etc/nginx/conf.d
-  ports:
-  -  "8900:80"
-  networks:
-  - monsaecommerce-net
+  monsaecommerce_www:
+    image: nginx
+    env_file: .env
+    container_name: monsaecommerce-www
+    restart: unless-stopped
+    volumes:
+      - ${WORK_DIR_SRC}:/usr/share/nginx/html
+      - ${WORK_DIR}:/etc/nginx/conf.d
+    ports:
+      - "8900:80"
+    networks:
+      - monsaecommerce-net
 
 networks:
   monsaecommerce-net:
@@ -53,6 +52,6 @@ networks:
     driver: bridge
 
 volumes:
- newmonsadata:
-   name: newmonsadata
-   external: true
+  newmonsadata:
+    name: newmonsadata
+    external: true

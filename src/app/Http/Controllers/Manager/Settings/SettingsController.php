@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use App\Models\Family;
 use App\Models\Label;
 use Illuminate\Support\Str;
-
+use App\Models\Setting;
 class SettingsController extends Controller
 {
     /**
@@ -93,5 +93,10 @@ class SettingsController extends Controller
         }
     }
 
-    
+    public function importData(){
+        
+        $values = Setting::where('module', 'import')->get();
+
+        return response()->json($values);
+    }
 }

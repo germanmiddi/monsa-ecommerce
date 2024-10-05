@@ -52,23 +52,6 @@
 			<!-- Main Navigation -->
 			<header class="relative">
 				<nav aria-label="Top">
-					<!-- Top navigation -->
-					<!-- <div class="bg-monsa-blue">
-						
-						<div class="max-w-7xl mx-auto h-10 px-4 flex items-right justify-end sm:px-6 lg:px-8">
-							<div class="flex items-center space-x-6" v-if="!this.$page.props.user">
-								<a :href="route('login')" class="text-sm font-medium text-white hover:text-gray-100">Ingresar</a>
-							</div>
-							<div v-else class="flex items-center space-x-6">
-								<a :href="route('dashboard')" class="text-sm font-medium text-white hover:text-gray-100">Administrar</a>
-								<div @click="logout" class="text-sm font-medium text-white hover:text-gray-100">Salir</div>
-							</div>
-						</div>
-						<div style=" background: url('/images/v.png');
-											background-size: contain;
-											opacity: 0.04;">
-						</div>
-					</div>  -->
 					<div class="bg-monsa-blue relative">
 						<!-- Fondo decorativo -->
 						<div class="absolute inset-0" style="background: url('/images/v.png'); background-size: contain; opacity: 0.04;"></div>
@@ -93,7 +76,7 @@
 							<div class="h-16 flex items-center justify-between">
 								<!-- Logo (lg+) -->
 								<div class="hidden lg:flex-1 lg:flex lg:items-center">
-									<a href="#">
+									<a :href="route('home')">
 										<img class="w-40" src="/images/logo-blanco.png" />
 									</a>
 								</div>
@@ -164,7 +147,7 @@
 				<slot></slot>
 
 			</main>
-	
+			
 			<footer aria-labelledby="footer-heading" class="bg-monsa-blue">
 				
 				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
@@ -177,9 +160,10 @@
 									<div class="col-span-3 md:col-span-1">
 										<h3 class="text-sm font-bold">Navegación</h3>
 										<ul class="mt-6 space-y-2">
-											<li v-if="$page.props.show_module_store"><a href="#" class="text-sm hover:underline">Tienda</a></li>
-											<li><a href="#" class="text-sm hover:underline">Nosotros</a></li>
-											<li><a href="#" class="text-sm hover:underline">Novedades</a></li>
+											<li v-if="$page.props.show_module_store">
+												<a :href="route('store')" class="text-sm hover:underline">Tienda</a></li>
+											<li><a :href="route('aboutus')" class="text-sm hover:underline">Nosotros</a></li>
+											<li><a :href="route('blog.list')" class="text-sm hover:underline">Novedades</a></li>
 											<li><a :href="route('contacto')" class="text-sm">Contacto</a></li>								
 										</ul>
 									</div>
@@ -204,12 +188,13 @@
 								<div class="mt-8">
 									<h3 class="text-sm font-bold text-white">Suscribite a nuestro newsletter</h3>
 									<p class="mt-6 text-sm text-white">Recibí las últimas novedades y promociones que tenemos para vos.</p>
-									<form class="flex">
+									<div class="flex">
 										<input id="email-address" type="text" autocomplete="email" required="" class="appearance-none border-white bg-monsa-blue min-w-0 w-full border border-bottom-1 rounded-md shadow-sm py-2 px-4 text-base text-white " />
 										<div class="ml-4 flex-shrink-0">
-											<button type="submit" class="w-full bg-white border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-monsa-blue hover:bg-monsa-blue hover:text-white hover:border-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Suscribirse</button>
+											<button @click="subscribe" class="w-full bg-white border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-monsa-blue hover:bg-monsa-blue hover:text-white hover:border-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Suscribirse</button>
 										</div>
-									</form>	
+									</div>	
+									<Alert :message="successMessage" @clear="clearMessage" />
 								</div>
 								<div class="mt-8 w-16"> 
 									<a href="http://qr.afip.gob.ar/?qr=TCwMdwjOQ0Ro_jSB62EtYw,," target="_F960AFIPInfo"><img src="http://www.afip.gob.ar/images/f960/DATAWEB.jpg" border="0"></a>
@@ -221,7 +206,7 @@
 					</div>
 	
 					<div class="border-t border-gray-100 pt-8 pb-5 text-center">
-						<p class="text-sm text-white">&copy; 2024 Monsa SRL. Todos los derechos reservados. Diseño y Desarrollo por onMedia</p>
+						<p class="text-sm text-white">&copy; 2024 Monsa SRL. Todos los derechos reservados. <a href="https://onmedia.com.ar" target="_blank" class="text-white hover:text-gray-100 hover:underline">Diseño y Desarrollo por onMedia</a></p>
 					</div>
 				</div>
 			</footer>
@@ -250,6 +235,8 @@
 	import { ShoppingBagIcon } from '@heroicons/vue/24/solid'
 	import { useCartStore } from '../Stores/useCartStore'
 	import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
+	import Alert from '../Layouts/Components/Alert'
+
 	const navigation = {
 		pages: [
 			{ name: 'Tienda', href: 'store' },
@@ -271,8 +258,6 @@
 		},
 		// More products...
 	]
-
-
 	
 	export default {
 		components: {
@@ -290,28 +275,38 @@
 			TransitionChild,
 			TransitionRoot,
 			ShoppingBagIcon,
-			Whatsappbtn
+			Whatsappbtn,
+			Alert
 
 		},
+		data() {
+			return {
+			successMessage: '',
+			};
+		},		
 		setup() {
 			const open = ref(false)
 			const cart = useCartStore()
 
 			// const totalItems = cart.totalItems()
 			const totalItems = computed(() => cart.totalItems);
-
-
 			return {
 				navigation,
 				trendingProducts,
 				open,
-				totalItems
+				totalItems,
 			}
 		},
 		methods: {
 			logout() {
                    this.$inertia.get(route('logout'));
             },
+			clearMessage() {
+				this.successMessage = ''; // Limpia el mensaje cuando se oculta el alert
+			},
+			subscribe(){
+				this.successMessage = 'Suscripción exitosa!';
+			}
 		},
 	}
 	</script>

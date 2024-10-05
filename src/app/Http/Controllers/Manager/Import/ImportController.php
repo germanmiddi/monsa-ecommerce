@@ -15,8 +15,9 @@ use App\Models\Brand;
 use App\Models\Atribute;
 use App\Models\Product;
 use App\Models\ProductAtribute;
+use App\Models\Setting;
 
-
+use Carbon\Carbon;
 class ImportController extends Controller
 {
  
@@ -40,86 +41,86 @@ class ImportController extends Controller
 
     }
 
-    public function _storeProducts($products){
+    // public function _storeProducts($products){
             
-        $count = 0;
-        $errorList = [];
+    //     $count = 0;
+    //     $errorList = [];
 
-        foreach ($products as $product) {
-            DB::beginTransaction();
+    //     foreach ($products as $product) {
+    //         DB::beginTransaction();
 
-            try {
+    //         try {
 
-                $id_family = Family::where('externalId', $product['idFamilia'])->value('id');
-                $id_brand = Brand::where('externalId', $product['idMarca'])->value('id');
+    //             $id_family = Family::where('externalId', $product['idFamilia'])->value('id');
+    //             $id_brand = Brand::where('externalId', $product['idMarca'])->value('id');
 
-                if(!$id_family || !$id_brand){
-                    $errorList[] = $product;
-                    continue;
-                }
-                // dd($product['idFamilia'], $id_family, $product['idMarca'], $id_brand);
+    //             if(!$id_family || !$id_brand){
+    //                 $errorList[] = $product;
+    //                 continue;
+    //             }
+    //             // dd($product['idFamilia'], $id_family, $product['idMarca'], $id_brand);
 
-                $productModel = Product::updateOrCreate(
-                    ['externalId' => $product['idProducto']],
-                    [
-                        'idProducto' => $product['idProducto'],
-                        'idFamily' => $id_family,
-                        'idBrand'   => $id_brand,
-                        'nombre'    => $product['nombre'],
-                        'slug'      => $product['slug'],
-                        'modelo'    => $product['modelo'],
-                        'descripcion' => $product['descripcion'],
-                        'imagen' => $product['imagen'],
-                        'sku'    => $product['sku'],
-                        'precio' => $product['precio'],
-                        'dimensiones' => $product['dimensiones'],
-                        'peso'  => $product['peso'],
-                        'stock' => $product['stock'],
-                        'stock_quantity' => $product['stock_quantity'],
-                        'visibilidad'    => $product['visibilidad'],
-                        'state'  => $product['state'],
-                        'show'   => $product['show'],
-                        'search' => $product['search'],
-                        'alto'   => $product['alto'],
-                        'ancho'  => $product['ancho'],
-                        'largo'  => $product['largo'],
-                        'externalId' => $product['idProducto']
-                    ]
-                );
+    //             $productModel = Product::updateOrCreate(
+    //                 ['externalId' => $product['idProducto']],
+    //                 [
+    //                     'idProducto' => $product['idProducto'],
+    //                     'idFamily' => $id_family,
+    //                     'idBrand'   => $id_brand,
+    //                     'nombre'    => $product['nombre'],
+    //                     'slug'      => $product['slug'],
+    //                     'modelo'    => $product['modelo'],
+    //                     'descripcion' => $product['descripcion'],
+    //                     'imagen' => $product['imagen'],
+    //                     'sku'    => $product['sku'],
+    //                     'precio' => $product['precio'],
+    //                     'dimensiones' => $product['dimensiones'],
+    //                     'peso'  => $product['peso'],
+    //                     'stock' => $product['stock'],
+    //                     'stock_quantity' => $product['stock_quantity'],
+    //                     'visibilidad'    => $product['visibilidad'],
+    //                     'state'  => $product['state'],
+    //                     'show'   => $product['show'],
+    //                     'search' => $product['search'],
+    //                     'alto'   => $product['alto'],
+    //                     'ancho'  => $product['ancho'],
+    //                     'largo'  => $product['largo'],
+    //                     'externalId' => $product['idProducto']
+    //                 ]
+    //             );
 
-                if(isset($product['atributos'])){
-                    foreach ($product['atributos'] as $atributo) {
-                        $id_atributo = Atribute::where('externalId', $atributo['idAtributo'])->value('id');
-                        if(!$id_atributo){
-                            $errorList[] = $product;
-                            continue;
-                        }
-                        $productAtribute = ProductAtribute::updateOrCreate(
-                            ['id_product' => $productModel->id, 'id_atribute' => $id_atributo],
-                            [
-                                'valores' => $atributo['valores']
-                            ]
-                        );
-                    }
-                }
+    //             if(isset($product['atributos'])){
+    //                 foreach ($product['atributos'] as $atributo) {
+    //                     $id_atributo = Atribute::where('externalId', $atributo['idAtributo'])->value('id');
+    //                     if(!$id_atributo){
+    //                         $errorList[] = $product;
+    //                         continue;
+    //                     }
+    //                     $productAtribute = ProductAtribute::updateOrCreate(
+    //                         ['id_product' => $productModel->id, 'id_atribute' => $id_atributo],
+    //                         [
+    //                             'valores' => $atributo['valores']
+    //                         ]
+    //                     );
+    //                 }
+    //             }
 
-                DB::commit();
-                $count++;
+    //             DB::commit();
+    //             $count++;
 
-            } catch (\Exception $e) {
-                DB::rollBack();
-                Log::error('Failed to store product: ' . $e->getMessage());
-                $errorList[] = $product;
-            }
+    //         } catch (\Exception $e) {
+    //             DB::rollBack();
+    //             Log::error('Failed to store product: ' . $e->getMessage());
+    //             $errorList[] = $product;
+    //         }
 
-        }
+    //     }
 
-        return response()->json([
-            'success' => $count . ' products stored successfully',
-            'errors' => $errorList
-        ]);
+    //     return response()->json([
+    //         'success' => $count . ' products stored successfully',
+    //         'errors' => $errorList
+    //     ]);
 
-    }
+    // }
 
     public function _get_products() {
         // Ensure the API URL is set in the environment configuration
@@ -176,25 +177,18 @@ class ImportController extends Controller
 
         foreach ($families as $family) {
             DB::beginTransaction();
-
             try {
-
                 $familyModel = Family::updateOrCreate(
                     ['externalId' => $family['idFamilia']],
                     [
                         'nombre' => $family['nombre'],
                         'slug' => $family['slug'],
-                        // 'descripcion' => $family['descripcion'],
-                        // 'imagen' => $family['imagen'],
                         'orden' => $family['orden'],
-                        // 'active' => false,
                         'externalId' => $family['idFamilia']
                     ]
                 );
-
                 DB::commit();
                 $count++;
-
             } catch (\Exception $e) {
                 DB::rollBack();
                 Log::error('Failed to store family: ' . $e->getMessage());
@@ -202,6 +196,9 @@ class ImportController extends Controller
             }
 
         }
+        $setting = Setting::where('key', 'last_import_families')->first();
+        $setting->value = Carbon::now()->format('d-m-Y H:i:s');
+        $setting->save();
 
         return response()->json([
             'success' => $count . ' families stored successfully',
@@ -285,8 +282,12 @@ class ImportController extends Controller
                 Log::error('Failed to store brand: ' . $e->getMessage());
                 $errorList[] = $brand;
             }
-
         }
+
+
+        $setting = Setting::where('key', 'last_import_brand')->first();
+        $setting->value = Carbon::now()->format('d-m-Y H:i:s');
+        $setting->save();
 
         return response()->json([
             'success' => $count . ' brands stored successfully',
@@ -379,6 +380,10 @@ class ImportController extends Controller
             }
 
         }
+
+        $setting = Setting::where('key', 'last_import_attributes')->first();
+        $setting->value = Carbon::now()->format('d-m-Y H:i:s');
+        $setting->save();
 
         return response()->json([
             'success' => $count . ' atributes stored successfully',

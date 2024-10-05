@@ -115,23 +115,24 @@
                     <tr class="text-left font-bold bg-blue-500 text-white">
                         <th class="px-6 py-3 text-center">SKU</th>
                         <th class="px-6 py-3 text-center">Familia</th>
-                        <th class="px-6 py-3 text-center">Marca</th>
-                        <th class="px-6 py-3 text-center">Modelo</th>
+                        <th class="px-6 py-3 text-left">Marca</th>
+                        <th class="px-6 py-3 text-left">Modelo</th>
                         <th class="px-6 py-3 text-center">Acciones</th>
                     </tr>
                     <tr v-for="product in products.data" :key="product.id"
                         class="hover:bg-gray-100 focus-within:bg-gray-100 text-sm ">
-                        <td class="border-t px-6 py-4 text-center">
-                            {{ product.sku }}
+                        <td class="border-t px-6 py-4 text-center hover:underline hover:text-monsa-blue hover:cursor-pointer" @click="linkProduct(product)">
+                            {{ product.sku }} <ArrowTopRightOnSquareIcon class="w-4 h-4 inline" />
                         </td>
                         <td class="border-t px-6 py-4 text-center">
                             {{ product.family.nombre }}
                         </td>
-                        <td class="border-t px-6 py-4 text-center">
+                        <td class="border-t px-6 py-4 text-left">
                             {{ product.brand.nombre }}
                         </td>
-                        <td class="border-t px-6 py-4 text-center">
-                            {{ product.modelo }}
+                        <td class="border-t px-6 py-4 text-left">
+                            {{ product.modelo }}<br>
+                            <span class="text-xs text-gray-500">{{ formattedPrice(product.price_public) }} - Stock: {{ product.stock_disponible }}</span>
                         </td>
                         <td class="border-t px-6 py-4 ">
                             <div class="flex justify-center">
@@ -244,32 +245,33 @@
 
                                                 <div class="flex text-sm text-gray-700">
                                                     <label class="text-bold w-40 font-bold">Precio:</label>
-                                                    <span>$ {{ this.product.precio ?? '-' }}</span>
+                                                    <span>{{ formattedPrice(this.product.precio) ?? '-' }}</span>
                                                 </div>
 
                                                 <div class="flex text-sm text-gray-700">
                                                     <label class="text-bold w-40 font-bold">Precio Público:</label>
-                                                    <span>$ {{ this.product.price_public ?? '-' }}</span>
+                                                    <span>{{ formattedPrice(this.product.price_public) ?? '-' }}</span>
                                                 </div>
 
                                                 <div class="flex text-sm text-gray-700">
                                                     <label class="text-bold w-40 font-bold">Peso: </label>
-                                                    <span>{{ this.product.peso ?? '-' }}</span>
+                                                    <span>{{ this.product.peso ?
+                                                        this.product.peso + ' Grs' : '-'}}</span>
                                                 </div>
                                                 <div class="flex text-sm text-gray-700">
                                                     <label class="text-bold w-40 font-bold">Alto: </label>
-                                                    <span>{{ this.product.dimensiones ?
-                                                        JSON.parse(this.product.dimensiones).alto ?? '-' : '-'}}</span>
+                                                    <span>{{ this.product.alto ?
+                                                        this.product.alto + ' Cm' : '-'}}</span>
                                                 </div>
                                                 <div class="flex text-sm text-gray-700">
                                                     <label class="text-bold w-40 font-bold">Largo: </label>
-                                                    <span>{{ this.product.dimensiones ?
-                                                        JSON.parse(this.product.dimensiones).largo ?? '-' : '-'}}</span>
+                                                    <span>{{ this.product.largo ?
+                                                        this.product.largo + ' Cm' : '-'}}</span>
                                                 </div>
                                                 <div class="flex text-sm text-gray-700">
                                                     <label class="text-bold w-40 font-bold">Ancho: </label>
-                                                    <span>{{ this.product.dimensiones ?
-                                                        JSON.parse(this.product.dimensiones).ancho ?? '-' : '-'}}</span>
+                                                    <span>{{ this.product.ancho ?
+                                                        this.product.ancho + ' Cm' : '-'}}</span>
                                                 </div>
 
                                                 <hr class="p-2">
@@ -417,7 +419,7 @@
 </template>
 <script>
 
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import { ChevronDownIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/20/solid'
 
 import { defineComponent } from 'vue'
 import {
@@ -434,6 +436,7 @@ import Toast from '@/Layouts/Components/Toast.vue';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { Switch } from '@headlessui/vue'
 import { quillEditor } from 'vue3-quill';
+import { useFormatPrice } from '@/Composables/useFormatPrice.js';
 
 
 
@@ -462,10 +465,22 @@ export default defineComponent({
         ChevronRightIcon,
         ChevronDownIcon,
         quillEditor,
-        Switch
+        Switch,
+        ArrowTopRightOnSquareIcon,
+        useFormatPrice
     },
-    data() {
+    
+    setup() {
+        const formattedPrice = (price) => {
+            if (price == null) return '-'; // Handle null or undefined prices
+            return useFormatPrice(price);
+        };
+        return {
+            formattedPrice
+        }
+    },
 
+    data() {
         return {
             products: {},
             product: {},
@@ -496,6 +511,10 @@ export default defineComponent({
     },
 
     methods: {
+        linkProduct(product){
+            let link = route('product', product.id);
+            window.open(link, '_blank');
+        },
         async getProducts() {
             /* let response = await axios.get(route('products.list'))
             this.products = response.data */

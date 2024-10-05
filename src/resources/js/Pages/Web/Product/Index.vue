@@ -40,7 +40,7 @@
                 <p class="text-3xl font-bold text-gray-900 ml-4">{{formatPrice(product.promo_price) }}</p>
               </div>
               <div v-else class="text-3xl text-gray-900">{{ formatPrice(product.price_public) }}</div>
-              <button @click.prevent="handleAddToCart"
+              <button v-if="product.price_public > 0" @click.prevent="handleAddToCart"
                         class="uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8
                                hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
             </div>
@@ -58,6 +58,11 @@
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ product.modelo }}</dd>
                   </div>
 
+                  <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                    <dt class="text-sm font-medium text-gray-500">SKU</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ product.sku }}</dd>
+                  </div>
+
                   <div v-for="atribute in product.atributes" :key="atribute.id" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
                     <dt class="text-sm font-medium text-gray-500">{{ atribute.atribute.nombre }}</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase">{{ atribute.valores }}</dd>
@@ -70,7 +75,7 @@
   
             <form class="mt-6">
               <div class="mt-10 flex sm:flex-col1">
-                <button @click.prevent="handleAddToCart"
+                <button @click.prevent="handleAddToCart" v-if="product.price_public > 0"
                         class="uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8
                                hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
               </div>
