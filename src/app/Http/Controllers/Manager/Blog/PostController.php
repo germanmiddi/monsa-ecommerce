@@ -86,8 +86,8 @@ class PostController extends Controller
             $post->save();
     
             DB::commit();
-            //return redirect()->route('posts.list')->with('message', 'Creado con éxito')->setStatusCode(200);
-            return response()->json(array('message' => 'Creado con éxito'), 200);
+            return redirect()->route('posts.list')->with('message', 'Creado con éxito')->setStatusCode(200);
+            //return response()->json(array('message' => 'Creado con éxito'), 200);
             
         }catch(\Exception $e){
             DB::rollback();
