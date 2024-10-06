@@ -138,17 +138,17 @@
                 <!-- Contact form -->
                 <div class="py-10 px-6 sm:px-10 lg:col-span-2 xl:p-12">
                   <h3 class="text-lg font-medium text-warm-gray-900">Envianos tu consulta</h3>
-                  <form action="#" method="POST" class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                  <div class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
                     <div>
                       <label for="first-name" class="block text-sm font-medium text-warm-gray-900">Nombre</label>
                       <div class="mt-1">
-                        <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md" />
+                        <input type="text" v-model="form.name" name="first-name" id="first-name" autocomplete="given-name" class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md" />
                       </div>
                     </div>
                     <div>
                       <label for="email" class="block text-sm font-medium text-warm-gray-900">Email</label>
                       <div class="mt-1">
-                        <input id="email" name="email" type="email" autocomplete="email" class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md" />
+                        <input id="email" v-model="form.email" name="email" type="email" autocomplete="email" class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md" />
                       </div>
                     </div>
                     <div>
@@ -157,7 +157,7 @@
                         <span id="phone-optional" class="text-sm text-warm-gray-500">Opcional</span>
                       </div>
                       <div class="mt-1">
-                        <input type="text" name="phone" id="phone" autocomplete="tel" class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md" aria-describedby="phone-optional" />
+                        <input type="text" v-model="form.phone" name="phone" id="phone" autocomplete="tel" class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300 rounded-md" aria-describedby="phone-optional" />
                       </div>
                     </div>
                     <div class="sm:col-span-2">
@@ -165,13 +165,50 @@
                         <label for="message" class="block text-sm font-medium text-warm-gray-900">Mensaje</label>
                       </div>
                       <div class="mt-1">
-                        <textarea id="message" name="message" rows="4" class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border border-warm-gray-300 rounded-md" aria-describedby="message-max" />
+                        <textarea id="message" v-model="form.message" name="message" rows="4" class="py-3 px-4 block w-full shadow-sm text-warm-gray-900 focus:ring-teal-500 focus:border-teal-500 border border-warm-gray-300 rounded-md" aria-describedby="message-max" />
                       </div>
                     </div>
-                    <div class="sm:col-span-2 sm:flex sm:justify-end">
-                      <button type="submit" class="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-monsa-blue hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto">Enviar Mensaje</button>
+                    <div v-if="showSuccessMessage" class="col-span-2  w-full rounded-md bg-green-50 p-4">
+                      <div class="flex">
+                        <div class="flex-shrink-0">
+                          <CheckCircleIcon class="h-5 w-5 text-green-400" aria-hidden="true" />
+                        </div>
+                        <div class="ml-3">
+                          <p class="text-sm font-medium text-green-800">Mensaje enviado correctamente</p>
+                        </div>
+                        <div class="ml-auto pl-3">
+                          <div class="-mx-1.5 -my-1.5">
+                            <button @click="showSuccessMessage = ''" type="button" class="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600">
+                              <span class="sr-only">Dismiss</span>
+                              <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                    <div v-if="showErrorMessage" class="col-span-2  w-full rounded-md bg-yellow-50 p-4">
+                      <div class="flex">
+                        <div class="flex-shrink-0">
+                          <CheckCircleIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />
+                        </div>
+                        <div class="ml-3">
+                          <p class="text-sm font-medium text-yellow-800">Complete los campos requeridos</p>
+                        </div>
+                        <div class="ml-auto pl-3">
+                          <div class="-mx-1.5 -my-1.5">
+                            <button @click="showErrorMessage = ''" type="button" class="inline-flex bg-yellow-50 rounded-md p-1.5 text-yellow-500 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-yellow-50 focus:ring-yellow-600">
+                              <span class="sr-only">Dismiss</span>
+                              <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2 sm:flex sm:justify-end">
+                      <button @click="sendMessage" class="mt-2 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-monsa-blue hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:w-auto">Enviar Mensaje</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -185,17 +222,46 @@
 
 <script>
 import { defineComponent, h } from 'vue'
-import { EnvelopeIcon, PhoneIcon } from '@heroicons/vue/24/outline'
+import { EnvelopeIcon, PhoneIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 export default {
     components: {
         EnvelopeIcon,
         PhoneIcon,
+        CheckCircleIcon,
+        XMarkIcon,
     },
     setup() {
         return {
         }
     },
+    data() {
+        return {
+          form: {
+            name: '',
+            email: '',
+            phone: '',
+            message: '',
+          },
+          showSuccessMessage: false,
+          showErrorMessage: false,
+        }
+    },
+    methods: {
+        async sendMessage() {
+
+          if(this.form.name == '' || this.form.email == '' || this.form.message == '') {
+            this.showErrorMessage = true;
+            return;
+          }
+
+          const url = route('contact.store');
+          const response = await axios.post(url, this.form);
+          
+          this.showSuccessMessage = true;
+          this.form.name = '';
+        },
+    }
 }
 
 </script>

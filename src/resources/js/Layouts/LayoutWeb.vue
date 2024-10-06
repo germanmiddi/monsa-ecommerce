@@ -188,13 +188,13 @@
 								<div class="mt-8">
 									<h3 class="text-sm font-bold text-white">Suscribite a nuestro newsletter</h3>
 									<p class="mt-6 text-sm text-white">Recibí las últimas novedades y promociones que tenemos para vos.</p>
-									<div class="flex">
-										<input id="email-address" type="text" autocomplete="email" required="" class="appearance-none border-white bg-monsa-blue min-w-0 w-full border border-bottom-1 rounded-md shadow-sm py-2 px-4 text-base text-white " />
+									<div class="flex" v-if="!alertMessage">
+										<input id="email-address" type="text" autocomplete="email" v-model="email" class="appearance-none border-white bg-monsa-blue min-w-0 w-full border border-bottom-1 rounded-md shadow-sm py-2 px-4 text-base text-white " />
 										<div class="ml-4 flex-shrink-0">
 											<button @click="subscribe" class="w-full bg-white border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-monsa-blue hover:bg-monsa-blue hover:text-white hover:border-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Suscribirse</button>
 										</div>
 									</div>	
-									<Alert :message="successMessage" @clear="clearMessage" />
+									<Alert :message="alertMessage" :type="alertType" @clear="clearMessage" />
 								</div>
 								<div class="mt-8 w-16"> 
 									<a href="http://qr.afip.gob.ar/?qr=TCwMdwjOQ0Ro_jSB62EtYw,," target="_F960AFIPInfo"><img src="http://www.afip.gob.ar/images/f960/DATAWEB.jpg" border="0"></a>
@@ -281,7 +281,9 @@
 		},
 		data() {
 			return {
-			successMessage: '',
+			alertMessage: '',
+			email: '',
+			alertType: 'success' // Default type
 			};
 		},		
 		setup() {
@@ -302,10 +304,33 @@
                    this.$inertia.get(route('logout'));
             },
 			clearMessage() {
-				this.successMessage = ''; // Limpia el mensaje cuando se oculta el alert
+				this.alertMessage = ''; // Limpia el mensaje cuando se oculta el alert
 			},
-			subscribe(){
-				this.successMessage = 'Suscripción exitosa!';
+			async subscribe(){
+
+				if(!this.email){
+					this.alertMessage = 'El email es requerido';
+					this.alertType = 'warning'; // Set type to warning
+					return;
+				}
+				try {
+					let url = route('suscribe');
+					const response = await axios.post(url, {
+						email: this.email
+					});
+					console.log(response);
+					if (response.status === 200 && response.data.message) {
+						this.alertMessage = response.data.message;
+						this.alertType = 'success';
+					}
+				} catch (error) {
+					if (error.response && error.response.status === 400) {
+						this.alertMessage = error.response.data.message;
+						this.alertType = 'warning'; // Set type to warning
+					} else {
+						alert('An unexpected error occurred.');
+					}
+				}
 			}
 		},
 	}

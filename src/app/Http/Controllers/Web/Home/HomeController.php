@@ -11,7 +11,7 @@ use App\Models\Slider;
 use App\Models\ContentBrand;
 use App\Models\Content;
 use App\Models\Product;
-
+use App\Models\Suscripcion;
 class HomeController extends Controller
 {
     /**
@@ -39,5 +39,15 @@ class HomeController extends Controller
         ]);
     }
     
+    public function suscribe(Request $request)
+    {
+        $suscripcion = Suscripcion::where('email', $request->email)->first();
+        if($suscripcion){
+            return response()->json(['message' => 'El email ya está suscrito'], 400);
+        }
+        Suscripcion::create($request->all());
+
+        return response()->json(['message' => 'Te has suscrito correctamente']);
+    }
 
 }

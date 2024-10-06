@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 use Inertia\Inertia;
+use App\Models\Messages;
 
 class ContactController extends Controller
 {
@@ -14,16 +15,10 @@ class ContactController extends Controller
         return  Inertia::render('Web/Contact/Index');        
     }
 
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'email' => 'required|email',
-    //         'message' => 'required',
-    //     ]);
+    public function store(Request $request)
+    {
+        Messages::create($request->all());
 
-    //     Contact::create($request->all());
-
-    //     return redirect()->route('contacto')->with('success', 'Mensaje enviado correctamente');
-    // }
+        return response()->json(['message' => 'Mensaje enviado correctamente']);
+    }
 }

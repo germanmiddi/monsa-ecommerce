@@ -50,7 +50,8 @@ Route::get('/order/detail',[OrderController::class, 'viewDetail'])->name('order.
 
 Route::get('/{slug}',[PagesController::class, 'single'])->name('page'); 
 
-
+Route::post('/contact/store',[ContactController::class, 'store'])->name('contact.store');
+Route::post('/suscribe',[HomeController::class, 'suscribe'])->name('suscribe');
 
 
 /*Backoffice */
