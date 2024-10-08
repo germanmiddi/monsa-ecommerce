@@ -316,12 +316,22 @@
                                                     <label for="search"
                                                         class="block text-sm font-bold text-gray-700 mb-4">Parámetros de
                                                         Busqueda:</label>
-                                                    <span v-for="(search, index) in JSON.parse(this.product.search)"
+                                                    <!-- <span v-for="(search, index) in JSON.parse(this.product.search)"
                                                         :key="index"
                                                         class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 m-3 ">
                                                         {{ search.replace(/['"]+/g, '') }}
+                                                    </span> -->
+                                                    <span v-if="parsedSearch.length > 0" v-for="(search, index) in parsedSearch"
+                                                        :key="index"
+                                                        class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 m-3">
+                                                        {{ search.replace(/['"]+/g, '') }}
                                                     </span>
+                                                    <span v-else class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-700/10 m-3">
+                                                        {{ this.product.search }}
+                                                    </span>                                                    
                                                 </div>
+
+                                                
                                                 <hr class="p-2">
                                                 <div>
                                                     <label for="labels" class="block text-sm font-medium text-gray-700">
@@ -479,7 +489,16 @@ export default defineComponent({
             formattedPrice
         }
     },
-
+    computed: {
+        parsedSearch() {
+            try {
+                return JSON.parse(this.product.search);
+            } catch (error) {
+                console.error('Error al parsear el JSON:', error);
+                return [];
+            }
+        }
+    },
     data() {
         return {
             products: {},
