@@ -16,7 +16,7 @@
                     <!-- <a :href="route(product.href)"> -->
                     <a :href="route('product', product.id)">
                     <span aria-hidden="true" class="absolute inset-0" />
-                    {{ product.nombre }}
+                    <span v-if="this.$page.props.user" class="font-bold">{{ product.sku }} - </span>{{ product.nombre }}
                     </a>
                 </h3>
                 <div class="flex-1 flex flex-col justify-end">
