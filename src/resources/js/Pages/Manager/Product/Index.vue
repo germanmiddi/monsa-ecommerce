@@ -28,7 +28,7 @@
                             <button type="button" @click="showToast = false"
                                 class="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600">
                                 <span class="sr-only">Dismiss</span>
-                                <XIcon class="h-5 w-5" aria-hidden="true" />
+                                <XMarkIcon class="h-5 w-5" aria-hidden="true" />
                             </button>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
                         <th class="px-6 py-3 text-left">Modelo</th>
                         <th class="px-6 py-3 text-center">Acciones</th>
                     </tr>
-                    <tr v-for="product in products" :key="product.id"
+                    <tr v-for="product in products.data" :key="product.id"
                         class="hover:bg-gray-100 focus-within:bg-gray-100 text-sm "
                         :class="product.selected == true ? 'bg-gray-100' : ''">
                         <td class="border-t px-3 py-4 text-center mx-auto w-5" @click="product.selected = !product.selected">
@@ -530,7 +530,7 @@ export default defineComponent({
     },
     computed: {
         countSelectedProducts() {
-            return this.products.filter(product => product.selected).length;
+            return this.products.data ? this.products.data.filter(product => product.selected).length : 0;
         },
         parsedSearch() {
             try {
@@ -572,9 +572,8 @@ export default defineComponent({
     },
 
     methods: {
-        async massiveToggleActiveProducts(action){
-
-            const selectedProducts = this.products.filter(product => product.selected);
+        async massiveToggleActiveProducts(action) {
+            const selectedProducts = this.products.data ? this.products.data.filter(product => product.selected) : [];
             const response = await axios.post(route('products.massiveToggleActive'), {
                 products: selectedProducts,
                 is_active: action
@@ -621,8 +620,7 @@ export default defineComponent({
             const get = `${route('products.list')}?${filter}`
 
             const response = await fetch(get, { method: 'GET' })
-            let productsList = await response.json()
-            this.products = productsList.data
+            this.products = await response.json()
 
         },
 
