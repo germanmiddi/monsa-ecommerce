@@ -79,7 +79,7 @@ class ImportProductsJob implements ShouldQueue
                     }
                 }else{
                     //create whole product 
-                    $productModel = Product::create(
+                    $productLocal = Product::create(
                         [
                             'idProducto'  => $product['idProducto'],
                             'idFamily'    => $id_family,
@@ -107,11 +107,14 @@ class ImportProductsJob implements ShouldQueue
                             'is_active'  => $is_active
                         ]
                     );
+                    if(!$productLocal){
+                        Log::error('Failed to store product: ' . json_encode($product));
+                    }else{
+                        Log::info('Product created: ' . json_encode($productLocal));
+                    }
+
                 }
 
-                if(!$productModel){
-                    Log::error('Failed to store product: ' . json_encode($product));
-                }
 
                 if(isset($product['atributos'])){
                     foreach ($product['atributos'] as $atributo) {
@@ -121,7 +124,7 @@ class ImportProductsJob implements ShouldQueue
                             continue;
                         }
                         $productAtribute = ProductAtribute::updateOrCreate(
-                            ['id_product' => $productModel->id, 'id_atribute' => $id_atributo],
+                            ['id_product' => $productLocal->id, 'id_atribute' => $id_atributo],
                             [
                                 'valores' => $atributo['valores']
                             ]
