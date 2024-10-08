@@ -124,8 +124,8 @@
                                 Productos Seleccionados: {{ countSelectedProducts}}
                             </div>
                             <div class="col-span-6 flex justify-end">
-                                <button class="btn-blue mr-3" @click="massiveToggleActive(true)">Activar Todos</button>
-                                <button class="btn-outline-red" @click="massiveToggleActive(false)">Desactivar Todos</button>
+                                <button class="btn-blue mr-3" @click="massiveToggleActiveProducts(true)">Activar Todos</button>
+                                <button class="btn-outline-red" @click="massiveToggleActiveProducts(false)">Desactivar Todos</button>
                             </div>
                         </div>
                     </div>
@@ -583,6 +583,7 @@ export default defineComponent({
             if (response.status == 200) {
                 this.toastMessage = response.data.message
                 this.labelType = 'success'
+                this.getProducts();
             } else {
                 this.toastMessage = response.data.message
                 this.labelType = 'danger'

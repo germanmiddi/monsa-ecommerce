@@ -169,10 +169,13 @@ class ProductController extends Controller
 
     public function massiveToggleActive(Request $request)
     {
-        $products = Product::whereIn('id', $request->ids)->get();
+        $products = $request->products;
+        
         foreach ($products as $product) {
-            $product->is_active = $request->is_active;
-            $product->save();
+            $productModel = Product::find($product['id']);
+            $productModel->is_active = $request->is_active;
+            $productModel->save();
+        
         }
         return response()->json(['message' => 'Productos actualizados correctamente'], 200);
     }
