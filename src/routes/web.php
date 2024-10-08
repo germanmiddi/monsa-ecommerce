@@ -78,7 +78,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/products', [ManagerProductController::class, 'index'])->name('products');
         Route::get('/products/list', [ManagerProductController::class, 'list'])->name('products.list');
         Route::post('/products/update/{product}', [ManagerProductController::class, 'update'])->name('products.update');
-        
+        Route::post('/products/massiveToggleActive', [ManagerProductController::class, 'massiveToggleActive'])->name('products.massiveToggleActive');
+
         Route::get('/novedades', [PostController::class, 'index'])->name('posts.list');
         Route::get('/novedades/create', [PostController::class, 'create'])->name('posts.create');
         Route::get('/novedades/{id}/edit',   [PostController::class, 'edit'])->name('posts.edit');

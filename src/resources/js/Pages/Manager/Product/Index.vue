@@ -6,9 +6,9 @@
                 <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
                     Productos
                 </h2>
-                <!-- <a class="btn-blue" :href="route('posts.create')">
-                        Crear Nota
-                    </a> -->
+                <div class="flex items-center">
+                    <button class="btn-blue mr-3" @click="showFilter = !showFilter"><FunnelIcon class="w-4 h-4 inline mr-2" /> Filtro</button>
+                </div>
             </div>
         </header>
 
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="mt-2 mb-4">
+            <div class="mt-2 mb-4" v-if="showFilter">
                 <div class="shadow sm:rounded-md sm:overflow-hidden">
                     <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                         <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
@@ -110,21 +110,58 @@
                 </div>
             </div>
 
+            <div class="mt-2 mb-4" v-if="countSelectedProducts > 0">
+                <div class="shadow sm:rounded-md sm:overflow-hidden">
+                    <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+                        <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+                            <div class="">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Modificación Masiva</h3>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="grid grid-cols-12 gap-6">
+                            <div class="col-span-6">
+                                Productos Seleccionados: {{ countSelectedProducts}}
+                            </div>
+                            <div class="col-span-6 flex justify-end">
+                                <button class="btn-blue mr-3" @click="massiveToggleActive(true)">Activar Todos</button>
+                                <button class="btn-outline-red" @click="massiveToggleActive(false)">Desactivar Todos</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
                 <table class="w-full whitespace-nowrap">
                     <tr class="text-left font-bold bg-blue-500 text-white">
+                        <th class="px-2 py-3 text-center"></th>
                         <th class="px-6 py-3 text-center">SKU</th>
                         <th class="px-6 py-3 text-center">Familia</th>
                         <th class="px-6 py-3 text-left">Marca</th>
                         <th class="px-6 py-3 text-left">Modelo</th>
                         <th class="px-6 py-3 text-center">Acciones</th>
                     </tr>
-                    <tr v-for="product in products.data" :key="product.id"
-                        class="hover:bg-gray-100 focus-within:bg-gray-100 text-sm ">
-                        <td class="border-t px-6 py-4 text-center hover:underline hover:text-monsa-blue hover:cursor-pointer" @click="linkProduct(product)">
-                            {{ product.sku }} <ArrowTopRightOnSquareIcon class="w-4 h-4 inline" />
+                    <tr v-for="product in products" :key="product.id"
+                        class="hover:bg-gray-100 focus-within:bg-gray-100 text-sm "
+                        :class="product.selected == true ? 'bg-gray-100' : ''">
+                        <td class="border-t px-3 py-4 text-center mx-auto w-5" @click="product.selected = !product.selected">
+                                <Icons 
+                                    :name="product.selected == true ? 'selected' : 'unsel'" class="w-4 h-4"
+                                    :class="product.selected == true ? 'text-gray-800' : 'text-gray-400'" />                                    
+                            </td>                        
+                        
+                        <td class="border-t px-5 py-4 text-center hover:underline hover:text-monsa-blue hover:cursor-pointer" @click="linkProduct(product)">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-gray-300 rounded-full inline-flex"
+                                    :class="product.is_active == true ? 'bg-green-300' : 'bg-gray-300'"></div>
+    
+                                   <label>{{ product.sku }} </label>
+                                   <ArrowTopRightOnSquareIcon class="w-4 h-4 inline" />
+                            </div>
                         </td>
-                        <td class="border-t px-6 py-4 text-center">
+                        <td class="border-t px-5 py-4 text-center">
                             {{ product.family.nombre }}
                         </td>
                         <td class="border-t px-6 py-4 text-left">
@@ -439,6 +476,7 @@ import {
     XMarkIcon,
     CheckCircleIcon,
     ChevronRightIcon,
+    FunnelIcon
 } from '@heroicons/vue/24/outline';
 import Icons from '@/Layouts/Components/Icons.vue'
 import Toast from '@/Layouts/Components/Toast.vue';
@@ -477,7 +515,8 @@ export default defineComponent({
         quillEditor,
         Switch,
         ArrowTopRightOnSquareIcon,
-        useFormatPrice
+        useFormatPrice,
+        FunnelIcon
     },
     
     setup() {
@@ -490,6 +529,9 @@ export default defineComponent({
         }
     },
     computed: {
+        countSelectedProducts() {
+            return this.products.filter(product => product.selected).length;
+        },
         parsedSearch() {
             try {
                 return JSON.parse(this.product.search);
@@ -501,7 +543,7 @@ export default defineComponent({
     },
     data() {
         return {
-            products: {},
+            products: [],
             product: {},
             toastMessage: "",
             labelType: "info",
@@ -511,7 +553,7 @@ export default defineComponent({
             //Filtros
             length: 10,
             filter: {},
-
+            showFilter: false,
             labelSelect: '',
             labelsSelected: [],
             editorOptions: {
@@ -530,6 +572,22 @@ export default defineComponent({
     },
 
     methods: {
+        async massiveToggleActiveProducts(action){
+
+            const selectedProducts = this.products.filter(product => product.selected);
+            const response = await axios.post(route('products.massiveToggleActive'), {
+                products: selectedProducts,
+                is_active: action
+            });
+
+            if (response.status == 200) {
+                this.toastMessage = response.data.message
+                this.labelType = 'success'
+            } else {
+                this.toastMessage = response.data.message
+                this.labelType = 'danger'
+            }
+        },
         linkProduct(product){
             let link = route('product', product.id);
             window.open(link, '_blank');
@@ -562,7 +620,8 @@ export default defineComponent({
             const get = `${route('products.list')}?${filter}`
 
             const response = await fetch(get, { method: 'GET' })
-            this.products = await response.json()
+            let productsList = await response.json()
+            this.products = productsList.data
 
         },
 
