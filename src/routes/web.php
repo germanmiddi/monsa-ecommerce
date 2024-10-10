@@ -121,7 +121,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('settings/import', [SettingsController::class, 'importData'])->name('settings.import');
         
-        
+        Route::get('settings/various', [SettingsController::class, 'various'])->name('settings.various');
+        Route::post('settings/various/update', [SettingsController::class, 'variousUpdate'])->name('settings.various.update');
+       
+       
         Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');
 
         Route::get('import/products',  [ImportController::class, 'import_products'])->name('import.products');

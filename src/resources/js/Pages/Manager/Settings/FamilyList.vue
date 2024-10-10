@@ -18,9 +18,6 @@
                                 <tr class="text-left font-bold bg-blue-500 text-white">
                                     <th class="px-6 py-3 text-center">Familia</th>
                                     <th class="px-6 py-3 text-left">Activar</th>
-                                    <!-- <th class="px-6 py-3 text-center">Ciudad</th>
-                                    <th class="px-6 py-3 text-center">Provincia</th>
-                                    <th class="px-6 py-3 text-center">CP</th> -->
                                 </tr>
                                 <FamilyItem v-for="item in families" 
                                                 :key="item.id"

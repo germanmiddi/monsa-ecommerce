@@ -23,8 +23,14 @@
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
+        
+        <!-- Insertar el script de Tabla Settings -->
+        {!! $codeHeadScript !!}
+
+
     </head>
     <body class="font-sans antialiased h-full">
+        {!! $codeBodyScript !!}
         @inertia
 
         <!-- @env ('local')

@@ -12,6 +12,8 @@ use App\Models\Family;
 use App\Models\Label;
 use Illuminate\Support\Str;
 use App\Models\Setting;
+use Illuminate\Support\Facades\DB;
+
 class SettingsController extends Controller
 {
     /**
@@ -98,5 +100,28 @@ class SettingsController extends Controller
         $values = Setting::where('module', 'import')->get();
 
         return response()->json($values);
+    }
+
+    public function various(){
+        $settings = Setting::all();
+        return response()->json($settings);
+    }
+
+    public function variousUpdate(Request $request){
+
+        DB::beginTransaction();
+        try{
+            foreach($request->all() as $key => $value){
+                $setting = Setting::where('key', $key)->first();
+                $setting->value = $value;
+                $setting->save();
+            }
+            DB::commit();
+            return response()->json(['message' => 'Configuración actualizada correctamente'],200);
+        }catch(\Exception $e){
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error al actualizar la configuración', 'error'=> $msg ], 500);
+        }
     }
 }

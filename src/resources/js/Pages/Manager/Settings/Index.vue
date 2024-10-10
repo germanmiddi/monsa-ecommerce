@@ -29,8 +29,6 @@
 <script>
 import Toast from '@/Layouts/Components/Toast.vue'
 import General from './General.vue';
-import Locations from './Locations.vue';
-import ServicesList from './ServicesList.vue';
 import BrandList from './BrandList.vue';
 import FamilyList from './FamilyList.vue';
 import LabelList from './LabelList.vue';
@@ -57,8 +55,6 @@ export default {
 	components: {
 		Toast,
 		General,
-		Locations,
-		ServicesList,
 		BrandList,
 		FamilyList,
 		LabelList
