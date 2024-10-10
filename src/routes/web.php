@@ -53,7 +53,7 @@ Route::get('/{slug}',[PagesController::class, 'single'])->name('page');
 Route::post('/contact/store',[ContactController::class, 'store'])->name('contact.store');
 Route::post('/suscribe',[HomeController::class, 'suscribe'])->name('suscribe');
 
-
+Route::get('/contact/data',[ContactController::class, 'getContactData'])->name('contact.data');
 /*Backoffice */
 
 Route::middleware(['auth'])->group(function () {

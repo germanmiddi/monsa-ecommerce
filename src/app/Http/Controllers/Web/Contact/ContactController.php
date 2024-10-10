@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Contact;
 use Inertia\Inertia;
 use App\Models\Messages;
-
+use App\Models\Setting;
 class ContactController extends Controller
 {
     public function index()
@@ -21,4 +21,12 @@ class ContactController extends Controller
 
         return response()->json(['message' => 'Mensaje enviado correctamente']);
     }
+    public function getContactData()
+    {
+        
+        $contact = Setting::where('module', 'contact')->get();
+        
+        return response()->json($contact);
+    }
+
 }
