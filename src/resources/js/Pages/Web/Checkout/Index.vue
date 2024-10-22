@@ -9,7 +9,9 @@
       <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="relative flex items-center sm:justify-center">
           <!-- <a href="#" class="absolute -mt-4 left-0 top-1/2 font-exo text-3xl font-extrabold text-gray-900"></a> -->
-          <img class="absolute left-0 w-40" src="/images/logo-blanco.png" alt="Monsa"/>
+          <a :href="route('home')" class="absolute left-0">
+            <img class="w-40" src="/images/logo-blanco.png" alt="Monsa"/>
+          </a>
 
           
           <nav aria-label="Progress" class="hidden sm:block">
@@ -23,7 +25,7 @@
               </li>
             </ol>
           </nav>
-          <p class="sm:hidden">Paso 2 of 4</p>
+          <p class="w-full text-right sm:hidden">Paso 2 of 4</p>
         </div>
       </div>
     </header>
@@ -159,7 +161,7 @@
             <div class="mt-6">
               <label for="document" class="block text-sm font-medium text-gray-700">Documento</label>
               <div class="mt-1">
-                <input type="text" id="document" name="document" v-model="form.document" autocomplete="document"
+                <input @input="onlyNumbers" type="text" id="document" name="document" v-model="form.document" autocomplete="document"
                   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                   <p v-if="v$.form.document.$error" class="text-red-600 text-sm mt-1">{{ v$.form.document.$errors[0].$message }}</p>
                 </div>
@@ -381,7 +383,8 @@ export default {
 
           let response = await axios.post(url, {  customerDetails: form.value,
                                                   cartItems: cart.items,
-                                                  totalPrice: totalPricewDelivery.value
+                                                  totalPrice: totalPricewDelivery.value,
+                                                  cart_id: cart.cart_id
                                                 },
                                                 {
                                                   headers: {
@@ -451,6 +454,12 @@ export default {
     const clearCart = () => {
       cart.clearCart()
     }
+    
+    const onlyNumbers = (event) => {
+      if (!/^\d*$/.test(event.key)) {
+        event.preventDefault();
+      }
+    }
 
     // Watch for changes in the zip code
     watch(() => form.value.zip, (newZip) => {
@@ -476,7 +485,8 @@ export default {
       loading,
       calcDelivery,
       clearCart,
-      processErrorMsg
+      processErrorMsg,
+      onlyNumbers
     }
   },
   template: 'none'

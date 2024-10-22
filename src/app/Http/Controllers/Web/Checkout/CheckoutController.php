@@ -67,9 +67,12 @@ class CheckoutController extends Controller
         if(!isset($client->id)){
             return response()->json(['message' => 'Error creating client', 'response' => $client], 500);
         }
-        
+        if(!$request->cart_id){
+            return response()->json(['message' => 'Error creating order', 'error' => 'Cart id is required'], 500);
+        }
+
         $orderController = new OrderController();
-        $order = $orderController->store($client->id, $request->totalPrice, $request->cartItems);
+        $order = $orderController->store($client->id, $request->cart_id, $request->totalPrice, $request->cartItems);
         Log::info('Order created: ' . json_encode($order->content()));
 
         $response = json_decode($order->content());
@@ -111,6 +114,9 @@ class CheckoutController extends Controller
             // Envía el correo electrónico de confirmación
             Mail::to($client->email)->send(new OrderConfirmation($newOrder, $client, $shipment ?? null));
         }
+
+        //Se actualiza el estado de la orden una vez que se ha creado el pago y el envío
+        $updateStatus = $orderController->updateStatus($newOrder->id, 3);
 
         return response()->json(['message'  => 'Proceso finalizado', 
                                  'payment'  => $responsePayment->payment,

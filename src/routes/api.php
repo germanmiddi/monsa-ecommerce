@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Checkout\CheckoutController;
 use App\Http\Controllers\Api\OrdersController;
+
+use App\Http\Controllers\Api\PaymentNotificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,6 +20,9 @@ use App\Http\Controllers\Api\OrdersController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/payment/notification', [PaymentNotificationController::class, 'handleNotification']);
+
 
 // Se pasa esta ruta al web.php para hacer uso del CSRF, y evitar exponer la ruta de pago sin seguridad
 // https://a34c-180-200-236-215.ngrok-free.app/api/payment/update

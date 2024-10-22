@@ -4,6 +4,7 @@ export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [],
     delivery: 0,
+    cart_id: null,
 
   }),
   persist: true,
@@ -24,6 +25,11 @@ export const useCartStore = defineStore('cart', {
       item._id = this._generateUUID();
       
       this.items.push(item);
+      
+      // Generate cart_id if it is null and this is the first item
+      if (this.cart_id === null && this.items.length === 1) {
+        this.cart_id = this._generateUUID();
+      }
     },
     removeItem(_id) {
 
@@ -40,6 +46,8 @@ export const useCartStore = defineStore('cart', {
     clearCart() {
       this.items = [];
       this.delivery = 0;
+      // Clear cart_id when the cart is cleared
+      this.cart_id = null;      
     },
     _generateUUID() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

@@ -21,13 +21,13 @@
         <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 sm:py-32 lg:pt-32 lg:px-8">
             <div class="flex h-[353px] "> <!-- Set a fixed height or use h-screen for full viewport height -->
             <!-- Primer contenedor que ocupa todo el alto -->
-            <div class="w-1/6 bg-cover bg-center mr-4 flex-shrink-0 flex items-center justify-center rounded-xl text-white font-bold text-xl 
+            <div class="hidden sm:flex w-1/6 bg-cover bg-center mr-4 flex-shrink-0 items-center justify-center rounded-xl text-white font-bold text-xl 
                         hover:bg-left-top transition-all duration-300" 
                  style="background-image: url('images/banner-moto-1.png');">
                 <span class="bg-black bg-opacity-50 p-2 text-center text-3xl">Productos<br>Destacados</span>
             </div>
             <!-- Slider ocupa el resto del ancho -->
-            <div class="w-5/6 overflow-hidden">
+            <div class="w-full sm:w-5/6 overflow-hidden">
                 <SliderProducts2 :productItems="products" class="h-full"/>
             </div>
             </div>
