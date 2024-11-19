@@ -40,7 +40,7 @@
                 <p class="text-3xl font-bold text-gray-900 ml-4">{{formatPrice(product.promo_price) }}</p>
               </div>
               <div v-else class="text-3xl text-gray-900">{{ formatPrice(product.price_public) }}</div>
-              <button v-if="product.price_public > 0" @click.prevent="handleAddToCart"
+              <button v-if="product.price_public > 0 && $page.props.show_module_store" @click.prevent="handleAddToCart"
                         class="uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8
                                hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
             </div>
@@ -75,7 +75,7 @@
   
             <form class="mt-6">
               <div class="mt-10 flex sm:flex-col1">
-                <button @click.prevent="handleAddToCart" v-if="product.price_public > 0"
+                <button @click.prevent="handleAddToCart" v-if="product.price_public > 0 && $page.props.show_module_store"
                         class="uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8
                                hover:border-[#232323] hover:bg-white hover:text-[#232323]">Agregar al carrito</button>
               </div>
