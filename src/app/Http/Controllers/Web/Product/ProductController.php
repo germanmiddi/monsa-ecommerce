@@ -23,6 +23,7 @@ class ProductController extends Controller
 
         $relatedProducts = Product::where('idFamily', $prod->idFamily)
                                   ->where('id', '!=', $prod->id)
+                                  ->where('price_public', '>', 0)
                                   ->limit(4)
                                   ->get();
         // Add your logic here

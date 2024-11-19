@@ -27,6 +27,10 @@ class CheckoutController extends Controller
      */
     public function index(Request $request)
     {
+        if (env('SHOW_MODULE_STORE', true) === false) {
+            abort(404); // O redirige a otra ruta, por ejemplo: return redirect()->route('home');
+        }
+        
         // Add your logic here
         return  Inertia::render('Web/Checkout/Index');
         
@@ -265,66 +269,6 @@ class CheckoutController extends Controller
         return $callback_url;
      
     }
-
-    // private function _buildDeliveryRequestData($request)
-    // {
-    //     $items = array_map(function($item) {
-    //         return [
-    //             "sku" => $item['sku'],
-    //             "weight" => $item['peso'] == 0 ? 10 : $item['peso'],
-    //             "height" => $item['alto'] == 0 ? 10 : $item['alto'],
-    //             "width" => $item['ancho'] == 0 ? 10 : $item['ancho'],
-    //             "length" => $item['largo'] == 0 ? 10 : $item['largo'],
-    //             "description" => $item['nombre'],
-    //             "classification_id" => 1 //$item['classification_id']
-    //         ];
-    //     }, $request['items']);
-        
-    //     return [
-    //         "account_id" => "12222",
-    //         "origin_id" => "345752",
-    //         "declared_value" => $request['total'],
-    //         "items" => $items,
-    //         "destination" => [
-    //             "city" => $request['city'],
-    //             "state" => $request['state'],
-    //             "zipcode" => $request['zip']
-    //         ]
-    //     ];
-    // }
-    
-    // public function calcDelivery(Request $request)
-    // {
-
-    //     // Construir los datos de la solicitud
-    //     $requestData = $this->_buildDeliveryRequestData($request->form);
-
-    //     // Username y Password de la autenticación básica
-    //     $username = env('ZIPPIN_API_KEY'); 
-    //     $password = env('ZIPPIN_API_SECRET');
-    
-    //     // Hacer la solicitud a la API externa
-    //     $response = Http::withBasicAuth($username, $password)
-    //                     ->withHeaders([
-    //                         'Accept' => 'application/json',
-    //                         'Content-Type' => 'application/json'
-    //                     ])->post('https://api.zippin.com.ar/v2/shipments/quote', $requestData);
-
-    
-    //     // Verificar si la solicitud fue exitosa
-    //     if ($response->successful()) {
-    //         $data = $response->json();
-    //         $price = $data['results']['standard_delivery']['amounts']['price_incl_tax'];
-
-    //         return response()->json(['message' => 'Delivery calculated successfully', 
-    //                                  'data'    => $data['results'],
-    //                                  'price'   => $price,
-    //                                  'carrier' => $data['results']['standard_delivery']['carrier']
-    //                             ], 200);
-    //     } else {
-    //         return response()->json(['message' => 'Error calculating delivery', 'error' => $response->body()], $response->status());
-    //     }
-    // }
 
     public function calcDelivery(Request $request)
     {

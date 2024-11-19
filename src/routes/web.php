@@ -41,10 +41,11 @@ Route::get('/tienda',[StoreController::class, 'index'])->name('store');
 Route::get('/product/{product}',[ProductController::class, 'index'])->name('product');
 Route::get('/cart',[CartController::class, 'index'])->name('cart');
 
-Route::get('/checkout',[CheckoutController::class, 'index'])->name('checkout');
-Route::get('/checkout/confirmation',[CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
-Route::post('/checkout/calcDelivery',[CheckoutController::class, 'calcDelivery'])->name('checkout.calcDelivery');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout_process');
+    
+    Route::get('/checkout',[CheckoutController::class, 'index'])->name('checkout');
+    Route::get('/checkout/confirmation',[CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
+    Route::post('/checkout/calcDelivery',[CheckoutController::class, 'calcDelivery'])->name('checkout.calcDelivery');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout_process');
 
 Route::get('/order/detail',[OrderController::class, 'viewDetail'])->name('order.viewDetail');
 
