@@ -17,7 +17,7 @@
         <img v-for="item in sliderDesktop" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />   
     </div> -->
 
-    <section aria-labelledby="trending-heading" class="relative">
+    <section aria-labelledby="trending-heading" class="relative" v-if="products.length > 0">
         <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 sm:py-32 lg:pt-32 lg:px-8">
             <div class="flex h-[353px] "> <!-- Set a fixed height or use h-screen for full viewport height -->
             <!-- Primer contenedor que ocupa todo el alto -->

@@ -1,34 +1,37 @@
 <template>
-    <div class="relative bg-white">
-      <div class="lg:absolute lg:inset-0">
-        <div class="lg:absolute lg:inset-y-0 lg:left-0 lg:w-1/2">
-          <img :src="`/storage/${this.aboutusImg}`" class="h-56 w-full object-cover lg:absolute lg:h-full"  alt="" />
+    <div class="bg-white flex flex-col md:flex-row items-center justify-center gap-4 h-full mb-20">
+       <div class="w-full md:w-1/2">
+          <SliderAboutUs class="w-11/12 mx-auto rounded-lg overflow-hidden" :images="aboutusImg" />
         </div>
-      </div>
-      <div class="relative pt-12 pb-16 px-4 sm:pt-16 sm:px-6 lg:px-8 lg:max-w-7xl lg:mx-auto lg:grid lg:grid-cols-2">
-        <div class="lg:col-start-2 lg:pl-8">
-          <div class="text-base max-w-prose mx-auto lg:max-w-lg lg:ml-auto lg:mr-0">
+      <div class="w-full md:w-1/2">
+          <div class="text-base px-10">
             <p v-html="this.aboutusText"></p>
           </div>
-        </div>
       </div>
     </div>
   
 </template>
 
 <script>
+import SliderAboutUs from './SliderAboutUs.vue';
 export default {
   props:{
     content: Object
   },
-  
+  components: {
+    SliderAboutUs
+  },
   setup(props) {
     const aboutusText = props.content.find(item => item.element === 'text').content;
-    const aboutusImg = props.content.find(item => item.element === 'img').content;
-    
+    // const aboutusImg = props.content.filter(item => item.element === 'img');
+    const aboutusImg = props.content.filter(item => item.element === 'img').map(item => `<img src="/storage/${item.content}" class="w-full h-96  object-center object-cover" />`);
+
+
+
     return {
       aboutusText,
-      aboutusImg
+      aboutusImg,
+      
     }
   },
 }

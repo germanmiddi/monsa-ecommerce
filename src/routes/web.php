@@ -99,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
         //create a route named logout to logout the user
 
         Route::post('/contenido/about/store', [ContentController::class, 'aboutStore'])->name('content.about.store');
+        Route::post('/contenido/about/store/image', [ContentController::class, 'aboutStoreImage'])->name('content.about.store.image');
         
         Route::post('/contenido/legales/store', [ContentController::class, 'legalesStore'])->name('content.legales.store');
         Route::get('/contenido/brand/list', [ContentController::class, 'brandList'])->name('content.brand.list');

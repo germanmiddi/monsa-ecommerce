@@ -15,17 +15,14 @@
                             <div class="col-span-6 sm:col-span-6">
                                 <label for="content"
                                     class="block text-sm font-medium text-gray-700 mb-1">Contenido</label>
-                                <!-- <Tinymce ref="editor-content" v-model="form.content" :height="400" :toolbar="toolbar"></Tinymce> -->
-                                
                                 <div class="quill-editor-container mb-10">
                                     <quill-editor ref="editor" v-model:value="text.content" :options="editorOptions"></quill-editor>
                                 </div>
-
                             </div>
                                                      
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="file" class="block text-sm font-medium text-gray-700">Imagen</label>
-                                <span class="text-gray-500 text-sm">Se recomienda utilizar una imagen de 1414 x 1000px.</span>
+                                <span class="text-gray-500 text-sm">Se recomienda utilizar una imagen de 1400 x 1000px.</span>
                                 <input name="file" type="file" hidden @change="previewImage"
                                     @input="form.image = $event.target.files[0]" ref="import_file" />
                                 <div class="flex flex-row items-center">
@@ -52,21 +49,21 @@
                                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                             </svg>
                                         </i>Buscar Imagen</button>
+                                    <button v-else @click="uploadImage" class="mt-2 ml-10 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Subir Imagen</button>
                                 </div>
                             </div>
-                            <div v-if="img.content">
+                            <div>
                                 <hr>
                                 <label for="Imagen"
                                     class="block text-sm font-medium text-gray-700 mb-2">
                                     <b>Imagen actual:</b></label>
                                     <div class="flex">
-                                        <img class="rounded-3xl h-32 w-32" :src="`/storage/${this.img.content}`" alt="">
+                                        <div v-for="images in this.img" :key="images.id">
+                                            <img class="rounded-2xl w-52 ml-4" :src="`/storage/${images.content}`" alt="">
+                                        </div>
                                     </div> 
                                 <hr>
                             </div>
-
-                            <!-- <button v-if="url" @click="uploadImage" class="mt-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Subir</button> -->
-
                         </div>
                     </div>
                     <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 bg-gray-50">
@@ -81,7 +78,7 @@
     import { quillEditor } from 'vue3-quill';
 
     export default {
-        
+        name: 'Aboutus',
         components: {
             TrashIcon,
             quillEditor
@@ -134,7 +131,9 @@
                 const content = response.data
 
                 this.text    = content.find(item => item.element === 'text');
-                this.img = content.find(item => item.element === 'img');
+                this.img = content.filter(item => item.element === 'img');
+
+                console.log(this.img);
             },
 
             openDialogSearchImg() {
@@ -147,19 +146,47 @@
             },     
 
             async uploadImage(){
+                this.loading = true
+                let data = {}
 
-            },
+                try {
+                    let formData = new FormData();
+                    formData.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
+                    formData.append('type', this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
+
+                    // Configura el header para el contenido multipart/form-data
+                    const config = {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    };
+                     
+                    const response = await axios.post(route('content.about.store.image'), formData, config);
+                    if (response.status == 200) {
+                        data.message = response.data.message
+                        data.labelType = 'success'
+                    } else {
+                        data.message = response.data.message
+                        data.labelType = 'danger'
+                    }
+                } catch (error) {
+                    data.message = 'Se ha producido un error al procesar | Comuniquese con el administrador'
+                    data.labelType = 'danger'
+                }
+
+                this.loading = false
+                this.url  = null
+                this.form = {}
+                
+                this.getSliderItems();
+                this.$emit('message', data)
+            },  
+
 
             async submit() {
                 let data = new FormData();
 
                 data.append('items[0][id]', this.text.id);
                 data.append('items[0][content]', this.text.content);
-
-                data.append('image', this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
-                data.append('items[1][id]', this.img.id);
-                data.append('items[1][content]', this.img.content);
-                
+               
                 // Configura el header para el contenido multipart/form-data
                 const config = {
                     headers: { 'Content-Type': 'multipart/form-data' }

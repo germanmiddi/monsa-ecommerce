@@ -3,7 +3,7 @@
       <Slide v-for="slide in productItems" :key="slide">
         
         <!-- <a class="carousel__item" @click="goUrl(slide.id)"> -->
-        <div @click="goUrl(slide.id)" class="carousel__item overflow-hidden mx-2 flex flex-col items-center bg-gray-100 rounded-xl">
+        <div @click="goUrl(slide.id)" class="carousel__item overflow-hidden mx-2 flex flex-col items-center bg-gray-100 rounded-xl hover:cursor-pointer hover:text-monsa-blue">
             <div class="w-60 h-60 overflow-hidden">
                 <img class="img-item w-full h-full object-cover" 
                      style="mix-blend-mode: multiply"
@@ -105,4 +105,3 @@
     }
 
 </style>
-  ```

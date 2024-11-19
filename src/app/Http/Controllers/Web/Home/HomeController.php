@@ -26,7 +26,7 @@ class HomeController extends Controller
         $post = Post::with('post_category')->get()->toArray();
         $products = Product::whereHas('labels', function ($query) {
             $query->where('slug', 'carrousel_home');
-        })->get();
+        })->where('price_public', '>', 0)->get();
 
         // Add your logic here
         return  Inertia::render('Web/Index', [

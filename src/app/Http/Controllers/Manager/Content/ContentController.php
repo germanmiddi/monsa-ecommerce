@@ -264,6 +264,38 @@ class ContentController extends Controller
         }
     }
 
+
+    public function aboutStoreImage(Request $request)
+    {
+        DB::beginTransaction();    
+        try{
+            $content = new Content();
+            
+            if($request->file()) {
+                $file_name = time().'_'.$request->file('image')->getClientOriginalName();
+                $file_path = $request->file('image')->storeAs('aboutus', $file_name, 'public');
+                $content->content = $file_path;
+            }else{
+                throw new \Exception('No se ha subido ninguna imagen');
+            }
+            $content->page = 'aboutus';
+            $content->section = 'content';
+            $content->element = 'img';
+            $content->save();
+
+            DB::commit();
+            return response()->json(['message' => 'Imagen subida correctamente'], 200);
+        }catch(\Exception $e){
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return response()->json(['message' => 'Error al subir la imagen', 
+                                     'detail'  => $msg ], 500);
+        }
+    }
+
+
+
+
     public function legalesStore(Request $request)
     {
         DB::beginTransaction();    

@@ -41,16 +41,17 @@ class ImportProductsJob implements ShouldQueue
 
                 $id_family = Family::where('externalId', $product['idFamilia'])->value('id');
                 $id_brand = Brand::where('externalId', $product['idMarca'])->value('id');
-                $is_active = 1;
+                $is_active = 0;
 
                 if(!$id_family || !$id_brand){
                     Log::error('Failed to store product: ' . json_encode($product));
                     continue;
                 }
                 
-                if($product['visibilidad'] === 'oculto'){
-                    $is_active = 0;
-                }
+                // if($product['visibilidad'] === 'oculto'){
+                //     $is_active = 0;
+                // }
+
                 Log::info('price_public' . $product['price_public'] );
                 
                 $productLocal = Product::where('externalId', $product['idProducto'])->first();  
