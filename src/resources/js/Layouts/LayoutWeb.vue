@@ -48,6 +48,9 @@
 							<!-- <div class="flow-root">
 									<a :href="route('register')" class="-m-2 p-2 block font-medium text-gray-900">Registrarse</a>
 								</div> -->
+							<div class="flow-root">
+								<a href="https://monsa-srl.com.ar/pedidosweb/" class="-m-2 p-2 block font-medium text-gray-900">Acceso Mayoristas</a>
+							</div>
 							<div class="flow-root" v-if="$page.props.show_module_store">
 								<a :href="route('login')" class="-m-2 p-2 block font-medium text-gray-900">Ingresar</a>
 							</div>
@@ -68,12 +71,14 @@
 						style="background: url('/images/v.png'); background-size: contain; opacity: 0.04;"></div>
 
 					<!-- Contenido del menú -->
-					<div class="relative z-10 mx-auto h-10 px-4 flex items-center justify-end sm:px-6 lg:px-8">
-						<div class="flex items-center space-x-6 w-full" v-if="!this.$page.props.user">
+					<div class="relative z-10 mx-auto h-14  px-4 py-4 flex items-center justify-end sm:px-6 lg:px-8">
+						<div class="flex items-center space-x-6 w-full my-4" v-if="!this.$page.props.user">
 							<div class="flex w-full items-center justify-end">
-								<div class="w-3/6 text-white">🚚 Envios a todo el pais. </div>
+								<div class="w-2/5 text-white">🚚 Envios a todo el pais. </div>
+								<a href="https://monsa-srl.com.ar/pedidosweb/" class="text-sm font-medium text-monsa-blue bg-white px-4 py-2 rounded-md">Acceso Mayoristas</a>
 								<a :href="route('login')"
-									class="text-sm font-medium text-white hover:text-gray-100">Ingresar</a>
+									class="text-sm font-medium text-white hover:text-gray-100 ml-4">Ingresar</a>
+							
 							</div>
 						</div>
 						<div v-else class="flex items-center space-x-6">
