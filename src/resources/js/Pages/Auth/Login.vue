@@ -1,10 +1,10 @@
 <template>
-    <Head title="Log in" />
+    <Head title="Ingresar a Monsa Store" />
 
     <jet-authentication-card>
         <template #logo>
             <!-- <jet-authentication-card-logo /> -->
-            <img class="w-4/12 mx-auto" src="images/logo-vlc.png" alt=""> 
+            <img class="w-6/12 mx-auto" src="/images/logo_monsa_store_negro.png" alt=""> 
         </template> 
         
         <jet-validation-errors class="mb-4" />

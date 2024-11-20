@@ -15,6 +15,9 @@ module.exports = {
   darkMode: false, // Opciones: 'media', 'class', false
   theme: {
     extend: {
+      fontFamily: {
+        'neue': ['Neue'],
+      },
       colors: {
           'monsa-blue': '#0C41FA',
           'monsa-yellow': '#FFC006',

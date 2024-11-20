@@ -15,6 +15,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@100;200;400;700;800;900&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">        
         <!-- Styles -->
+        <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
