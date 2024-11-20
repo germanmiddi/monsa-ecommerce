@@ -187,7 +187,7 @@
                         <td class="border-t px-6 py-4 text-left">
                             {{ product.brand.nombre }}
                         </td>
-                        <td class="border-t px-6 py-4 text-left">
+                        <td class="border-t px-6 py-4 text-left max-w-sm   overflow-hidden">
                             {{ product.modelo }}<br>
                             <span class="text-xs text-gray-500">{{ formattedPrice(product.price_public) }} - Stock: {{ product.stock_disponible }}</span>
                         </td>
@@ -554,7 +554,7 @@ export default defineComponent({
         },
         parsedSearch() {
             try {
-                return JSON.parse(this.product.search);
+                return this.product.search.split(';');
             } catch (error) {
                 console.error('Error al parsear el JSON:', error);
                 return [];
