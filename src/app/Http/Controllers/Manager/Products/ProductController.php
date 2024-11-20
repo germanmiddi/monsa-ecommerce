@@ -64,6 +64,9 @@ class ProductController extends Controller
             });
         }
 
+        if(request('promo_active')){
+            $result->where('promo_active', true);
+        }
 
         return $result->with('family', 'brand', 'labels')
                     ->orderBy('created_at', 'desc')

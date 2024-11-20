@@ -48,6 +48,7 @@
                                     @click="clearFilter">Limpiar Filtro</button>
                                 <button type="button"
                                     class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-blue-200 text-blue-900 hover:bg-blue-600 hover:text-white"
+                                    @keyup.enter="getProducts()"
                                     @click="getProducts()">Aplicar
                                     Filtro</button>
 
@@ -64,7 +65,7 @@
                         </div>
                         <hr>
                         <div class="grid grid-cols-12 gap-6">
-                            <div class="col-span-12 sm:col-span-1">
+                            <div class="col-span-12 sm:col-span-2">
                                 <label for="sku" class="block text-sm font-medium text-gray-700">SKU</label>
                                 <input v-model="filter.sku" type="text" name="sku" id="sku" autocomplete="off"
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
@@ -75,15 +76,22 @@
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                             </div>
                             <div class="col-span-12 sm:col-span-3">
-                                <label for="family_id" class="block text-sm font-medium text-gray-700">Familia</label>
-                                <select v-model="filter.family_id" id="family_id" name="family_id" autocomplete="off"
-                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <option value="" disabled> - Seleccione una familia - </option>
-                                    <option v-for="family in families" :key="family.id" :value="family.id">{{
-                                        family.nombre
-                                        }}</option>
-                                </select>
+                                <label for="promo_active" class="block text-sm font-medium text-gray-700">Promoción Activa</label>
+ 
+                                <Switch v-model="filter.promo_active"
+                                    @click="filter.promo_active = !filter.promo_active"
+                                    :class="filter.promo_active ? 'bg-blue-600' : 'bg-gray-200'"
+                                    class="relative inline-flex h-6 w-11 items-center rounded-full mt-2">
+                                    <span
+                                        :class="filter.promo_active ? 'translate-x-6' : 'translate-x-1'"
+                                        class="inline-block h-4 w-4 transform rounded-full bg-white transition" />
+                                </Switch>
                             </div>
+
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-6">
+                            
                             <div class="col-span-12 sm:col-span-2">
                                 <label for="brand_id" class="block text-sm font-medium text-gray-700">Marca</label>
                                 <select v-model="filter.brand_id" id="brand_id" name="brand_id" autocomplete="off"
@@ -94,6 +102,18 @@
                                         }}</option>
                                 </select>
                             </div>
+
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="family_id" class="block text-sm font-medium text-gray-700">Familia</label>
+                                <select v-model="filter.family_id" id="family_id" name="family_id" autocomplete="off"
+                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled> - Seleccione una familia - </option>
+                                    <option v-for="family in families" :key="family.id" :value="family.id">{{
+                                        family.nombre
+                                        }}</option>
+                                </select>
+                            </div>
+                            
                             <div class="col-span-12 sm:col-span-3">
                                 <label for="label_id" class="block text-sm font-medium text-gray-700">Etiqueta</label>
                                 <select v-model="filter.label_id" id="label_id" name="label_id" autocomplete="off"
@@ -570,7 +590,14 @@ export default defineComponent({
             },
         }
     },
-
+    watch: {
+        filter: {
+            handler() {
+                this.getProducts();
+            },
+            deep: true
+        }
+},
     methods: {
         async massiveToggleActiveProducts(action) {
             const selectedProducts = this.products.data ? this.products.data.filter(product => product.selected) : [];
@@ -615,6 +642,10 @@ export default defineComponent({
 
             if (this.filter.sku) {
                 filter += `&sku=${JSON.stringify(this.filter.sku)}`
+            }
+
+            if (this.filter.promo_active) {
+                filter += `&promo_active=${JSON.stringify(this.filter.promo_active)}`
             }
 
             const get = `${route('products.list')}?${filter}`
