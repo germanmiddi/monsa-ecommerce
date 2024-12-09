@@ -5,7 +5,7 @@
                 class="w-full h-full object-center object-cover group-hover:opacity-75" />
         </div>
         <div v-show="product.promo_text"
-            class="absolute mt-8 mx-8 ml-1 xl:ml-2 bg-yellow-400 rounded-md p-4 font-semibold bg-opacity-90 text-xs xl:text-sm">
+            class="absolute mt-8 mx-8 ml-1 xl:ml-2 bg-monsa-blue text-white rounded-sm  p-2 font-semibold bg-opacity-90 text-sm">
             <span class="">{{ product.promo_text ?? '-' }}</span>
         </div>
         <div class="flex-1 p-4 space-y-2 flex flex-col">
@@ -17,8 +17,18 @@
                 </a>
             </h3>
             <div class="flex-1 flex flex-col justify-end">
-                <p class="text-xl font-bold text-gray-900">$ {{ Number(product.price_public).toLocaleString(undefined, {
-                    minimumFractionDigits: 0, maximumFractionDigits: 0 }) }}</p>
+                <div v-if="product.promo_active" class=" px-2 mb-6">
+                    <div class="font-bold text-base text-red-500 line-through">{{ formatPrice(product.price_public) }}
+                    </div>
+                    <div class="font-extrabold text-2xl">{{ formatPrice(product.promo_price) }}</div>
+                </div>
+
+                <div v-else class=" px-2 mb-6">
+                    <div class="font-extrabold text-2xl">{{ formatPrice(product.price_public) }}</div>
+                </div>
+                <!-- <p class="text-xl font-bold text-gray-900">$ {{ Number(product.price_public).toLocaleString(undefined, {
+                    minimumFractionDigits: 0, maximumFractionDigits: 0
+                }) }}</p> -->
             </div>
         </div>
     </div>
@@ -51,6 +61,16 @@ export default {
             } else {
                 return null;
             }
+        },
+        formatPrice(price_public) {
+            const formattedPrice = price_public.toLocaleString('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            });
+            return formattedPrice;
+
         }
     }
 }
