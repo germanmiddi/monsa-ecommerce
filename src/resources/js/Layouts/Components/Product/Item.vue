@@ -4,7 +4,7 @@
             <img :src="buildImg(product.imagen)" alt="Lorem"
                 class="w-full h-full object-center object-cover group-hover:opacity-75" />
         </div>
-        <div v-show="product.promo_text"
+        <div v-show="product.promo_active && product.promo_text"
             class="absolute mt-8 mx-8 ml-1 xl:ml-2 bg-monsa-blue text-white rounded-sm  p-2 font-semibold bg-opacity-90 text-sm">
             <span class="">{{ product.promo_text ?? '-' }}</span>
         </div>
