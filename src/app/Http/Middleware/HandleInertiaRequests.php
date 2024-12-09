@@ -37,14 +37,24 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        
+        $is_admin = Auth::user() && Auth::user()->role->name == 'admin';
+
+        if($is_admin && env('SHOW_MODULE_STORE')){
+            $show_module_store = true;
+        }else{
+            $show_module_store = false;
+        }
+
         $groups = [];
         if (Auth::check()) {
             $groups = session('userGroups');
         }
         
+
         return array_merge(parent::share($request), [
             'userGroups' => $groups,
-            'show_module_store' => config('app.show_module_store'),
+            'show_module_store' => $show_module_store,
         ]);        
     }
 }

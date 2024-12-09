@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Manager\Role;
+use App\Models\Role;
 
 class User extends Authenticatable
 {
@@ -30,6 +30,7 @@ class User extends Authenticatable
         'password'
     ];
 
+    protected $with = ['role'];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -58,12 +59,12 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url'
-
     ];
 
-
-    public function roles()
+    public function role()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsTo(Role::class);
     }
+
+
 }

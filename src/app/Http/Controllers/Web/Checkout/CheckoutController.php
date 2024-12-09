@@ -27,7 +27,7 @@ class CheckoutController extends Controller
      */
     public function index(Request $request)
     {
-        if (env('SHOW_MODULE_STORE', true) === false) {
+        if (env('SHOW_MODULE_STORE', false) === false) {
             abort(404); // O redirige a otra ruta, por ejemplo: return redirect()->route('home');
         }
         

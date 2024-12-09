@@ -301,8 +301,8 @@
 		TransitionChild,
 		TransitionRoot,
 	} from '@headlessui/vue'
-	//  import { MenuIcon, QuestionMarkCircleIcon, SearchIcon, ShoppingBagIcon, XIcon } from '@heroicons/vue/24/solid'
-	import { ShoppingBagIcon } from '@heroicons/vue/24/solid'
+	
+	import { MenuIcon,ShoppingBagIcon } from '@heroicons/vue/24/solid'
 	import { useCartStore } from '../Stores/useCartStore'
 	import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
 	const navigation = {
@@ -345,8 +345,8 @@
 			TransitionChild,
 			TransitionRoot,
 			ShoppingBagIcon,
-			Whatsappbtn
-
+			Whatsappbtn,
+			MenuIcon
 		},
 		setup() {
 			const open = ref(false)

@@ -72,7 +72,6 @@ class SettingsTableSeeder extends Seeder
                 'value' => '<script></script>',
             ],
 
-
         ];
         
         foreach ($data as $setting) {

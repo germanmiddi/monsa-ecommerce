@@ -27,7 +27,8 @@
                 <span class="bg-black bg-opacity-50 p-2 text-center text-3xl">Productos<br>Destacados</span>
             </div>
             <!-- Slider ocupa el resto del ancho -->
-            <div class="w-full sm:w-5/6 overflow-hidden">
+            <!-- <div class="w-full sm:w-5/6 overflow-hidden"> -->
+            <div class="w-full sm:w-5/6">
                 <SliderProducts2 :productItems="products" class="h-full"/>
             </div>
             </div>

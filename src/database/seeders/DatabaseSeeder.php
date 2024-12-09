@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Role;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -22,12 +24,28 @@ class DatabaseSeeder extends Seeder
             OrderStatusTableSeeder::class,
             PagesLegalesTableSeeder::class,
         ]);
+       
+        
+        Role::firstOrCreate([
+            'name' => 'admin'
+        ]);
+
+        Role::firstOrCreate([
+            'name' => 'operator'
+        ]);
+
+        Role::firstOrCreate([
+            'name' => 'client'
+        ]);
+
+        $admin_id = Role::where('name', 'admin')->first()->id;
         
         User::firstOrCreate([
             'email' => 'g@gmail.com'
         ], [
             'name' => 'German Middi',
-            'password' => bcrypt('Inicio123')
+            'password' => bcrypt('Inicio123'),
+            'role_id' => $admin_id
         ]);
        
 

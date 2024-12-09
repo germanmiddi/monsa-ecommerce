@@ -133,8 +133,8 @@
 							</div>
 
 							<!-- Logo (lg-) -->
-							<a href="#" class="lg:hidden">
-								<img src="/images/monsa-srl-logo.png" alt="" class="h-8 w-auto" />
+							<a :href="route('home')" class="lg:hidden">
+								<img src="/images/logo-blanco.png" alt="" class="h-8 w-auto" />
 							</a>
 
 							<div class="flex-1 flex items-center justify-end">
@@ -291,7 +291,7 @@ import {
 	TransitionRoot,
 } from '@headlessui/vue'
 //  import { MenuIcon, QuestionMarkCircleIcon, SearchIcon, ShoppingBagIcon, XIcon } from '@heroicons/vue/24/solid'
-import { ShoppingBagIcon } from '@heroicons/vue/24/solid'
+import { ShoppingBagIcon,MenuIcon } from '@heroicons/vue/24/solid'
 import { useCartStore } from '../Stores/useCartStore'
 import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
 import Alert from '../Layouts/Components/Alert'
@@ -335,7 +335,8 @@ export default {
 		TransitionRoot,
 		ShoppingBagIcon,
 		Whatsappbtn,
-		Alert
+		Alert,
+		MenuIcon
 
 	},
 	data() {
