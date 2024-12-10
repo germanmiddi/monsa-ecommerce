@@ -67,7 +67,7 @@
                     <th>Precio unitario</th>
                     <th>Total</th>
                 </tr>
-                @if($order->items)
+                @if($order->items != null)
                     @foreach($order->items as $item)
                     <tr>
                         <td>{{ $item->product->nombre }}</td>
