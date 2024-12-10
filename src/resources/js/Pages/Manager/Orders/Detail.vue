@@ -18,15 +18,6 @@
                         <span>Consultar Pago</span>
                         <div v-if="this.loadingPaymentStatus == true" ><Icons name="cog" class="ml-2 w-6 h-6 animate-spin"/></div>
                     </button>
-                    <!--
-                    <button v-if="this.order.bill_status != 'finished'" @click="createInvoice" class="btn-default">
-                        <span>Emitir Factura</span>
-                        <div v-if="this.loading == true" ><Icons name="cog" class="ml-2 w-6 h-6 animate-spin"/></div>
-                    </button> -->
-                    <!-- <a href="#" class="btn-default">
-                        <span>Imprimir</span>
-                    </a> -->
-
                     <button v-if="this.order.order_status_id < 4" @click="updateStatus" class="btn-default">
                         <span>Finalizar</span>
                     </button>
@@ -66,9 +57,9 @@
                                     <td class="w-5/6">Subtotal</td>
                                     <td class="w-1/6 text-right">{{formattedPrice( Number(subtotal) )}}</td>
                                 </tr>
-                                <tr>
+                                <tr v-if="order.delivery_amount > 0">
                                     <td class="w-5/6">Shipping</td>
-                                    <td class="w-1/6 text-right">{{formattedPrice( Number(order.shipments[0].price_incl_tax) )}}</td>
+                                    <td class="w-1/6 text-right">{{formattedPrice( Number(order.delivery_amount) )}}</td>
                                 </tr>
                                 <!-- <tr>
                                     <td class="w-5/6">Tax</td>
@@ -82,36 +73,11 @@
                         </div>
                     </div>
 
-                    <!-- <div v-if="true" class="card">
-                        <div class="border-b flex justify-between items-center">
-                            <div class="card-title-text">Información de Factura</div>
-                            <a href="#" class="btn-default m-4">Ver Factura</a>                            
-                        </div>
-                        <div class="card-body">
-                                <table class="w-full mt-2">
-                                    <tr>
-                                        <td class="w-1/5 text-center">Fecha</td>
-                                        <td class="w-3/5 text-center">Número</td>
-                                        <td class="w-1/5 text-center">Total</td>
-                                        
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center">{{}}</td>
-                                        <td class="text-center">{{  }}</td>
-                                        <td class="font-bold text-center">$ </td>
-                                    </tr>
-
-                                </table>
-                        </div>
-                    </div> -->
-                    
-
-                    <div v-if="true" class="card">
+                    <div v-if="order.delivery_amount > 0" class="card">
                         <div class="border-b flex justify-between items-center">
                             <div class="card-title-text">Información del Envio</div>
                             <div class="flex"> 
                                 <button @click="getShipmentLabel" class="bg-gray-100 btn-default m-4">Guia</button>
-                                <!-- <a href="#" class="bg-gray-100 btn-default m-4">FC Comercial</a> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -120,7 +86,6 @@
                                     <td class="w-1/5 text-center">Fecha</td>
                                     <td class="w-3/5 text-center">Trackig Number</td>
                                     <td class="w-1/5 text-center">Carrier</td>
-                                    
                                 </tr>
                                 <tr>
                                     <td class="text-center">{{formatDateDDMMYYYY(order.shipments[0].created_at)}}</td>
@@ -167,7 +132,7 @@
                                     <td class="font-bold">
                                         Envio:
                                     </td>
-                                    <td>
+                                    <td v-if="order.delivery_amount > 0">
                                         {{ order.shipments[0].status_name }}    
                                     </td>
                                 </tr>
