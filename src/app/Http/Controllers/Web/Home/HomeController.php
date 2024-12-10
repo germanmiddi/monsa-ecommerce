@@ -12,6 +12,7 @@ use App\Models\ContentBrand;
 use App\Models\Content;
 use App\Models\Product;
 use App\Models\Suscripcion;
+use App\Models\PostStatus;
 class HomeController extends Controller
 {
     /**
@@ -23,7 +24,11 @@ class HomeController extends Controller
     public function index(Request $request)
     {
 
-        $post = Post::with('post_category')->get()->toArray();
+        $status_publicado = PostStatus::where('name', 'Publicado')->first()->id;
+        $post = Post::with('post_category')
+        ->where('post_status_id', $status_publicado)
+        ->get()
+        ->toArray();
         $products = Product::whereHas('labels', function ($query) {
             $query->where('slug', 'carrousel_home');
         })->where('price_public', '>', 0)->get();

@@ -88,4 +88,11 @@ export default {
   background-position: center bottom;
 }
 
+p{
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-align: justify;
+    line-height: 1.5;
+}
 </style>

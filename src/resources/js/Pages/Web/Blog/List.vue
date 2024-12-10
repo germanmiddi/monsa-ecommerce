@@ -18,8 +18,8 @@
 
    <div class="relative max-w-7xl mx-auto">
 
-      <div v-for="post in posts.data" :key="post.id"  class="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
-        <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
+      <div class="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+        <div v-for="post in posts.data" :key="post.id" class="col-span-1 flex flex-col rounded-lg shadow-lg overflow-hidden">
           <div class="flex-shrink-0">
             <img class="h-48 w-full object-cover" :src="`/storage/${post.image}`" alt="">
           </div>
@@ -35,18 +35,11 @@
             </div>
             <div class="mt-6 flex items-center">
               <div class="flex-shrink-0">
-                <a href="#">
-                  <span class="sr-only">Roel Aufderehar</span>
-                  <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                </a>
+                <CalendarIcon class="h-5 w-5" />
               </div>
               <div class="ml-3">
-                <!-- <p class="text-sm font-medium text-gray-900">
-                  <a href="#" class="hover:underline"> Roel Aufderehar </a>
-                </p> -->
                 <div class="flex space-x-1 text-sm text-gray-500">
-                  <time datetime="2020-03-16">{{ formatFecha(post.date_published) }}</time>
-                  <span aria-hidden="true"> &middot; </span>
+                  <time>{{ formatFecha(post.date_published) }}</time>
                 </div>
               </div>
             </div>
@@ -60,7 +53,11 @@
 </template>
 
 <script>
+import { CalendarIcon } from '@heroicons/vue/24/solid'
 export default {
+    components: {
+        CalendarIcon
+    },
     props:{
         posts: {
             type: Object,

@@ -6,15 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Post;
-
+use App\Models\PostStatus;
 class BlogController extends Controller
 {
     // Add your controller methods here
 
     public function list()
     {
+        $status_publicado = PostStatus::where('name', 'Publicado')->first()->id;
         return Inertia::render('Web/Blog/List',[
-            'posts'     => Post::orderBy('created_at', 'desc')
+            'posts'     => Post::where('post_status_id', $status_publicado)
+                                ->orderBy('created_at', 'desc')
                                 ->paginate(999)
                                 ->withQueryString()
                                 ->through(fn ($post) => [
