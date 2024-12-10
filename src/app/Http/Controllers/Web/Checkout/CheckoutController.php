@@ -138,15 +138,41 @@ class CheckoutController extends Controller
         //Get Token Nave
         $get_token_url = env('NAVE_URL');
 
-        $http_token = Http::withHeaders(['Content-Type' => 'application/json'])
-                            ->post($get_token_url, 
-                                [ 'client_id'     => env('NAVE_CLIENT_ID'),
-                                'client_secret' => env('NAVE_CLIENT_SECRET'),
-                                'audience'      => "https://naranja.com/ranty/merchants/api" ]);
+        // $http_token = Http::withHeaders(['Content-Type' => 'application/json'])
+        //                     ->post($get_token_url, 
+        //                         [ 'client_id'     => env('NAVE_CLIENT_ID'),
+        //                         'client_secret' => env('NAVE_CLIENT_SECRET'),
+        //                         'audience'      => "https://naranja.com/ranty/merchants/api" ]);
 
-        if($http_token->status() != 200){
-            return response()->json(['message' => 'Error getting token', 'error' => $http_token], 500);
+        // if($http_token->status() != 200){
+        //     return response()->json(['message' => 'Error getting token', 'error' => $http_token], 500);
+        // }
+
+
+        $payload = [
+            'client_id'     => env('NAVE_CLIENT_ID'),
+            'client_secret' => env('NAVE_CLIENT_SECRET'),
+            'audience'      => "https://naranja.com/ranty/merchants/api"
+        ];
+        
+        $http_token = Http::withHeaders(['Content-Type' => 'application/json'])
+                          ->post($get_token_url, $payload);
+        
+        if ($http_token->status() != 200) {
+            // Registrar detalles de la solicitud y respuesta
+            Log::error('Error obteniendo token', [
+                'url' => $get_token_url,
+                'headers' => ['Content-Type' => 'application/json'],
+                'payload' => $payload,
+                'response_status' => $http_token->status(),
+                'response_body' => $http_token->body(),
+                'response_headers' => $http_token->headers(),
+            ]);
+        
+            return response()->json(['message' => 'Error getting token', 'error' => $http_token->body()], 500);
         }
+
+
 
         $response_token = json_decode($http_token);
         $token = $response_token->access_token;
