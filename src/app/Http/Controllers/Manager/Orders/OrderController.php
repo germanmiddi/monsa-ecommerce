@@ -136,12 +136,16 @@ class OrderController extends Controller
             foreach ($payments as $payment) {
                 Log::info('Check Payment Status: ' . $order->id . ' - Transaction ID: ' . $payment->transaction_id);
 
-                $http_get = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $token,
-                    'Content-Type' => 'application/json'
-                ])->get($url . $payment->transaction_id);
+                // $http_get = Http::withHeaders([
+                //     'Authorization' => 'Bearer ' . $token
+                // ])->get($url . $payment->transaction_id);
 
-                dd($http_get);
+            // Aquí se realiza la solicitud GET con el token de autorización
+            $http_get = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $token
+                ])->get("https://e3-api.ranty.io/api/payment_requests/{$payment->transaction_id}");
+
+
                 $response = json_decode($http_get);
                 if ($response->message) {
                     Log::error('Error checking payment status: ' . $response->message);
