@@ -173,7 +173,7 @@ class CheckoutController extends Controller
         }
 
 
-
+        Log::info('Token obtenido: ' . json_encode($http_token));
         $response_token = json_decode($http_token);
         $token = $response_token->access_token;
 
@@ -189,8 +189,8 @@ class CheckoutController extends Controller
         
 
         if($http_post->status() != 200){
-            Log::error('Error creating payment method: ' . json_encode($http_post));
-            return response()->json(['message' => 'Error creando el metodo de pago', 'error' => $http_token], 500);
+            Log::error('Error creating payment method: ' . json_encode($http_post->body()));
+            return response()->json(['message' => 'Error creando el metodo de pago', 'error' => $http_post->body()], 500);
         }
 
         $response = json_decode($http_post);
