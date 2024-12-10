@@ -118,7 +118,7 @@ class CheckoutController extends Controller
             return response()->json(['message' => $responsePayment->message, 'error' => $responsePayment->error], 500);
         }
 
-        if ($payment->status() == 200) {
+        if ($payment->status() == 200 && $request->customerDetails['zip'] != '0000') {
             // Envía el correo electrónico de confirmación
             Mail::to($client->email)->send(new OrderConfirmation($newOrder, $client, $shipment ?? null));
         }

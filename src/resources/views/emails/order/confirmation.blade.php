@@ -67,19 +67,14 @@
                     <th>Precio unitario</th>
                     <th>Total</th>
                 </tr>
-                @php
-                dd($order);
-                @endphp
-                @if($order->items != null)
-                    @foreach($order->items as $item)
+                @foreach($order->items as $item)
                     <tr>
                         <td>{{ $item->product->nombre }}</td>
                         <td>{{ $item->quantity }}</td>
                         <td>$ {{ number_format($item->price, 2) }}</td>
                         <td>$ {{ number_format($item->total, 2) }}</td>
                     </tr>
-                    @endforeach
-                @endif
+                @endforeach
                 <tr>
                     <td colspan="3" style="text-align: right;"><strong>Subtotal:</strong></td>
                     <td>$ {{ number_format($order->subtotal, 2) }}</td>
