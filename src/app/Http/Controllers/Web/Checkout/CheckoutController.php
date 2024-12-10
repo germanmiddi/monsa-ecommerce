@@ -104,6 +104,7 @@ class CheckoutController extends Controller
                 return response()->json(['message' => 'Error al crear el envío', 'error' => $e->getMessage()], 500);
             }
         } else {
+            $newOrder->load('items');
             $newOrder->delivery_amount = "1.00";
         }
 
@@ -136,7 +137,6 @@ class CheckoutController extends Controller
 
     public function payment(Request $request, $order_id, $delivery_amount)
     {
-
         //Get Token Nave
         $get_token_url = env('NAVE_URL');
 
