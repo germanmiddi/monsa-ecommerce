@@ -104,7 +104,6 @@ class CheckoutController extends Controller
                 return response()->json(['message' => 'Error al crear el envío', 'error' => $e->getMessage()], 500);
             }
         } else {
-            $newOrder->load('items');
             $newOrder->delivery_amount = "1.00";
         }
 
