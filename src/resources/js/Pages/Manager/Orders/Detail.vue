@@ -282,7 +282,19 @@ export default defineComponent({
                 this.toastMessage = "Error al actualizar el estado del pedido";
                 this.labelType = "error";
             }
-        }
+        },
+
+        async requestPaymentStatus() {
+            try {
+                const response = await axios.post(`/manager/orders/${this.order.id}/requestPaymentStatus`);
+                this.toastMessage = "Estado del pago actualizado";
+                this.labelType = "success";
+            } catch (error) {
+                console.error('Error al actualizar el estado del pago:', error);
+                this.toastMessage = "Error al actualizar el estado del pago";
+                this.labelType = "error";
+            }
+        },
     },
 })
 </script>

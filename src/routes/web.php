@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orders/list', [ManagerOrderController::class, 'list'])->name('orders.list');
         Route::get('/orders/{order}/detail', [ManagerOrderController::class, 'detail'])->name('orders.detail');
         Route::post('/orders/{order}/updateStatus', [ManagerOrderController::class, 'updateStatus'])->name('orders.updateStatus');
-
+        Route::post('/orders/{order}/requestPaymentStatus', [ManagerOrderController::class, 'requestPaymentStatus'])->name('orders.requestPaymentStatus');
         Route::get('/shipments/{shipment}/documentation', [ShipmentController::class, 'getDocumentation']);
 
         Route::get('/clients', [ClientController::class, 'index'])->name('clients');
