@@ -67,6 +67,9 @@
                     <th>Precio unitario</th>
                     <th>Total</th>
                 </tr>
+                @php
+                dd($order);
+                @endphp
                 @if($order->items != null)
                     @foreach($order->items as $item)
                     <tr>
