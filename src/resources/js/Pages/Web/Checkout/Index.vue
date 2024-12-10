@@ -253,17 +253,6 @@
             </div>
           </section>
 
-          <!-- <section aria-labelledby="billing-heading" class="mt-10">
-              <h2 id="billing-heading" class="text-lg font-medium text-gray-900">Facturación</h2>
-  
-              <div class="mt-6 flex items-center">
-                <input id="same-as-shipping" name="same-as-shipping" type="checkbox" checked="" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
-                <div class="ml-2">
-                  <label for="same-as-shipping" class="text-sm font-medium text-gray-900">Mismo</label>
-                </div>
-              </div>
-            </section> -->
-
           <div class="mt-10 pt-6 border-t border-gray-200 sm:flex sm:items-center sm:justify-between">
             <button @click.prevent="submitCheckout" type="submit" class="w-32 bg-[#232323] border border-transparent rounded-md shadow-sm 
                                           py-2 px-4 text-sm font-medium  uppercase
@@ -432,6 +421,12 @@ export default {
 
     const calcDelivery = async() => {
       loading.value = true
+
+      if(form.value.zip == '0000'){
+        cart.setDelivery(1)
+        loading.value = false
+        return
+      }
       const post = route('checkout.calcDelivery')
       try {
         const params = {...form.value, items: cart.items, total: cart.totalPrice};

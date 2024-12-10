@@ -88,21 +88,25 @@ class CheckoutController extends Controller
         $newOrder = $response->order;
 
         // Crear envío
-        $deliveryService = app(DeliveryService::class);
-        try {
-            //Se crea el envio
-            $shipment = $deliveryService->createShipment($newOrder, $client, $request->cartItems);
-            Log::info('Shipment created: ' . json_encode($shipment));
-            
-            //Se actualiza la orden con la info del envio
-            $order = $orderController->update($newOrder->id, $shipment->id);
-            $response = json_decode($order->content());
-            $newOrder = $response->order;
+        if($request->customerDetails['zip'] != '0000'){
+            $deliveryService = app(DeliveryService::class);
+            try {
+                //Se crea el envio
+                $shipment = $deliveryService->createShipment($newOrder, $client, $request->cartItems);
+                Log::info('Shipment created: ' . json_encode($shipment));
+                
+                //Se actualiza la orden con la info del envio
+                $order = $orderController->update($newOrder->id, $shipment->id);
+                $response = json_decode($order->content());
+                $newOrder = $response->order;
 
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al crear el envío', 'error' => $e->getMessage()], 500);
-        }        
-
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Error al crear el envío', 'error' => $e->getMessage()], 500);
+            }        
+        }else{
+            $newOrder->delivery_amount = 1;
+        }
+        
         $payment = $this->payment($request, $newOrder->id, $newOrder->delivery_amount);
         Log::info('Payment created: ' . json_encode($payment->content()));
 
