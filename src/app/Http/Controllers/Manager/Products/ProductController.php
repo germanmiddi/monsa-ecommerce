@@ -54,14 +54,6 @@ class ProductController extends Controller
             $result->where('idBrand', $brand_id);
         }
 
-        if(request('has_0price')){
-            $result->where('price_public', 0);
-        }
-
-        if(request('has_0stock')){
-            $result->where('stock_disponible', '<',1);
-        }
-
         if(request('label_id')){
             $label_id = json_decode(request('label_id'));
             $result->whereIn('id', function ($sub) use($label_id) {
@@ -76,14 +68,39 @@ class ProductController extends Controller
             $result->where('promo_active', true);
         }
 
-        if(request('is_active')){
-            $result->where('is_active', true);
+        if(request('stock_filter') !== null){
+            $stock_filter = request('stock_filter');
+            if($stock_filter === '0'){
+                $result->where('stock_disponible', '<',1);
+            }elseif($stock_filter === '1'){
+                $result->where('stock_disponible', '>=',1);
+            }
+        }
+        if(request('price_filter') !== null){
+            $price_filter = request('price_filter');
+            if($price_filter === '0'){
+                $result->where('precio','<',1);
+            }elseif($price_filter === '1'){
+                $result->where('precio', '>', 0);
+            }
+        }
+        if(request('visibility_filter') !== null){
+            $visibility_filter = request('visibility_filter');
+            if($visibility_filter === '0'){
+                $result->where('is_active', true);
+            }elseif($visibility_filter === '1'){
+                $result->where('is_active', false);
+            }
         }
 
+        // dd($stock_filter );
+        // dd($result->toSql());
+        // return $result->with('family', 'brand', 'labels')
         return $result->with('family', 'brand', 'labels')
                     ->orderBy('created_at', 'desc')
                     ->paginate($length)
                     ->withQueryString();
+
     }
     /**
      * Show the form for creating a new resource.

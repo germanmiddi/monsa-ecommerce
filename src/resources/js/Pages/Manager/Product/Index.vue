@@ -75,60 +75,52 @@
                                 <input v-model="filter.modelo" type="text" name="modelo" id="modelo" autocomplete="off"
                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                             </div>
-                            <div class="col-span-12 sm:col-span-4">
-                                <div class="flex justify-between">
-                                    <div class="w-24">
-                                        <label for="is_active" class="block text-sm font-medium text-gray-700">Visible</label>
-         
-                                        <Switch v-model="filter.is_active"
-                                            @click="filter.is_active = !filter.is_active"
-                                            :class="filter.is_active ? 'bg-blue-600' : 'bg-gray-200'"
-                                            class="relative inline-flex h-6 w-11 items-center rounded-full mt-2">
-                                            <span
-                                                :class="filter.is_active ? 'translate-x-6' : 'translate-x-1'"
-                                                class="inline-block h-4 w-4 transform rounded-full bg-white transition" />
-                                        </Switch>
-                                    </div>
-                                    <div class="w-24">
-                                        <label for="has_0stock" class="block text-sm font-medium text-gray-700">Sin Stock</label>
-    
-                                        <Switch v-model="filter.has_0stock"
-                                            @click="filter.has_0stock = !filter.has_0stock"
-                                            :class="filter.has_0stock ? 'bg-blue-600' : 'bg-gray-200'"
-                                            class="relative inline-flex h-6 w-11 items-center rounded-full mt-2">
-                                            <span
-                                                :class="filter.has_0stock ? 'translate-x-6' : 'translate-x-1'"
-                                                class="inline-block h-4 w-4 transform rounded-full bg-white transition" />
-                                        </Switch>
-                                    </div>
-                                    <div class="w-24">
-                                        <label for="has_0price" class="block text-sm font-medium text-gray-700">Sin Precio</label>
-                                        
-                                        <Switch v-model="filter.has_0price"
-                                            @click="filter.has_0price = !filter.has_0price"
-                                            :class="filter.has_0price ? 'bg-blue-600' : 'bg-gray-200'"
-                                            class="relative inline-flex h-6 w-11 items-center rounded-full mt-2">
-                                            <span
-                                                :class="filter.has_0price ? 'translate-x-6' : 'translate-x-1'"
-                                                class="inline-block h-4 w-4 transform rounded-full bg-white transition" />
-                                        </Switch>
-                                    </div>       
-                                    <div class="w-24"> 
-                                        <label for="promo_active" class="block text-sm font-medium text-gray-700">Promo Activa</label>
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="promo_active" class="block text-sm font-medium text-gray-700">Promoción Activa</label>
  
-                                        <Switch v-model="filter.promo_active"
-                                            @click="filter.promo_active = !filter.promo_active"
-                                            :class="filter.promo_active ? 'bg-blue-600' : 'bg-gray-200'"
-                                            class="relative inline-flex h-6 w-11 items-center rounded-full mt-2">
-                                            <span
-                                                :class="filter.promo_active ? 'translate-x-6' : 'translate-x-1'"
-                                                class="inline-block h-4 w-4 transform rounded-full bg-white transition" />
-                                        </Switch>
-                                    </div>                                                                 
-                                </div>
+                                <Switch v-model="filter.promo_active"
+                                    @click="filter.promo_active = !filter.promo_active"
+                                    :class="filter.promo_active ? 'bg-blue-600' : 'bg-gray-200'"
+                                    class="relative inline-flex h-6 w-11 items-center rounded-full mt-2">
+                                    <span
+                                        :class="filter.promo_active ? 'translate-x-6' : 'translate-x-1'"
+                                        class="inline-block h-4 w-4 transform rounded-full bg-white transition" />
+                                </Switch>
                             </div>                            
                         </div>
 
+                        <div class="grid grid-cols-12 gap-6">
+                            
+                            <div class="col-span-12 sm:col-span-2">
+                                <label for="stock_filter" class="block text-sm font-medium text-gray-700">Stock</label>
+                                <select v-model="filter.stock_filter" id="stock_filter" name="stock_filter" autocomplete="off"
+                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled> Todos </option>
+                                    <option value="0"> Sin Stock </option>
+                                    <option value="1"> Con Stock </option>
+                                </select>
+                            </div>
+
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="price_filter" class="block text-sm font-medium text-gray-700">Precio</label>
+                                <select v-model="filter.price_filter" id="price_filter" name="price_filter" autocomplete="off"
+                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled> Todos </option>
+                                    <option value="0"> Sin Precio </option>
+                                    <option value="1"> Con Precio </option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-span-12 sm:col-span-3">
+                                <label for="visibility_filter" class="block text-sm font-medium text-gray-700">Visibilidad</label>
+                                <select v-model="filter.visibility_filter" id="visibility_filter" name="visibility_filter" autocomplete="off"
+                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled> Todos </option>
+                                    <option value="0"> Activo </option>
+                                    <option value="1"> Inactivo </option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="grid grid-cols-12 gap-6">
                             
                             <div class="col-span-12 sm:col-span-2">
@@ -687,18 +679,17 @@ export default defineComponent({
                 filter += `&promo_active=${JSON.stringify(this.filter.promo_active)}`
             }
 
-            if (this.filter.is_active) {
-                filter += `&is_active=${JSON.stringify(this.filter.is_active)}`
+            if (this.filter.stock_filter) {
+                filter += `&stock_filter=${this.filter.stock_filter}`
             }
 
-            if (this.filter.has_0price) {
-                filter += `&has_0price=${JSON.stringify(this.filter.has_0price)}`
+            if (this.filter.price_filter) {
+                filter += `&price_filter=${this.filter.price_filter}`
             }
 
-            if (this.filter.has_0stock) {
-                filter += `&has_0stock=${JSON.stringify(this.filter.has_0stock)}`
+            if (this.filter.visibility_filter) {
+                filter += `&visibility_filter=${this.filter.visibility_filter}`
             }
-
 
             const get = `${route('products.list')}?${filter}`
 
