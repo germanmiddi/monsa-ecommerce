@@ -104,7 +104,7 @@ class CheckoutController extends Controller
                 return response()->json(['message' => 'Error al crear el envío', 'error' => $e->getMessage()], 500);
             }
         } else {
-            $newOrder->delivery_amount = 1;
+            $newOrder->delivery_amount = "1.00";
         }
 
         $payment = $this->payment($request, $newOrder->id, $newOrder->delivery_amount);
@@ -261,20 +261,18 @@ class CheckoutController extends Controller
             ];
         }, $cartItems);
 
-        if ($delivery_amount == 1) {
-            $items = array_merge($items, [
-                [
-                    "id" => "883628",
-                    "name" => "Envío",
-                    "description" => "Envío a domicilio",
-                    "quantity" => 1,
-                    "unit_price" => [
-                        "currency" => "ARS",
-                        "value" => $delivery_amount
-                    ]
+        $items = array_merge($items, [
+            [
+                "id" => "883628",
+                "name" => "Envío",
+                "description" => "Envío a domicilio",
+                "quantity" => 1,
+                "unit_price" => [
+                    "currency" => "ARS",
+                    "value" => $delivery_amount
                 ]
-            ]);
-        }
+            ]
+        ]);
 
         return $items;
     }
