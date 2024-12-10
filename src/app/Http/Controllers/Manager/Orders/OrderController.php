@@ -9,6 +9,9 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Payment;
+use App\Models\OrderStatus;
+
+
 class OrderController extends Controller
 {
     public function index()
@@ -95,7 +98,7 @@ class OrderController extends Controller
 
     public function requestPaymentStatus(Order $order)
     {
-
+        $order_status_id = OrderStatus::where('name', 'En Preparación')->first()->id;
         try {
 
             $get_token_url = env('NAVE_URL');
@@ -127,6 +130,7 @@ class OrderController extends Controller
             Log::info('Token obtenido: ' . $response_token->access_token);
             $token = $response_token->access_token;
 
+            // $token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjI4ODRTMUN6aVh2RFctNEh1RnkySyJ9.eyJodHRwczovL25hcmFuamEuY29tL2luZm8iOnsiY2xpZW50SWQiOiJnU3AxVHE0cktrOHFid3lRdXlyYlloeDR1NGMxNlJFOCIsImNsaWVudE5hbWUiOiJCMkJFeHRlcm5hbE1vbnNhU1JMIn0sImlzcyI6Imh0dHBzOi8vbTJtLm5hcmFuamF4LmNvbS8iLCJzdWIiOiJnU3AxVHE0cktrOHFid3lRdXlyYlloeDR1NGMxNlJFOEBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9uYXJhbmphLmNvbS9yYW50eS9tZXJjaGFudHMvYXBpIiwiaWF0IjoxNzMzODE1MzI1LCJleHAiOjE3MzM5MDE3MjUsInNjb3BlIjoid3JpdGUucGF5bWVudF9yZXF1ZXN0IHdyaXRlLmVjb21tZXJjZSB3cml0ZS5pbnRlZ3JhdGlvbiByZWFkLnBheW1lbnQiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJhenAiOiJnU3AxVHE0cktrOHFid3lRdXlyYlloeDR1NGMxNlJFOCJ9.Sily4sUf3Yej6MLTyTzlAZ3UTlzoQs8XJA68ef2NM1wHCqSpdCO-I5hQj3SMOwY80h_rFRmSRU6ode63Q08D6QQfKZ7j5cSSsLR9QlVdGkqztX_qEd9fOuxKrTNNQm4MoPbrNqcPXT2ZvZg2q4EEb4JSIyurDslZjUpK9yidqTBD79misvdEe1cRe0ZHh2ojLv6ccxz1MqiA6c4ErEy1MqWLzG3Xd-BU3oXAvGiJbcwNs3q-PuW0uZDKnFcb4aS7IcZ4qd5BbWbQpa54UldTmYclkOQ78nPJWP-VYz4T7tAXb1O8fyX94_B3ZNdc5IZRzWdt50otP4lO4phQtE2CcQ';
             $url = env('NAVE_URL_PAYMENT_STATUS');
             $payments = Payment::where('order_id', $order->id)->get();
 
@@ -137,26 +141,37 @@ class OrderController extends Controller
             foreach ($payments as $payment) {
                 Log::info('Check Payment Status: ' . $order->id . ' - Transaction ID: ' . $payment->transaction_id);
 
-                // $http_get = Http::withHeaders([
-                //     'Authorization' => 'Bearer ' . $token
-                // ])->get($url . $payment->transaction_id);
+                $get_url = $url . $payment->payment_request_id;
 
-            // Aquí se realiza la solicitud GET con el token de autorización
-            $http_get = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $token
-                ])->get("https://e3-api.ranty.io/api/payment_requests/{$payment->transaction_id}");
-
+                $http_get = Http::withHeaders([
+                                        'Authorization' => 'Bearer ' . $token
+                                    ])->get($get_url);
 
                 $response = json_decode($http_get);
-                if ($response->message) {
+
+                if ($response->status != null) {
+                    $payment->update([
+                        'status' => $response->status,
+                        'payment_check_status' => $response
+                    ]);
+
+                    if($response->status == 'SUCCESS_PROCESSED'){
+                        $order->update([
+                            'payment_status' => 'PAGADO',
+                            'order_status_id' => $order_status_id
+                        ]);
+                    }
+
+                    Log::info('Order: ' . $order->id . ' - Payment:' . $payment->id . ' status updated: ' . $response->status);
+                }else{
+                    $payment->update([
+                        'payment_check_status' => $response
+                    ]);
                     Log::error('Error checking payment status: ' . $response->message);
                     return response()->json(['message' => 'Error checking payment status', 'error' => $response->message], 500);
                 }
-
-                $payment->update([
-                    'payment_status' => $response->status
-                ]);
             }
+            return response()->json(['message' => 'Payment status updated', 'status' => $response->status], 200);
 
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error al actualizar el estado del pago', 'error' => $e->getMessage()], 500);
