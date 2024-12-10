@@ -54,6 +54,14 @@ class ProductController extends Controller
             $result->where('idBrand', $brand_id);
         }
 
+        if(request('has_0price')){
+            $result->where('price_public', 0);
+        }
+
+        if(request('has_0stock')){
+            $result->where('stock_disponible', '<',1);
+        }
+
         if(request('label_id')){
             $label_id = json_decode(request('label_id'));
             $result->whereIn('id', function ($sub) use($label_id) {
@@ -66,6 +74,10 @@ class ProductController extends Controller
 
         if(request('promo_active')){
             $result->where('promo_active', true);
+        }
+
+        if(request('is_active')){
+            $result->where('is_active', true);
         }
 
         return $result->with('family', 'brand', 'labels')
