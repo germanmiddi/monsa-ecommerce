@@ -124,7 +124,7 @@
 								<div class="flex-1 flex items-center lg:hidden">
 									<button type="button" class="-ml-2 bg-white p-2 rounded-md text-gray-400" @click="open = true">
 										<span class="sr-only">Open menu</span>
-										<MenuIcon class="h-6 w-6" aria-hidden="true" />
+										<Bars3Icon class="h-6 w-6" aria-hidden="true" />
 									</button>
 	
 									<!-- Search -->
@@ -302,7 +302,7 @@
 		TransitionRoot,
 	} from '@headlessui/vue'
 	
-	import { MenuIcon,ShoppingBagIcon } from '@heroicons/vue/24/solid'
+	import { Bars3Icon,ShoppingBagIcon } from '@heroicons/vue/24/solid'
 	import { useCartStore } from '../Stores/useCartStore'
 	import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
 	const navigation = {
@@ -346,7 +346,7 @@
 			TransitionRoot,
 			ShoppingBagIcon,
 			Whatsappbtn,
-			MenuIcon
+			Bars3Icon
 		},
 		setup() {
 			const open = ref(false)

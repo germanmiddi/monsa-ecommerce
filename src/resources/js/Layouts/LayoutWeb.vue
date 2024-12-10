@@ -122,7 +122,7 @@
 								<button type="button" class="-ml-2 bg-white p-2 rounded-md text-gray-400"
 									@click="open = true">
 									<span class="sr-only">Open menu</span>
-									<MenuIcon class="h-6 w-6" aria-hidden="true" />
+									<Bars3Icon class="h-6 w-6" aria-hidden="true" />
 								</button>
 
 								<!-- Search -->
@@ -290,8 +290,7 @@ import {
 	TransitionChild,
 	TransitionRoot,
 } from '@headlessui/vue'
-//  import { MenuIcon, QuestionMarkCircleIcon, SearchIcon, ShoppingBagIcon, XIcon } from '@heroicons/vue/24/solid'
-import { ShoppingBagIcon,MenuIcon } from '@heroicons/vue/24/solid'
+import { ShoppingBagIcon,Bars3Icon } from '@heroicons/vue/24/solid'
 import { useCartStore } from '../Stores/useCartStore'
 import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
 import Alert from '../Layouts/Components/Alert'
@@ -336,7 +335,7 @@ export default {
 		ShoppingBagIcon,
 		Whatsappbtn,
 		Alert,
-		MenuIcon
+		Bars3Icon
 
 	},
 	data() {
