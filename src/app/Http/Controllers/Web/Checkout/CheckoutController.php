@@ -178,7 +178,7 @@ class CheckoutController extends Controller
         $token = $response_token->access_token;
 
         //Crear Intencion de Pago
-        $url    = 'https://e3-api.ranty.io/ecommerce/payment_request/external';
+        $url    = env('NAVE_URL_PAYMENT');
 
         $params = $this->_buildPaymentData($request->all(), $order_id, $delivery_amount);
 
@@ -189,7 +189,6 @@ class CheckoutController extends Controller
         
 
         if($http_post->status() != 200){
-            dd($http_post);
             Log::error('Error creating payment method: ' . json_encode($http_post->body()));
             return response()->json(['message' => 'Error creando el metodo de pago', 'error' => $http_post->body()], 500);
         }
