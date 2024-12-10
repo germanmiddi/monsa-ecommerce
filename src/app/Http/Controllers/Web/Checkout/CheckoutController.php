@@ -135,7 +135,8 @@ class CheckoutController extends Controller
     public function payment(Request $request, $order_id, $delivery_amount)
     {        
         
-        $get_token_url = 'https://homoservices.apinaranja.com/security-ms/api/security/auth0/b2b/m2ms';
+        //Get Token Nave
+        $get_token_url = env('NAVE_URL');
 
         $http_token = Http::withHeaders(['Content-Type' => 'application/json'])
                             ->post($get_token_url, 
@@ -150,6 +151,7 @@ class CheckoutController extends Controller
         $response_token = json_decode($http_token);
         $token = $response_token->access_token;
 
+        //Crear Intencion de Pago
         $url    = 'https://e3-api.ranty.io/ecommerce/payment_request/external';
 
         $params = $this->_buildPaymentData($request->all(), $order_id, $delivery_amount);
@@ -179,9 +181,12 @@ class CheckoutController extends Controller
         $callback_url = $this->_generateCallbackUrl($order_id);
         $total = number_format($request['totalPrice'], 2, '.', '');
 
+        $platform = env('NAVE_PLATFORM');
+        $store_id = env('NAVE_STORE_ID');
+
         return [
-                    "store_id" => "YqzLxzVobkr6Xqk7JGZmzZsHqmTOAL37",
-                    "platform" => "monsa_srl",
+                    "store_id" => $store_id,
+                    "platform" => $platform,
                     "callback_url" => $callback_url,
                     "order_id" => $order_id,
                     "mobile" => false,
