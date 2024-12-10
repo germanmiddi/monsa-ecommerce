@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\Payment;
 class OrderController extends Controller
 {
     public function index()
@@ -127,7 +128,7 @@ class OrderController extends Controller
             $token = $response_token->access_token;
 
             $url = env('NAVE_URL_PAYMENT_STATUS');
-            $payments = $order::with('payments')->get();
+            $payments = Payment::where('order_id', $order->id)->get();
 
             if ($payments->isEmpty()) {
                 return response()->json(['message' => 'No se encontraron pagos para el pedido'], 404);
@@ -155,7 +156,6 @@ class OrderController extends Controller
                 $payment->update([
                     'payment_status' => $response->status
                 ]);
-
             }
 
         } catch (\Exception $e) {
