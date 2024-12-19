@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/payment/notification', [PaymentNotificationController::class, 'handleNotification']);
+Route::post('/pagos/nave/', [PaymentNotificationController::class, 'handleNotification']);
 
 
 // Se pasa esta ruta al web.php para hacer uso del CSRF, y evitar exponer la ruta de pago sin seguridad

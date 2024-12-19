@@ -22,7 +22,7 @@ class PaymentNotificationController extends Controller
                 return response()->json(['message' => 'Order not found'], 404);
             }
             $order->payment_status = $status;
-            $order->payment_method = $payment_method;
+            // $order->payment_method = $payment_method;
             $order->save();
             DB::commit();
 
