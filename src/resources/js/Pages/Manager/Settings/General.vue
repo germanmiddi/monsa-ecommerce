@@ -49,6 +49,31 @@
                             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
                     </div>
 
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
+                        <div>
+                            Importar detalles de productos<br>
+                            <input @change="handleFileChange" accept=".xlsx" type="file" name="file" id="file" ref="inputfile" autocomplete="off"
+                                class="mt-2 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block" />
+                           
+                        </div>
+                        <div>
+                            <a :href="route('products.download.template')"
+                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-indigo-800 bg-indigo-200 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">Template</a>
+                            <button @click="importProducts()"
+                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Importar</button>
+                        </div>
+                    </div>
+
+                    <div v-if="result" class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
+                        <div>
+                            Resultado de la importación<br>
+                            <div > 
+                                <p>Total de filas: {{ result.rows }}</p>
+                                <p>Total de filas exitosas: {{ result.rowsSuccess }}</p>
+                                <p>Total de filas con errores: {{ result.rowsError }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,6 +100,8 @@ export default {
             lastImportFamilies: null,
             lastImportBrands: null,
             lastImportAtributes: null,
+            file: '',
+            result: null,
         }
     },
     created() {
@@ -181,7 +208,39 @@ export default {
             this.lastImportBrands = response.data.find(setting => setting.key === 'last_import_brand')?.value
             this.lastImportAtributes = response.data.find(setting => setting.key === 'last_import_attributes')?.value
 
-        }
+        },
+
+        handleFileChange(event) {
+            this.file = event.target.files[0];
+        },
+
+        async importProducts() {
+            if (this.file != '') {
+                // this.processImport = true
+                // this.status = ''
+                let rt = route("products.importDetails");
+                const formData = new FormData();
+                formData.append('file', this.file);
+                try {
+                    const response = await axios.post(rt, formData);
+                    if (response.status == 200) {
+                        this.result = response.data.result;
+                        this.labelType = "success";
+                        this.toastMessage = response.data.message;
+                    } else {
+                        this.labelType = "danger";
+                        this.toastMessage = response.data.message;
+                    }
+                    // this.formImport = false
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar un archivo";
+            }
+        },
+
     }
 }
 

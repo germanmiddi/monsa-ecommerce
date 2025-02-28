@@ -78,6 +78,8 @@
                             <div class="card-title-text">Información del Envio</div>
                             <div class="flex"> 
                                 <button @click="getShipmentLabel" class="bg-gray-100 btn-default m-4">Guia</button>
+                                <button @click="getShipmentLabelZebra" class="bg-gray-100 btn-default m-4">Guia Zebra</button>
+                                <!-- <a :href="`/manager/shipments/${order.shipments[0].shipment_id}/zebra-label`" class="bg-gray-100 btn-default m-4">Guia Zebra</a> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -256,6 +258,39 @@ export default defineComponent({
 
                     // Abrir el PDF en una nueva pestaña
                     window.open(fileURL, '_blank');
+                } else {
+                    this.toastMessage = "No se pudo obtener la etiqueta del envío.";
+                    this.labelType = "error";
+                }
+
+            } catch (error) {
+                console.error('Error al obtener la etiqueta:', error);
+                this.toastMessage = "Error al obtener la etiqueta del envío.";
+                this.labelType = "error";
+            }
+        },
+
+        async getShipmentLabelZebra() {
+            try {
+                const response = await axios.get(`/manager/shipments/${this.order.shipments[0].shipment_id}/zebra-label`);
+
+                if (response.data && response.data.body) {
+                    // Crear un Blob con el contenido Base64
+                    const byteCharacters = atob(response.data.body);
+                    const byteNumbers = new Array(byteCharacters.length);
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+                    const blob = new Blob([byteArray], {type: 'application/zpl'});
+
+                    // Crear un elemento <a> para descargar
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `label-${this.order.shipments[0].shipment_id}.zpl`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 } else {
                     this.toastMessage = "No se pudo obtener la etiqueta del envío.";
                     this.labelType = "error";

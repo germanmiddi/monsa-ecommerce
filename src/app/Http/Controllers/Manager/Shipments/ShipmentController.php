@@ -38,4 +38,22 @@ class ShipmentController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
+
+    public function getZebraLabel($shipmentId)
+    {
+
+        $what = 'label';
+        $format = 'zpl';
+
+        try {
+            $response = $this->deliveryService->getShipmentDocumentation($shipmentId, $what, $format);
+
+            return response()->json([
+                'format' => $response['format'],
+                'body' => $response['body'],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
 }

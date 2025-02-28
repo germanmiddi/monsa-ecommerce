@@ -5,3 +5,4 @@ src/public/js/app.js
 .env
 src/public/mix-manifest.json
 src/package-lock.json
+src/composer.lock

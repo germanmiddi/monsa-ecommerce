@@ -71,7 +71,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orders/{order}/detail', [ManagerOrderController::class, 'detail'])->name('orders.detail');
         Route::post('/orders/{order}/updateStatus', [ManagerOrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::post('/orders/{order}/requestPaymentStatus', [ManagerOrderController::class, 'requestPaymentStatus'])->name('orders.requestPaymentStatus');
+        
         Route::get('/shipments/{shipment}/documentation', [ShipmentController::class, 'getDocumentation']);
+        Route::get('/shipments/{shipment}/zebra-label', [ShipmentController::class, 'getZebraLabel']);
 
         Route::get('/clients', [ClientController::class, 'index'])->name('clients');
         Route::get('/clients/list', [ClientController::class, 'list'])->name('clients.list');
@@ -80,6 +82,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/products/list', [ManagerProductController::class, 'list'])->name('products.list');
         Route::post('/products/update/{product}', [ManagerProductController::class, 'update'])->name('products.update');
         Route::post('/products/massiveToggleActive', [ManagerProductController::class, 'massiveToggleActive'])->name('products.massiveToggleActive');
+
+        Route::post('/products/importDetails', [ManagerProductController::class, 'importDetails'])->name('products.importDetails');
+        Route::get('/products/download-template', [ManagerProductController::class, 'downloadTemplate'])->name('products.download.template');
+
 
         Route::get('/novedades', [PostController::class, 'index'])->name('posts.list');
         Route::get('/novedades/create', [PostController::class, 'create'])->name('posts.create');

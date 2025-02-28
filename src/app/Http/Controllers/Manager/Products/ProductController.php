@@ -10,7 +10,10 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ProductsImport;
+use Illuminate\Support\Facades\Log;
+use App\Exports\ProductsTemplateExport;
 
 class ProductController extends Controller
 {
@@ -210,6 +213,31 @@ class ProductController extends Controller
         
         }
         return response()->json(['message' => 'Productos actualizados correctamente'], 200);
+    }
+    public function importDetails(Request $request)
+    {
+        if ($request->file('file')) {
+            try {
+                $archivo = $request->file('file');
+                Log::info('Se ha iniciado el proceso de Importación de Productos');
+                $import = new ProductsImport();
+
+                Excel::import($import, $archivo);
+                $status = $import->getImportResult(); 
+                return response()->json(['message' => 'Se ha finalizado el proceso de importacion.', 'result' => $status], 200);
+
+            } catch (\Throwable $th) {
+                Log::error('Error al procesar el archivo', ['error' => $th->getMessage()]);
+                return response()->json(['message' => 'Error al procesar el archivo'], 203);
+            }
+        } else {
+            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+        }
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new ProductsTemplateExport(), 'template_productos.xlsx');
     }
 
 }
