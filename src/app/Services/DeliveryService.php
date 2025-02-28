@@ -85,8 +85,10 @@ class DeliveryService
         }, $form['items']);
         
         return [
-            "account_id" => "12222",
-            "origin_id" => "345752",
+            "account_id" => env('ZIPPIN_ACCOUNT_ID'),
+            "origin_id" => env('ZIPPIN_ORIGIN_ID'),
+            // "account_id" => "12222",
+            // "origin_id" => "345752",
             "declared_value" => $form['total'],
             "items" => $items,
             "destination" => [
