@@ -12,7 +12,7 @@ class ProductsTemplateExport implements FromCollection,ShouldAutoSize
         $headers = [
             [
                 'sku',
-                'activo', 
+                'activo',
                 'stock_disponible',
                 'promo_active',
                 'promo_price',

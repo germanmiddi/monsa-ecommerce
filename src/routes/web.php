@@ -25,6 +25,7 @@ use App\Http\Controllers\Manager\Shipments\ShipmentController;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Settings;
 use App\Http\Controllers\Manager\Import\ImportController;
 use App\Http\Controllers\Web\Pages\PagesController;
+use App\Http\Controllers\Manager\Marketing\MarketingController;
 
 /* Frontoffice */
 
@@ -41,7 +42,7 @@ Route::get('/tienda',[StoreController::class, 'index'])->name('store');
 Route::get('/product/{product}',[ProductController::class, 'index'])->name('product');
 Route::get('/cart',[CartController::class, 'index'])->name('cart');
 
-    
+
     Route::get('/checkout',[CheckoutController::class, 'index'])->name('checkout');
     Route::get('/checkout/confirmation',[CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
     Route::post('/checkout/calcDelivery',[CheckoutController::class, 'calcDelivery'])->name('checkout.calcDelivery');
@@ -49,7 +50,7 @@ Route::get('/cart',[CartController::class, 'index'])->name('cart');
 
 Route::get('/order/detail',[OrderController::class, 'viewDetail'])->name('order.viewDetail');
 
-Route::get('/{slug}',[PagesController::class, 'single'])->name('page'); 
+Route::get('/{slug}',[PagesController::class, 'single'])->name('page');
 
 Route::post('/contact/store',[ContactController::class, 'store'])->name('contact.store');
 Route::post('/suscribe',[HomeController::class, 'suscribe'])->name('suscribe');
@@ -61,17 +62,18 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('manager')->group(function () {
         Route::get('/logout', function () {
             auth()->logout();
-            return redirect()->route('home'); 
+            return redirect()->route('home');
         })->name('logout');
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        
+
         Route::get('/orders', [ManagerOrderController::class, 'index'])->name('orders');
         Route::get('/orders/list', [ManagerOrderController::class, 'list'])->name('orders.list');
         Route::get('/orders/{order}/detail', [ManagerOrderController::class, 'detail'])->name('orders.detail');
         Route::post('/orders/{order}/updateStatus', [ManagerOrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::post('/orders/{order}/requestPaymentStatus', [ManagerOrderController::class, 'requestPaymentStatus'])->name('orders.requestPaymentStatus');
-        
+
+        Route::post('/shipments/{shipment}/processDevolution', [ShipmentController::class, 'processDevolution'])->name('shipments.processDevolution');
         Route::get('/shipments/{shipment}/documentation', [ShipmentController::class, 'getDocumentation']);
         Route::get('/shipments/{shipment}/zebra-label', [ShipmentController::class, 'getZebraLabel']);
 
@@ -92,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/novedades/{id}/edit',   [PostController::class, 'edit'])->name('posts.edit');
         Route::post('/novedades/store', [PostController::class, 'store'])->name('posts.store');
         Route::post('/novedades/update/{post}', [PostController::class, 'update'])->name('posts.update');
-        
+
 
         Route::get('/contenido', [ContentController::class, 'index'])->name('content');
 
@@ -107,13 +109,13 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/contenido/about/store', [ContentController::class, 'aboutStore'])->name('content.about.store');
         Route::post('/contenido/about/store/image', [ContentController::class, 'aboutStoreImage'])->name('content.about.store.image');
-        
+
         Route::post('/contenido/legales/store', [ContentController::class, 'legalesStore'])->name('content.legales.store');
         Route::get('/contenido/brand/list', [ContentController::class, 'brandList'])->name('content.brand.list');
         Route::post('/contenido/brand/store', [ContentController::class, 'brandStore'])->name('content.brand.store');
         Route::post('/contenido/{contentBrand}/brand', [ContentController::class, 'brandDelete'])->name('content.brand.delete');
         Route::post('/contenido/brand/order', [ContentController::class, 'brandOrder'])->name('content.brand.order');
-        
+
         Route::get('/contenido/banner', [ContentController::class, 'banner'])->name('content.banner');
 
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
@@ -128,11 +130,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('settings/label/store', [SettingsController::class, 'labelStore'])->name('settings.label.store');
 
         Route::get('settings/import', [SettingsController::class, 'importData'])->name('settings.import');
-        
+
         Route::get('settings/various', [SettingsController::class, 'various'])->name('settings.various');
         Route::post('settings/various/update', [SettingsController::class, 'variousUpdate'])->name('settings.various.update');
-       
-       
+
+
         Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');
 
         Route::get('import/products',  [ImportController::class, 'import_products'])->name('import.products');
@@ -146,7 +148,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/pages/update',[PagesController::class, 'update'])->name('pages.update');
 
+        Route::get('/marketing', [MarketingController::class, 'index'])->name('marketing');
+        Route::put('/marketing/update', [MarketingController::class, 'updateContent'])->name('marketing.update');
+        Route::post('/marketing/store/image', [MarketingController::class, 'storeImage'])->name('marketing.store.image');
+
     });
 });
-
-

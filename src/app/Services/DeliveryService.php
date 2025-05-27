@@ -53,7 +53,7 @@ class DeliveryService
         if ($response->successful()) {
             $shipmentData = $response->json();
             // Almacenar el envío en la base de datos
-            $shipment = $this->storeShipment($order, $shipmentData);            
+            $shipment = $this->storeShipment($order, $shipmentData, $data);
             return $shipment;
         } else {
             throw new \Exception('Error creating shipment: ' . $response->body(), $response->status());
@@ -83,7 +83,7 @@ class DeliveryService
                 "classification_id" => 1
             ];
         }, $form['items']);
-        
+
         return [
             "account_id" => env('ZIPPIN_ACCOUNT_ID'),
             "origin_id" => env('ZIPPIN_ORIGIN_ID'),
@@ -127,12 +127,12 @@ class DeliveryService
                     "weight" => $item['peso'] == 0 ? 10 : $item['peso'] ,
                     "height" => $item['alto'] == 0 ? 10 : $item['alto'],
                     "width" => $item['ancho'] == 0 ? 10 : $item['ancho'],
-                    "length" => $item['largo'] == 0 ? 10 : $item['largo'],                    
+                    "length" => $item['largo'] == 0 ? 10 : $item['largo'],
                     'description' => $item['nombre'] ?? null,
                     'classification_id' => $item['classification_id'] ?? 1,
                 ];
             }, $cartItems),
-            'logistic_type' => 'crossdock', 
+            'logistic_type' => 'crossdock',
             'service_type' => 'standard_delivery',
             'carrier_id' => $order->carrier_id ?? null,
             'source' => $order->source ?? null,
@@ -140,7 +140,7 @@ class DeliveryService
         ];
     }
 
-    private function storeShipment($order, $shipmentData)
+    private function storeShipment($order, $shipmentData, $payload)
     {
         return Shipment::create([
             'order_id' => $order->id,
@@ -164,6 +164,7 @@ class DeliveryService
             'estimated_delivery' => $shipmentData['delivery_time']['estimated_delivery'],
             'shipment_created_at' => $shipmentData['created_at'],
             'full_details' => $shipmentData,
+            'payload' => $payload
         ]);
     }
 
@@ -179,7 +180,20 @@ class DeliveryService
         } else {
             throw new \Exception('Error getting shipment documentation: ' . $response->body(), $response->status());
         }
-    }    
+    }
 
+    public function processDevolution($shipmentId)
+    {
 
+        $shipment = Shipment::find($shipmentId);
+
+        $response = $this->makeApiCall('post',
+                            "shipments/{$shipmentID}/return/quote",
+                                      $shipment->payload);
+
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            throw new \Exception('Error processing devolution: ' . $response->body(), $response->status());
+    }
 }

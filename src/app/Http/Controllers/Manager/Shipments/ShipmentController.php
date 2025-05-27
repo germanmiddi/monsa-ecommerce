@@ -18,7 +18,7 @@ class ShipmentController extends Controller
 
     public function getDocumentation(Request $request, $shipmentId)
     {
-        
+
         $request->validate([
             'what' => 'required|in:document,label',
             'format' => 'sometimes|in:pdf,zpl',
@@ -55,5 +55,12 @@ class ShipmentController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function processDevolution($shipmentId)
+    {
+        $response = $this->deliveryService->processDevolution($shipmentId);
+
+        return response()->json($response);
     }
 }

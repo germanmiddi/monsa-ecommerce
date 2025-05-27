@@ -6,7 +6,7 @@
 					<TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
 						<DialogOverlay class="fixed inset-0 bg-black bg-opacity-25" />
 					</TransitionChild>
-	
+
 					<TransitionChild as="template" enter="transition ease-in-out duration-300 transform" enter-from="-translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0" leave-to="-translate-x-full">
 						<div class="relative max-w-xs w-full bg-white shadow-xl pb-12 flex flex-col overflow-y-auto">
 							<div class="px-4 pt-5 pb-2 flex">
@@ -15,7 +15,7 @@
 									<XIcon class="h-6 w-6" aria-hidden="true" />
 								</button>
 							</div>
-	
+
 							<div class="border-t border-gray-200 py-6 px-4 space-y-6">
 								<div class="flow-root" v-if="$page.props.show_module_store">
 									<a :href="route('store')" class="-m-2 p-2 block font-medium text-gray-900">Tienda</a>
@@ -33,7 +33,7 @@
 									<a :href="route('contacto')" class="-m-2 p-2 block font-medium text-gray-900">Contacto</a>
 								</div>
 							</div>
-	
+
 							<div class="border-t border-gray-200 py-6 px-4 space-y-6">
 								<!-- <div class="flow-root">
 									<a :href="route('register')" class="-m-2 p-2 block font-medium text-gray-900">Registrarse</a>
@@ -42,19 +42,19 @@
 									<a :href="route('login')" class="-m-2 p-2 block font-medium text-gray-900">Ingresar</a>
 								</div>
 							</div>
-								
+
 						</div>
 					</TransitionChild>
 				</Dialog>
 			</TransitionRoot>
 			<!-- End Mobile menu -->
-			
+
 			<!-- Main Navigation -->
 			<header class="relative">
 				<nav aria-label="Top">
 					<!-- Top navigation -->
 					<!-- <div class="bg-monsa-blue">
-						
+
 						<div class="max-w-7xl mx-auto h-10 px-4 flex items-right justify-end sm:px-6 lg:px-8">
 							<div class="flex items-center space-x-6" v-if="!this.$page.props.user">
 								<a :href="route('login')" class="text-sm font-medium text-white hover:text-gray-100">Ingresar</a>
@@ -72,7 +72,7 @@
 					<div class="bg-monsa-blue relative">
 						<!-- Fondo decorativo -->
 						<div class="absolute inset-0" style="background: url('/images/v.png'); background-size: contain; opacity: 0.04;"></div>
-						
+
 						<!-- Contenido del menú -->
 						<div class="relative z-10 mx-auto h-10 px-4 flex items-center justify-end sm:px-6 lg:px-8">
 							<div class="flex items-center space-x-6 w-full" v-if="!this.$page.props.user">
@@ -97,25 +97,25 @@
 										<img class="w-40" src="/images/logo-blanco.png" />
 									</a>
 								</div>
-	
+
 								<div class="hidden h-full lg:flex">
 									<!-- Flyout menus -->
 									<PopoverGroup class="px-4 bottom-0 inset-x-0">
 										<div class="h-full flex justify-center space-x-8">
 											<a v-if="$page.props.show_module_store"
-											   :href="route('store')" 
+											   :href="route('store')"
 											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Tienda</a>
 											<a v-if="!$page.props.show_module_store"
-											   :href="route('home')" 
+											   :href="route('home')"
 											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Inicio</a>
-											<a 
-											   :href="route('aboutus')" 
+											<a
+											   :href="route('aboutus')"
 											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Nosotros</a>
-											<a 
-											   :href="route('blog.list')" 
+											<a
+											   :href="route('blog.list')"
 											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Novedades</a>
-											<a 
-												:href="route('contacto')" 
+											<a
+												:href="route('contacto')"
 											   class="flex items-center text-sm font-bold text-gray-50 hover:text-monsa-blue uppercase">Contacto</a>
 										</div>
 									</PopoverGroup>
@@ -126,19 +126,19 @@
 										<span class="sr-only">Open menu</span>
 										<Bars3Icon class="h-6 w-6" aria-hidden="true" />
 									</button>
-	
+
 									<!-- Search -->
 									<a href="#" class="ml-2 p-2 text-gray-400 hover:text-gray-500">
 										<span class="sr-only">Search</span>
 										<SearchIcon class="w-6 h-6" aria-hidden="true" />
 									</a>
 								</div>
-	
+
 								<!-- Logo (lg-) -->
 								<a href="#" class="lg:hidden">
 									<img src="/images/monsa-srl-logo.png" alt="" class="h-8 w-auto" />
 								</a>
-	
+
 								<div class="flex-1 flex items-center justify-end">
 									<div class="flex items-center lg:ml-8">
 										<!-- Cart -->
@@ -157,14 +157,14 @@
 				</nav>
 			</header>
 			<!-- End Main Navigation -->
-			
+
 			<main>
 				<!-- <pre v-if="$page.props.show_module_store">true - {{ $page.props.show_module_store }}</pre>
 				<pre v-if="!$page.props.show_module_store">False - {{ $page.props.show_module_store }}</pre> -->
 				<slot></slot>
 
 			</main>
-	
+
 			<footer aria-labelledby="footer-heading" class="bg-monsa-blue">
 				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex justify-center ">
 					<div>
@@ -178,7 +178,7 @@
 							<div class="ml-4 flex-shrink-0">
 								<button type="submit" class="w-full bg-monsa-blue border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Suscribirse</button>
 							</div>
-						</form>					
+						</form>
 					</div>
 				</div>
 				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -198,7 +198,7 @@
 									<li v-if="$page.props.show_module_store"><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Tienda</a></li>
 									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Nosotros</a></li>
 									<li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Novedades</a></li>
-									<li><a :href="route('contacto')" class="text-sm text-gray-500 hover:text-gray-900">Contacto</a></li>								
+									<li><a :href="route('contacto')" class="text-sm text-gray-500 hover:text-gray-900">Contacto</a></li>
 								</ul>
 							</div>
 
@@ -236,9 +236,9 @@
 
 						</div>
 					</div>
-	
+
 					<div class="border-t border-gray-100 py-10 text-center">
-						<p class="text-sm text-gray-500">&copy; 2024 Monsa SRL. Todos los derechos reservados. Diseño y Desarrollo por onMedia</p>
+						<p class="text-sm text-gray-500">&copy; 2025 Monsa SRL. Todos los derechos reservados. Diseño y Desarrollo por onMedia</p>
 					</div>
 				</div>
 
@@ -255,7 +255,7 @@
 											<li v-if="$page.props.show_module_store"><a href="#" class="text-sm hover:underline">Tienda</a></li>
 											<li><a href="#" class="text-sm hover:underline">Nosotros</a></li>
 											<li><a href="#" class="text-sm hover:underline">Novedades</a></li>
-											<li><a :href="route('contacto')" class="text-sm">Contacto</a></li>								
+											<li><a :href="route('contacto')" class="text-sm">Contacto</a></li>
 										</ul>
 									</div>
 
@@ -274,16 +274,16 @@
 						</div>
 						<div class="mt-2">Monsa S.R.L. - Av. Castañares 6140 - 1439 - Ciudad Autónoma de Buenos Aires, Argentina</div>
 					</div>
-	
+
 					<div class="border-t border-gray-100 py-10 text-center">
-						<p class="text-sm text-gray-500">&copy; 2024 Monsa SRL. Todos los derechos reservados. Diseño y Desarrollo por onMedia</p>
+						<p class="text-sm text-gray-500">&copy; 2025 Monsa SRL. Todos los derechos reservados. Diseño y Desarrollo por onMedia</p>
 					</div>
 				</div>
 			</footer>
 			<whatsappbtn links="https://whatwsapp"/>
-		</div>	
+		</div>
 	</template>
-	
+
 	<script>
 	import { ref, computed } from 'vue'
 	import {
@@ -301,7 +301,7 @@
 		TransitionChild,
 		TransitionRoot,
 	} from '@headlessui/vue'
-	
+
 	import { Bars3Icon,ShoppingBagIcon } from '@heroicons/vue/24/solid'
 	import { useCartStore } from '../Stores/useCartStore'
 	import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
@@ -328,7 +328,7 @@
 	]
 
 
-	
+
 	export default {
 		components: {
 			Dialog,

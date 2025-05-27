@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Order;
 use App\Models\Payment;
@@ -15,7 +15,7 @@ class PaymentService
     public function store($order_id, $data)
     {
         $data = json_decode($data);
-        
+
         try {
             DB::beginTransaction();
 
@@ -29,10 +29,11 @@ class PaymentService
 
             $payment->save();
             DB::commit();
-
+            Log::info('Payment stored: ' . json_encode($payment->content()));
             return $payment;
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Error storing payment: ' . $e->getMessage());
             return false;
         }
     }

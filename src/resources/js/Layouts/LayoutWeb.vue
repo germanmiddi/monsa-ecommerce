@@ -75,10 +75,11 @@
 						<div class="flex items-center space-x-6 w-full my-4" v-if="!this.$page.props.user">
 							<div class="flex w-full items-center justify-end">
 								<div class="w-2/5 text-white">🚚 Envios a todo el pais. </div>
-								<a href="https://monsa-srl.com.ar/pedidosweb/" class="text-sm font-medium text-monsa-blue bg-white px-4 py-2 rounded-md">Acceso Mayoristas</a>
+								<a href="https://monsa-srl.com.ar/pedidosweb/"
+                                    class="text-sm text-gray-200 font-medium border-gray-300 border  hover:bg-white hover:text-gray-700 px-4 py-2 rounded-md transition-all duration-400">Ingreso Mayoristas</a>
 								<a :href="route('login')"
-									class="text-sm font-medium text-white hover:text-gray-100 ml-4">Ingresar</a>
-							
+									class="ml-2 text-sm text-gray-200 font-medium border-gray-300 border  hover:bg-white px-4 py-2 rounded-md hover:text-gray-700 transition-all duration-400">Ingreso Clientes</a>
+
 							</div>
 						</div>
 						<div v-else class="flex items-center space-x-6">
@@ -166,6 +167,10 @@
 			<slot></slot>
 
 		</main>
+
+
+
+        <Popup :content="content" />
 
 		<footer aria-labelledby="footer-heading" class="bg-monsa-blue">
 
@@ -262,7 +267,7 @@
 				</div>
 
 				<div class="border-t border-gray-100 pt-8 pb-5 text-center">
-					<p class="text-sm text-white">&copy; 2024 Monsa SRL. Todos los derechos reservados. <a
+					<p class="text-sm text-white">&copy; 2025 Monsa SRL. Todos los derechos reservados. <a
 							href="https://onmedia.com.ar" target="_blank"
 							class="text-white hover:text-gray-100 hover:underline">Diseño y Desarrollo por onMedia</a>
 					</p>
@@ -294,6 +299,7 @@ import { ShoppingBagIcon,Bars3Icon } from '@heroicons/vue/24/solid'
 import { useCartStore } from '../Stores/useCartStore'
 import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
 import Alert from '../Layouts/Components/Alert'
+import Popup from '../Pages/Web/Popup.vue'
 
 const navigation = {
 	pages: [
@@ -335,7 +341,8 @@ export default {
 		ShoppingBagIcon,
 		Whatsappbtn,
 		Alert,
-		Bars3Icon
+		Bars3Icon,
+		Popup
 
 	},
 	data() {

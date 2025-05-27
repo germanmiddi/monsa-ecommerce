@@ -60,7 +60,6 @@ class CheckoutController extends Controller
     }
 
     //fix the payment method to receive the request
-
     public function process(Request $request)
     {
 
