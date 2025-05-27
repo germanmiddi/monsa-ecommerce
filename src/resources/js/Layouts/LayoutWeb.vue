@@ -77,8 +77,8 @@
 								<div class="w-2/5 text-white">🚚 Envios a todo el pais. </div>
 								<a href="https://monsa-srl.com.ar/pedidosweb/"
                                     class="text-sm text-gray-200 font-medium border-gray-300 border  hover:bg-white hover:text-gray-700 px-4 py-2 rounded-md transition-all duration-400">Ingreso Mayoristas</a>
-								<a :href="route('login')"
-									class="ml-2 text-sm text-gray-200 font-medium border-gray-300 border  hover:bg-white px-4 py-2 rounded-md hover:text-gray-700 transition-all duration-400">Ingreso Clientes</a>
+								<!-- <a :href="route('login')"
+									class="ml-2 text-sm text-gray-200 font-medium border-gray-300 border  hover:bg-white px-4 py-2 rounded-md hover:text-gray-700 transition-all duration-400">Ingreso Clientes</a> -->
 
 							</div>
 						</div>
