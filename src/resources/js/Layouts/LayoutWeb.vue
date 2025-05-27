@@ -185,6 +185,8 @@
 								<div class="col-span-3 md:col-span-1">
 									<h3 class="text-sm font-bold">Navegación</h3>
 									<ul class="mt-6 space-y-2">
+										<li><a :href="route('login')" class="text-sm hover:underline">Ingresar</a>
+										</li>
 										<li v-if="$page.props.show_module_store">
 											<a :href="route('store')" class="text-sm hover:underline">Tienda</a>
 										</li>
