@@ -4,25 +4,25 @@
     <!-- eslint-disable -->
     <!-- Hero section -->
 
-    <!-- <div class="flex w-full h-2/3 ">      
+    <!-- <div class="flex w-full h-2/3 ">
         <img class="w-full h-full object-center object-cover" src="/images/slide1.jpg" />
     </div> -->
     <Slider :sliderMobile="sliderMobile" :sliderDesktop="sliderDesktop" :isMobile="isMobile"/>
-    
+
     <!-- <div v-if="isMobile">
 
         <img v-for="item in sliderMobile" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />
     </div>
     <div v-else >
-        <img v-for="item in sliderDesktop" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />   
+        <img v-for="item in sliderDesktop" :src="`/storage/${item.image}`" class="w-full h-full object-center object-cover" />
     </div> -->
 
     <section aria-labelledby="trending-heading" class="relative" v-if="products.length > 0">
         <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 sm:py-32 lg:pt-32 lg:px-8">
             <div class="flex h-[353px] "> <!-- Set a fixed height or use h-screen for full viewport height -->
             <!-- Primer contenedor que ocupa todo el alto -->
-            <div class="hidden sm:flex w-1/6 bg-cover bg-center mr-4 flex-shrink-0 items-center justify-center rounded-xl text-white font-bold text-xl 
-                        hover:bg-left-top transition-all duration-300" 
+            <div class="hidden sm:flex w-1/6 bg-cover bg-center mr-4 flex-shrink-0 items-center justify-center rounded-xl text-white font-bold text-xl
+                        hover:bg-left-top transition-all duration-300"
                  style="background-image: url('images/banner-moto-1.png');">
                 <span class="bg-black bg-opacity-50 p-2 text-center text-3xl">Productos<br>Destacados</span>
             </div>
@@ -39,7 +39,7 @@
         <div class="absolute inset-0 bg-gradient-to-b from-monsa-blue to-blue-900 w-full z-0 h-400px    overflow-hidden">
             <div class="section px-6 py-20 md:py-60 w-full" style="background:url('/images/v.png'); opacity:0.05">
             </div>
-        </div>        
+        </div>
         <div class="relative py-40 sm:py-24 max-w-7xl mx-auto px-4 lg:px-8 ">
             <div class="absolute -top-32 left-1/2 transform -translate-x-1/2 sm:top-6 sm:translate-x-0">
                 <div class="ml-24 flex space-x-6 min-w-max sm:ml-3 lg:space-x-8">
@@ -53,7 +53,7 @@
                     </div>
                     <div class="flex space-x-6 sm:-mt-20 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
                         <div class="flex-shrink-0 opacity-30">
-                            <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cascos/46692-1.jpg" alt="" />                                            
+                            <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cascos/46692-1.jpg" alt="" />
                         </div>
                         <div class="mt-6 flex-shrink-0 sm:mt-0 opacity-30">
                             <img class="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72" src="/images/products/cubierta.jpg" alt="" />
@@ -81,7 +81,7 @@
             </div>
 
 
-        </div>    
+        </div>
     </div>
 
     <section class="my-32">
@@ -117,7 +117,7 @@
                             <div class="flex-1">
                                 <a :href="route('blog.single', post.slug)" class="block mt-2">
                                     <p class="text-xl font-semibold text-gray-900 hover:text-monsa-blue">{{ post.title }}</p>
-                                    
+
                                     <p class="mt-3 text-base text-gray-500 break-words whitespace-normal" v-html="truncateContent(post.content)"></p>
                                 </a>
                             </div>
@@ -138,7 +138,7 @@
         </div>
 
     </section>
-
+    <Popup :content="popupData" />
 </template>
 
 <script>
@@ -148,7 +148,8 @@ import SliderProducts2 from './Home/SliderProducts2.vue'
 import CarouselProducts from './Home/CarouselProducts.vue'
 import { Vue3Marquee } from 'vue3-marquee'
 import { CalendarIcon } from '@heroicons/vue/24/solid'
-    
+import Popup from '@/Pages/Web/Popup.vue'
+
 export default {
     props:{
         sliderDesktop: Object,
@@ -156,7 +157,8 @@ export default {
         brands:  Object,
         content: Object,
         posts:   Object,
-        products: Object
+        products: Object,
+        popupData: Object
     },
 
     components:{
@@ -165,7 +167,8 @@ export default {
         CarouselProducts,
         SliderProducts2,
         Vue3Marquee,
-        CalendarIcon
+        CalendarIcon,
+        Popup
     },
 
     setup(props) {
@@ -185,10 +188,10 @@ export default {
         randomBrands2() {
             return [...this.brands].sort(() => Math.random() - 0.5);
         }
-    },    
+    },
     data() {
         return {
-        
+
             isMobile: false, // Estado para controlar si es móvil o no
         }
     },
@@ -227,7 +230,7 @@ export default {
 }
 </script>
 
-<style> 
+<style>
 .promo-banner {
     background-color: rgba(0, 0, 0, 0.2);
     border: none;

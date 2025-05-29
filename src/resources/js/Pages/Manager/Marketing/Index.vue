@@ -33,12 +33,15 @@
     import { CogIcon,
              MapPinIcon,
              CubeIcon,
-             TagIcon
+             TagIcon,
+             MegaphoneIcon
+
+
               } from '@heroicons/vue/24/outline'
 
 
     const subNavigation = [
-        { name: 'Popup',  icon: CogIcon, componentName: 'Popup' },
+        { name: 'Popup',  icon: MegaphoneIcon, componentName: 'Popup' },
     ]
 
     export default {

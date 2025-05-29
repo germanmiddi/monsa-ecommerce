@@ -170,7 +170,7 @@
 
 
 
-        <Popup :content="content" />
+        <!-- <Popup :content="content" /> -->
 
 		<footer aria-labelledby="footer-heading" class="bg-monsa-blue">
 
@@ -301,7 +301,7 @@ import { ShoppingBagIcon,Bars3Icon } from '@heroicons/vue/24/solid'
 import { useCartStore } from '../Stores/useCartStore'
 import Whatsappbtn from '../Layouts/Components/Whatsappbtn'
 import Alert from '../Layouts/Components/Alert'
-import Popup from '../Pages/Web/Popup.vue'
+// import Popup from '../Pages/Web/Popup.vue'
 
 const navigation = {
 	pages: [
@@ -344,7 +344,7 @@ export default {
 		Whatsappbtn,
 		Alert,
 		Bars3Icon,
-		Popup
+		// Popup
 
 	},
 	data() {

@@ -149,7 +149,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/pages/update',[PagesController::class, 'update'])->name('pages.update');
 
         Route::get('/marketing', [MarketingController::class, 'index'])->name('marketing');
-        Route::put('/marketing/update', [MarketingController::class, 'updateContent'])->name('marketing.update');
+        Route::post('/marketing/update', [MarketingController::class, 'updateContent'])->name('marketing.update');
         Route::post('/marketing/store/image', [MarketingController::class, 'storeImage'])->name('marketing.store.image');
 
     });

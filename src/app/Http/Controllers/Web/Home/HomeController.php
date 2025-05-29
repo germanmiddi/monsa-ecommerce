@@ -13,6 +13,7 @@ use App\Models\Content;
 use App\Models\Product;
 use App\Models\Suscripcion;
 use App\Models\PostStatus;
+
 class HomeController extends Controller
 {
     /**
@@ -40,10 +41,11 @@ class HomeController extends Controller
             'brands'  => ContentBrand::orderby('order')->get(),
             'content' => Content::where('page', 'home')->get(),
             'posts'   => $post,
-            'products'   => $products
+            'products'   => $products,
+            'popupData' => Content::where('page', 'marketing')->where('section', 'popup')->get()
         ]);
     }
-    
+
     public function suscribe(Request $request)
     {
         $suscripcion = Suscripcion::where('email', $request->email)->first();

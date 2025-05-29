@@ -1,108 +1,124 @@
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
 import { TrashIcon } from "@heroicons/vue/24/outline";
+import { Switch } from "@headlessui/vue";
 
-export default {
-    name: "Banner",
-    components: {
-        TrashIcon
-    },
-    props: {
-        content: {
-            type: Object,
-            required: true
-        }
-    },
-    data() {
+const form = ref({
+    link: "",
+    image: null,
+    active: false,
+});
 
-        return {
-            url: null,
-            img: [],
-            form: {
-                link: '',
-                image: null,
-                type: 'popup'
-            }
-        };
-    },
+const import_file = ref(null);
+const url = ref(null);
+const img = ref([]);
+const loading = ref(false);
+const previewImg = ref(null);
 
-    methods: {
-
-        openDialogSearchImg() {
-            this.$refs.import_file.click();
-        },
-
-        previewImage(e) {
-            const file = e.target.files[0];
-            this.url = URL.createObjectURL(file);
-        },
-
-        async uploadImage() {
-            this.loading = true;
-            let data = {};
-
-            try {
-                let formData = new FormData();
-                formData.append("image", this.form.image); // Asegúrate de que 'form.image' contenga el archivo a cargar
-                formData.append("type", this.form.type); // Asegúrate de que 'form.image' contenga el archivo a cargar
-
-                // Configura el header para el contenido multipart/form-data
-                const config = {
-                    headers: { "Content-Type": "multipart/form-data" },
-                };
-
-                const response = await axios.post(
-                    route("marketing.popup.store.image"),
-                    formData,
-                    config
-                );
-                if (response.status == 200) {
-                    data.message = response.data.message;
-                    data.labelType = "success";
-                } else {
-                    data.message = response.data.message;
-                    data.labelType = "danger";
-                }
-            } catch (error) {
-                data.message =
-                    "Se ha producido un error al procesar | Comuniquese con el administrador";
-                data.labelType = "danger";
-            }
-
-            this.loading = false;
-            this.url = null;
-            this.form = {};
-
-            this.$emit("message", data);
-        },
-
-        async submit() {
-            // let data = new FormData();
-
-            // data.append("items[0][id]", this.text.id);
-            // data.append("items[0][content]", this.text.content);
-
-            // // Configura el header para el contenido multipart/form-data
-            // const config = {
-            //     headers: { "Content-Type": "multipart/form-data" },
-            // };
-
-            // try {
-            //     const response = await axios.post(
-            //         route("content.about.store"),
-            //         data,
-            //         config
-            //     );
-            //     const content = response.data;
-            //     console.log(content);
-            //     alert("Actualizado con exito");
-            // } catch (error) {
-            //     console.error("Submission failed:", error);
-            //     alert("Error al actualizar");
-            // }
-        },
-    },
-
+// Methods
+const openDialogSearchImg = () => {
+    import_file.value.click();
 };
+
+const previewImage = (e) => {
+    const file = e.target.files[0];
+    url.value = URL.createObjectURL(file);
+};
+
+const uploadImage = async () => {
+    loading.value = true;
+    let data = {};
+
+    try {
+        let formData = new FormData();
+        formData.append("image", form.value.image);
+        formData.append("type", form.value.type);
+
+        const config = {
+            headers: { "Content-Type": "multipart/form-data" },
+        };
+
+        const response = await axios.post(
+            route("marketing.popup.store.image"),
+            formData,
+            config
+        );
+        if (response.status == 200) {
+            data.message = response.data.message;
+            data.labelType = "success";
+        } else {
+            data.message = response.data.message;
+            data.labelType = "danger";
+        }
+    } catch (error) {
+        data.message =
+            "Se ha producido un error al procesar | Comuniquese con el administrador";
+        data.labelType = "danger";
+    }
+
+    emit("message", data);
+};
+
+const submit = async () => {
+    loading.value = true;
+
+    try {
+        let formData = new FormData();
+
+        formData.append("link", form.value.link);
+        formData.append("active", form.value.active);
+        formData.append("image", form.value.image);
+
+        const config = {
+            headers: { "Content-Type": "multipart/form-data" },
+        };
+
+        const response = await axios.post(
+            route("marketing.update"),
+            formData,
+            config
+        );
+
+        if (response.status == 200) {
+            data.message = response.data.message || "Actualizado con éxito";
+            data.labelType = "success";
+        } else {
+            data.message = response.data.message || "Error al actualizar";
+            data.labelType = "danger";
+        }
+    } catch (error) {
+        console.error("Submission failed:", error);
+        data.message =
+            "Se ha producido un error al procesar | Comuníquese con el administrador";
+        data.labelType = "danger";
+    }
+
+    loading.value = false;
+    emit("message", data);
+};
+
+const handleSwitchToggle = () => {
+    form.value.active = !form.value.active;
+};
+
+const getContent = async () => {
+    let response = await axios.get(
+        route("content.get", {
+            page: "marketing",
+            section: "popup",
+        })
+    );
+    let data = response.data;
+
+    form.value.link = data.find(item => item.element === 'link')?.content;
+    form.value.active = data.find(item => item.element === 'active')?.content;
+    form.value.image = data.find(item => item.element === 'img')?.content;
+    previewImg.value = data.find(item => item.element === 'img')?.content;
+};
+
+onMounted(() => {
+    getContent();
+});
 </script>
 
 <template>
@@ -136,7 +152,11 @@ export default {
                             class="block text-sm font-medium text-gray-700"
                             >Link</label
                         >
-                        <input type="text" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <input
+                            v-model="form.link"
+                            type="text"
+                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        />
                     </div>
 
                     <div class="col-span-6 sm:col-span-3 mb-8">
@@ -163,7 +183,7 @@ export default {
                             <svg
                                 v-else
                                 @click="openDialogSearchImg()"
-                                class="w-40 h-40 text-gray-300 bg-white"
+                                class="w-40 h-40 text-gray-300 bg-white cursor-pointer"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -202,12 +222,38 @@ export default {
                             <button
                                 v-else
                                 @click="uploadImage"
-                                class="mt-2 ml-10 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                :disabled="loading"
+                                class="mt-2 ml-10 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                             >
-                                Subir Imagen
+                                {{ loading ? "Subiendo..." : "Subir Imagen" }}
                             </button>
                         </div>
                     </div>
+
+                    <div class="col-span-6 sm:col-span-3 mb-8">
+                        <label
+                            for="activeSwitch"
+                            class="block text-sm font-medium text-gray-700"
+                            >Activar</label
+                        >
+                        <Switch
+                            v-model="form.active"
+                            id="activeSwitch"
+                            @click="handleSwitchToggle"
+                            :class="form.active ? 'bg-blue-600' : 'bg-gray-200'"
+                            class="relative inline-flex h-6 w-11 items-center rounded-full mt-1"
+                        >
+                            <span
+                                :class="
+                                    form.active
+                                        ? 'translate-x-6'
+                                        : 'translate-x-1'
+                                "
+                                class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                            />
+                        </Switch>
+                    </div>
+
                     <div>
                         <hr />
                         <label
@@ -217,15 +263,19 @@ export default {
                             <b>Imagen actual:</b></label
                         >
                         <div class="flex">
-                            <div v-for="images in this.img" :key="images.id">
-                                <img
-                                    class="rounded-2xl w-52 ml-4"
-                                    :src="`/storage/${images.content}`"
-                                    alt=""
-                                />
-                            </div>
+                            <img
+                                v-if="previewImg"
+                                class="rounded-2xl w-52 ml-4"
+                                :src="`/storage/${previewImg}`"
+                                alt=""
+                            />
+                            <p
+                                v-if="!previewImg"
+                                class="text-gray-500 text-sm"
+                            >
+                                No hay imagen actual
+                            </p>
                         </div>
-                        <hr />
                     </div>
                 </div>
             </div>
