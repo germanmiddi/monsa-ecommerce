@@ -5,7 +5,7 @@
 	<main class="max-w-7xl mx-auto pb-10 lg:py-12 lg:px-8">
 		<div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
 			<aside class="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
-				
+
 				<div class="text-sm tracking-wide text-gray-700 font-bold mb-5">MENU</div>
 				<nav class="space-y-1">
 					<a v-for="(item,index) in subNavigation" :key="item.name" @click.prevent="selectItem(index)"
@@ -15,7 +15,7 @@
 					</a>
 				</nav>
 			</aside>
-	
+
 			<!-- Payment details -->
 			<div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
 				<component @message="messageToast" :is="selectedItem.componentName" :data="selectedItem.componentData" />
@@ -32,13 +32,15 @@ import General from './General.vue';
 import BrandList from './BrandList.vue';
 import FamilyList from './FamilyList.vue';
 import LabelList from './LabelList.vue';
+import UserList from './UserList.vue';
 
 
 import { CogIcon,
          MapPinIcon,
 		 CubeIcon,
-		 TagIcon
-  		} from '@heroicons/vue/24/outline'  
+		 TagIcon,
+		 UsersIcon
+  		} from '@heroicons/vue/24/outline'
 
 
 const subNavigation = [
@@ -46,6 +48,7 @@ const subNavigation = [
     { name: 'Marcas',   icon: CubeIcon, componentName: 'BrandList' },
 	{ name: 'Familias', icon: CubeIcon, componentName: 'FamilyList' },
 	{ name: 'Etiquetas', icon: TagIcon, componentName: 'LabelList' },
+	{ name: 'Usuarios', icon: UsersIcon, componentName: 'UserList' },
 ]
 
 export default {
@@ -57,7 +60,8 @@ export default {
 		General,
 		BrandList,
 		FamilyList,
-		LabelList
+		LabelList,
+		UserList
 	},
 
 	setup() {

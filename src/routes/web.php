@@ -26,6 +26,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Ods\Settings;
 use App\Http\Controllers\Manager\Import\ImportController;
 use App\Http\Controllers\Web\Pages\PagesController;
 use App\Http\Controllers\Manager\Marketing\MarketingController;
+use App\Http\Controllers\Manager\Roles\RoleController;
 
 /* Frontoffice */
 
@@ -133,6 +134,16 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('settings/various', [SettingsController::class, 'various'])->name('settings.various');
         Route::post('settings/various/update', [SettingsController::class, 'variousUpdate'])->name('settings.various.update');
+
+        Route::get('roles/list', [RoleController::class, 'list'])->name('manager.roles.list');
+
+        // Users management routes
+        Route::get('users/list', [App\Http\Controllers\Manager\Users\UserController::class, 'list'])->name('manager.users.list');
+        Route::get('users/list-for-settings', [App\Http\Controllers\Manager\Users\UserController::class, 'listForSettings'])->name('manager.users.listForSettings');
+        Route::post('users/store', [App\Http\Controllers\Manager\Users\UserController::class, 'store'])->name('manager.users.store');
+        Route::put('users/{user}', [App\Http\Controllers\Manager\Users\UserController::class, 'update'])->name('manager.users.update');
+        Route::delete('users/{user}', [App\Http\Controllers\Manager\Users\UserController::class, 'destroy'])->name('manager.users.destroy');
+        Route::post('users/{user}/change-password', [App\Http\Controllers\Manager\Users\UserController::class, 'changePassword'])->name('manager.users.changePassword');
 
 
         Route::get('content/{page}/{section}', [ContentController::class, 'getContent'])->name('content.get');

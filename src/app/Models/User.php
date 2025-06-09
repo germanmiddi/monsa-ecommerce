@@ -18,7 +18,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -27,7 +27,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password'
+        'password',
+        'role_id'
     ];
 
     protected $with = ['role'];
