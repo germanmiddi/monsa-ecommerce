@@ -27,6 +27,7 @@ use App\Http\Controllers\Manager\Import\ImportController;
 use App\Http\Controllers\Web\Pages\PagesController;
 use App\Http\Controllers\Manager\Marketing\MarketingController;
 use App\Http\Controllers\Manager\Roles\RoleController;
+use App\Http\Controllers\Manager\Category\CategoryController;
 
 /* Frontoffice */
 
@@ -58,7 +59,7 @@ Route::post('/suscribe',[HomeController::class, 'suscribe'])->name('suscribe');
 
 Route::get('/contact/data',[ContactController::class, 'getContactData'])->name('contact.data');
 /*Backoffice */
-
+Route::get('/category/{slug}', [CategoryController::class, 'single'])->name('categories.single');
 Route::middleware(['auth'])->group(function () {
     Route::prefix('manager')->group(function () {
         Route::get('/logout', function () {
@@ -162,6 +163,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/marketing', [MarketingController::class, 'index'])->name('marketing');
         Route::post('/marketing/update', [MarketingController::class, 'updateContent'])->name('marketing.update');
         Route::post('/marketing/store/image', [MarketingController::class, 'storeImage'])->name('marketing.store.image');
+
+        Route::get('/categories/list', [CategoryController::class, 'list'])->name('categories.list');
+
+
+        Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
+        Route::post('/categories/update/{category}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     });
 });

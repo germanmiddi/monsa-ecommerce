@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Family;
 use App\Models\Brand;
+use App\Models\Category;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -22,7 +23,7 @@ class StoreController extends Controller
         //     return $next($request);
         // });
     }
-    
+
     /**
      * Display the home page.
      *
@@ -35,17 +36,16 @@ class StoreController extends Controller
         return  Inertia::render('Web/Store/Index', [
             'families' => Family::where('active', true)->orderBy('orden')->get(),
             'brands'   => Brand::where('active', true)->orderBy('orden')->get(),
-            'products' => Product::with('family', 'brand')
+            'categories' => Category::where('status', 'active')->orderBy('name')->get(),
+            'products' => Product::with('family', 'brand', 'categories')
                                     ->whereIn('idFamily', Family::where('active', true)->pluck('id'))
                                     ->whereIn('idBrand', Brand::where('active', true)->pluck('id'))
-                                    ->where('price_public', '>', 0)  
+                                    ->where('price_public', '>', 0)
                                     ->active()
                                     ->get()
-
-
         ]);
-        
+
     }
-    
+
     // Add more methods as needed
 }

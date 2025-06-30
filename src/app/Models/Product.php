@@ -49,7 +49,7 @@ class Product extends Model
                     'promo_end_date',
                     'stock_disponible',
                     'stock_reservado'
-                
+
                 ];
 
     protected $casts = [
@@ -77,6 +77,28 @@ class Product extends Model
 
     public function labels(){
         return $this->belongsToMany(Label::class, 'label_product');
+    }
+
+    // Relación many-to-many con categorías
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_products');
+    }
+
+    // Métodos helper para facilitar la gestión de categorías
+    public function attachCategory($categoryId)
+    {
+        return $this->categories()->attach($categoryId);
+    }
+
+    public function detachCategory($categoryId)
+    {
+        return $this->categories()->detach($categoryId);
+    }
+
+    public function syncCategories($categoryIds)
+    {
+        return $this->categories()->sync($categoryIds);
     }
 
     public function scopeActive($query)

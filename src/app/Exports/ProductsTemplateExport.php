@@ -16,7 +16,8 @@ class ProductsTemplateExport implements FromCollection,ShouldAutoSize
                 'stock_disponible',
                 'promo_active',
                 'promo_price',
-                'promo_text'
+                'promo_text',
+                'categorias'
             ]
         ];
 

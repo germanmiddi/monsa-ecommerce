@@ -33,6 +33,7 @@ import BrandList from './BrandList.vue';
 import FamilyList from './FamilyList.vue';
 import LabelList from './LabelList.vue';
 import UserList from './UserList.vue';
+import CategoryList from './CategoryList.vue';
 
 
 import { CogIcon,
@@ -49,6 +50,7 @@ const subNavigation = [
 	{ name: 'Familias', icon: CubeIcon, componentName: 'FamilyList' },
 	{ name: 'Etiquetas', icon: TagIcon, componentName: 'LabelList' },
 	{ name: 'Usuarios', icon: UsersIcon, componentName: 'UserList' },
+	{ name: 'Categorías', icon: TagIcon, componentName: 'CategoryList' },
 ]
 
 export default {
@@ -61,7 +63,8 @@ export default {
 		BrandList,
 		FamilyList,
 		LabelList,
-		UserList
+		UserList,
+        CategoryList
 	},
 
 	setup() {

@@ -77,7 +77,7 @@
                             </div>
                             <div class="col-span-12 sm:col-span-3">
                                 <label for="promo_active" class="block text-sm font-medium text-gray-700">Promoción Activa</label>
- 
+
                                 <Switch v-model="filter.promo_active"
                                     @click="filter.promo_active = !filter.promo_active"
                                     :class="filter.promo_active ? 'bg-blue-600' : 'bg-gray-200'"
@@ -86,11 +86,11 @@
                                         :class="filter.promo_active ? 'translate-x-6' : 'translate-x-1'"
                                         class="inline-block h-4 w-4 transform rounded-full bg-white transition" />
                                 </Switch>
-                            </div>                            
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-12 gap-6">
-                            
+
                             <div class="col-span-12 sm:col-span-2">
                                 <label for="stock_filter" class="block text-sm font-medium text-gray-700">Stock</label>
                                 <select v-model="filter.stock_filter" id="stock_filter" name="stock_filter" autocomplete="off"
@@ -110,7 +110,7 @@
                                     <option value="1"> Con Precio </option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-span-12 sm:col-span-3">
                                 <label for="visibility_filter" class="block text-sm font-medium text-gray-700">Visibilidad</label>
                                 <select v-model="filter.visibility_filter" id="visibility_filter" name="visibility_filter" autocomplete="off"
@@ -122,7 +122,7 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-12 gap-6">
-                            
+
                             <div class="col-span-12 sm:col-span-2">
                                 <label for="brand_id" class="block text-sm font-medium text-gray-700">Marca</label>
                                 <select v-model="filter.brand_id" id="brand_id" name="brand_id" autocomplete="off"
@@ -144,7 +144,7 @@
                                         }}</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-span-12 sm:col-span-3">
                                 <label for="label_id" class="block text-sm font-medium text-gray-700">Etiqueta</label>
                                 <select v-model="filter.label_id" id="label_id" name="label_id" autocomplete="off"
@@ -152,6 +152,17 @@
                                     <option value="" disabled> - Seleccione una etiqueta - </option>
                                     <option v-for="label in labels" :key="label.id" :value="label.id">{{
                                         label.nombre
+                                        }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-span-12 sm:col-span-4">
+                                <label for="category_id" class="block text-sm font-medium text-gray-700">Categoría</label>
+                                <select v-model="filter.category_id" id="category_id" name="category_id" autocomplete="off"
+                                    class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled> - Seleccione una categoría - </option>
+                                    <option v-for="category in categories" :key="category.id" :value="category.id">{{
+                                        category.name
                                         }}</option>
                                 </select>
                             </div>
@@ -198,16 +209,16 @@
                         class="hover:bg-gray-100 focus-within:bg-gray-100 text-sm "
                         :class="product.selected == true ? 'bg-gray-100' : ''">
                         <td class="border-t px-3 py-4 text-center mx-auto w-5" @click="product.selected = !product.selected">
-                                <Icons 
+                                <Icons
                                     :name="product.selected == true ? 'selected' : 'unsel'" class="w-4 h-4"
-                                    :class="product.selected == true ? 'text-gray-800' : 'text-gray-400'" />                                    
-                            </td>                        
-                        
+                                    :class="product.selected == true ? 'text-gray-800' : 'text-gray-400'" />
+                            </td>
+
                         <td class="border-t px-5 py-4 text-center hover:underline hover:text-monsa-blue hover:cursor-pointer" @click="linkProduct(product)">
                             <div class="flex items-center space-x-2">
                                 <div class="w-3 h-3 bg-gray-300 rounded-full inline-flex"
                                     :class="product.is_active == true ? 'bg-green-300' : 'bg-gray-300'"></div>
-    
+
                                    <label>{{ product.sku }} </label>
                                    <ArrowTopRightOnSquareIcon class="w-4 h-4 inline" />
                             </div>
@@ -384,8 +395,8 @@
                                                                 class="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md bg-gray-100" />
                                                         </div>
                                                     </div>
-                                                </div>                                                
-                                                
+                                                </div>
+
 
                                                 <hr class="p-2">
 
@@ -416,10 +427,10 @@
                                                     </span>
                                                     <span v-else class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-700/10 m-3">
                                                         {{ this.product.search }}
-                                                    </span>                                                    
+                                                    </span>
                                                 </div>
 
-                                                
+
                                                 <hr class="p-2">
                                                 <div>
                                                     <label for="labels" class="block text-sm font-medium text-gray-700">
@@ -442,6 +453,29 @@
                                                         class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10 mr-2">
                                                         {{ label }} <TrashIcon @click="removeLabel(label)"
                                                             class="h-5 w-5 text-red-700 ml-2"></TrashIcon>
+                                                    </span>
+                                                </div>
+                                                <hr class="p-2">
+                                                <div>
+                                                    <label for="categories" class="block text-sm font-medium text-gray-700">
+                                                        Categorías: </label>
+                                                    <div class="flex items-center mb-2">
+                                                        <select v-model="categorySelect" id="category_id"
+                                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                            <option value="" disabled>- Seleccione una categoría -</option>
+                                                            <option v-for="cat in availableCategories" :value="cat.id" :key="cat.id">
+                                                                {{ cat.name }}
+                                                            </option>
+                                                        </select>
+                                                        <button type="button" @click="addCategory" :disabled="!categorySelect"
+                                                            class="ml-2 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                                                            Agregar
+                                                        </button>
+                                                    </div>
+                                                    <span v-for="category in selectedCategoriesDisplay" :key="category.id"
+                                                        class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10 mr-2 mb-2">
+                                                        {{ category.name }} <TrashIcon @click="removeCategory(category.id)"
+                                                            class="h-5 w-5 text-red-700 ml-2 cursor-pointer"></TrashIcon>
                                                     </span>
                                                 </div>
                                                 <hr class="p-2">
@@ -480,9 +514,9 @@
                                                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                                     <span class="text-gray-500 sm:text-sm"> $ </span>
                                                                 </div>
-                                                                <input type="text" name="price" id="price" v-model="product.promo_price" 
+                                                                <input type="text" name="price" id="price" v-model="product.promo_price"
                                                                        class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" aria-describedby="price-currency" />
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -544,7 +578,8 @@ export default defineComponent({
         toast: Object,
         families: Object,
         brands: Object,
-        labels: Object
+        labels: Object,
+        categories: Object
     },
     components: {
         // Panel lateral
@@ -569,7 +604,7 @@ export default defineComponent({
         useFormatPrice,
         FunnelIcon
     },
-    
+
     setup() {
         const formattedPrice = (price) => {
             if (price == null) return '-'; // Handle null or undefined prices
@@ -590,6 +625,12 @@ export default defineComponent({
                 console.error('Error al parsear el JSON:', error);
                 return [];
             }
+        },
+        availableCategories() {
+            return this.categories.filter(category => !this.categoriesSelected.includes(category.id));
+        },
+        selectedCategoriesDisplay() {
+            return this.categories.filter(category => this.categoriesSelected.includes(category.id));
         }
     },
     data() {
@@ -607,6 +648,8 @@ export default defineComponent({
             showFilter: false,
             labelSelect: '',
             labelsSelected: [],
+            categorySelect: '',
+            categoriesSelected: [],
             editorOptions: {
                 modules: {
                     toolbar: [
@@ -615,7 +658,7 @@ export default defineComponent({
                         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                         [{ 'script': 'sub'}, { 'script': 'super' }],
                         [{ 'indent': '-1'}, { 'indent': '+1' }],
-                        
+
                     ]
                 }
             },
@@ -671,6 +714,10 @@ export default defineComponent({
                 filter += `&label_id=${JSON.stringify(this.filter.label_id)}`
             }
 
+            if (this.filter.category_id) {
+                filter += `&category_id=${JSON.stringify(this.filter.category_id)}`
+            }
+
             if (this.filter.sku) {
                 filter += `&sku=${JSON.stringify(this.filter.sku)}`
             }
@@ -710,6 +757,7 @@ export default defineComponent({
 
             try {
                 this.product.labelDetails = this.labelsSelected;
+                this.product.categoryDetails = this.categoriesSelected;
                 const response = await axios.post(route('products.update', this.product.id), this.product);
                 if (response.status == 200) {
                     this.toastMessage = response.data.message
@@ -749,12 +797,38 @@ export default defineComponent({
             this.toastMessage = "Se ha eliminado correctamente la etiqueta";
         },
 
+        addCategory() {
+            if (this.categorySelect === '') {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar una categoría";
+            } else {
+                if (!this.categoriesSelected.includes(this.categorySelect)) {
+                    this.categoriesSelected.push(this.categorySelect);
+                    this.categorySelect = '';
+                } else {
+                    this.labelType = "info";
+                    this.toastMessage = "La categoría ya se encuentra asignada";
+                }
+            }
+        },
+
+        removeCategory(categoryId) {
+            const index = this.categoriesSelected.findIndex(item => item === categoryId);
+            this.categoriesSelected.splice(index, 1);
+            this.labelType = "success";
+            this.toastMessage = "Se ha eliminado correctamente la categoría";
+        },
+
         loadProduct(product) {
             this.open = true
             this.product = product
             this.labelsSelected = []
+            this.categoriesSelected = []
             this.product.labels.forEach(element => {
                 this.labelsSelected.push(element.nombre)
+            });
+            this.product.categories.forEach(element => {
+                this.categoriesSelected.push(element.id)
             });
         },
 
@@ -786,6 +860,6 @@ export default defineComponent({
     }
     .ql-editor {
         height: 300px;
-    }   
+    }
 
 </style>

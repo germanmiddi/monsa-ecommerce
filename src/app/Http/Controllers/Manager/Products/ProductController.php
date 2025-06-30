@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
 use Illuminate\Support\Facades\Log;
 use App\Exports\ProductsTemplateExport;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -28,6 +29,7 @@ class ProductController extends Controller
             'families' => Family::orderby('nombre')->get(),
             'brands' => Brand::orderby('nombre')->get(),
             'labels' => Label::orderby('nombre')->active()->get(),
+            'categories' => Category::orderby('name')->get(),
         ]);
     }
 
@@ -67,6 +69,16 @@ class ProductController extends Controller
             });
         }
 
+        if(request('category_id')){
+            $category_id = json_decode(request('category_id'));
+            $result->whereIn('id', function ($sub) use($category_id) {
+                $sub->selectRaw('product.id')
+                    ->from('product')
+                    ->join('category_products', 'product.id', '=', 'category_products.product_id')
+                    ->where('category_products.category_id', $category_id);
+            });
+        }
+
         if(request('promo_active')){
             $result->where('promo_active', true);
         }
@@ -99,7 +111,7 @@ class ProductController extends Controller
         // dd($stock_filter );
         // dd($result->toSql());
         // return $result->with('family', 'brand', 'labels')
-        return $result->with('family', 'brand', 'labels')
+        return $result->with('family', 'brand', 'labels', 'categories')
                     ->orderBy('created_at', 'desc')
                     ->paginate($length)
                     ->withQueryString();
@@ -157,7 +169,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        
+
         try{
             $product->is_active = $request->is_active;
             $product->promo_text = $request->promo_text;
@@ -168,20 +180,33 @@ class ProductController extends Controller
             $product->stock_disponible = $request->stock_disponible;
             $product->descripcion = $request->descripcion;
             $labelIds = array();
-            
+
             //Obtengo los ID de las etiquetas.
             foreach ($request->labelDetails as $value) {
                 // Buscar el Lable por nombre
                 $label = Label::firstOrCreate(
                     ['nombre' => $value],
                     [
-                        'nombre' => $value, 
+                        'nombre' => $value,
                         'slug' => Str::slug(Str::ascii($value))
                         ]
                     );
                     $labelIds[] = $label->id;
                 }
             $product->labels()->sync($labelIds);
+
+                        // Manejo de categorías - solo sincronizar existentes
+            $categoryIds = array();
+            if ($request->categoryDetails) {
+                foreach ($request->categoryDetails as $categoryId) {
+                    // Solo agregar si la categoría existe
+                    if (Category::find($categoryId)) {
+                        $categoryIds[] = $categoryId;
+                    }
+                }
+            }
+            $product->categories()->sync($categoryIds);
+
             $product->save();
 
             return response()->json(['message' => 'Producto actualizado correctamente'],200);
@@ -205,12 +230,12 @@ class ProductController extends Controller
     public function massiveToggleActive(Request $request)
     {
         $products = $request->products;
-        
+
         foreach ($products as $product) {
             $productModel = Product::find($product['id']);
             $productModel->is_active = $request->is_active;
             $productModel->save();
-        
+
         }
         return response()->json(['message' => 'Productos actualizados correctamente'], 200);
     }
@@ -223,7 +248,7 @@ class ProductController extends Controller
                 $import = new ProductsImport();
 
                 Excel::import($import, $archivo);
-                $status = $import->getImportResult(); 
+                $status = $import->getImportResult();
                 return response()->json(['message' => 'Se ha finalizado el proceso de importacion.', 'result' => $status], 200);
 
             } catch (\Throwable $th) {

@@ -78,35 +78,14 @@
               placeholder="Buscar producto, marcas, y más ..." />
           </div>
           <div class="flex items-center">
-            <!-- <Menu as="div" class="relative inline-block text-left">
-                 <div>
-                  <MenuButton class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Ordenar
-                    <ChevronDownIcon class="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  </MenuButton>
-                </div> 
-  
-                <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                  <MenuItems class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div class="py-1">
-                      <MenuItem v-for="option in sortOptions" :key="option.name" v-slot="{ active }">
-                        <a :href="option.href" :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">
-                          {{ option.name }}
-                        </a>
-                      </MenuItem>
-                    </div>
-                  </MenuItems>
-                </transition>
-              </Menu>
-  
-              <button type="button" class="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500">
-                <span class="sr-only">View grid</span>
-                <Squares2X2Icon class="w-5 h-5" aria-hidden="true" />
-              </button>
-              <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="mobileFiltersOpen = true">
-                <span class="sr-only">Filters</span>
-                <FunnelIcon class="w-5 h-5" aria-hidden="true" />
-              </button> -->
+            <div class="mr-4">
+              <select v-model="sortOrder"
+                      class="border border-gray-300 rounded-md px-3 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Ordenar por precio</option>
+                <option value="price_asc">Precio: Menor a Mayor</option>
+                <option value="price_desc">Precio: Mayor a Menor</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -116,14 +95,18 @@
           <div class="grid grid-cols-1 lg:grid-cols-6 gap-x-8 gap-y-10">
             <!-- Filters -->
             <form class="hidden lg:block py-4">
-              <!-- <h3 class="sr-only">Categories</h3>
-                <ul role="list" class="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
-                  <li v-for="category in subCategories" :key="category.name">
-                    <a :href="category.href">
-                      {{ category.name }}
-                    </a>
-                  </li>
-                </ul> -->
+                <h3 class="text-sm font-medium text-gray-900 mb-4">Categorías</h3>
+                <div class="space-y-4 pb-6 border-b border-gray-200">
+                    <div v-for="category in categories" :key="category.id" class="flex items-center">
+                        <input :id="`filter-category-${category.id}`" :name="`category-${category.name}`" :value="category.name"
+                            type="checkbox" :checked="selectedCategories.includes(category.name)"
+                            @change="handleCategoryChange(category.name, $event.target.checked)"
+                            class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
+                        <label :for="`filter-category-${category.id}`" class="ml-3 text-sm text-gray-600">
+                            {{ category.name }}
+                        </label>
+                    </div>
+                </div>
 
               <Disclosure as="div" class="border-b border-gray-200 py-6" v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
@@ -140,9 +123,9 @@
                 </h3>
                 <DisclosurePanel class="pt-6">
                   <div class="space-y-4">
-                    <div v-for="(option, optionIdx) in brands" :key="option.id" class="flex items-center">
+                    <div v-for="option in brands" :key="option.id" class="flex items-center">
                       <input :id="`filter-brand-${option.id}`" :name="`brand-${option.nombre}`" :value="option.nombre"
-                        type="checkbox" :checked="false"
+                        type="checkbox" :checked="selectedBrands.includes(option.nombre)"
                         @change="handleBrandChange(option.nombre, $event.target.checked)"
                         class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
 
@@ -169,9 +152,9 @@
                 </h3>
                 <DisclosurePanel class="pt-6">
                   <div class="space-y-4">
-                    <div v-for="(option, optionIdx) in families" :key="option.id" class="flex items-center">
+                    <div v-for="option in families" :key="option.id" class="flex items-center">
                       <input :id="`filter-family-${option.id}`" :name="`family-${option.nombre}`" :value="option.nombre"
-                        type="checkbox" :checked="false"
+                        type="checkbox" :checked="selectedFamilies.includes(option.nombre)"
                         @change="handleFamilyChange(option.nombre, $event.target.checked)"
                         class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
                       <label :for="`filter-family-${option.id}`" class="ml-3 text-sm text-gray-600">
@@ -185,16 +168,73 @@
 
             <!-- Product grid -->
             <div class="lg:col-span-5">
+              <!-- Active Filters -->
+              <div v-if="hasActiveFilters" class="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-sm font-medium text-gray-900">Filtros activos:</h3>
+                  <button @click="clearAllFilters"
+                          class="text-sm text-red-600 hover:text-red-800 underline">
+                    Limpiar todos
+                  </button>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <!-- Search filter -->
+                  <span v-if="searchTerm"
+                        class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
+                    Búsqueda: "{{ searchTerm }}"
+                    <button @click="clearSearch" class="ml-2 hover:text-blue-600">
+                      <XMarkIcon class="h-4 w-4" />
+                    </button>
+                  </span>
+
+                  <!-- Category filters -->
+                  <span v-for="category in selectedCategories" :key="`cat-${category}`"
+                        class="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800">
+                    Categoría: {{ category }}
+                    <button @click="removeCategoryFilter(category)" class="ml-2 hover:text-purple-600">
+                      <XMarkIcon class="h-4 w-4" />
+                    </button>
+                  </span>
+
+                  <!-- Brand filters -->
+                  <span v-for="brand in selectedBrands" :key="`brand-${brand}`"
+                        class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
+                    Marca: {{ brand }}
+                    <button @click="removeBrandFilter(brand)" class="ml-2 hover:text-green-600">
+                      <XMarkIcon class="h-4 w-4" />
+                    </button>
+                  </span>
+
+                  <!-- Family filters -->
+                  <span v-for="family in selectedFamilies" :key="`family-${family}`"
+                        class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800">
+                    Familia: {{ family }}
+                    <button @click="removeFamilyFilter(family)" class="ml-2 hover:text-yellow-600">
+                      <XMarkIcon class="h-4 w-4" />
+                    </button>
+                  </span>
+
+                  <!-- Sort filter -->
+                  <span v-if="sortOrder"
+                        class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-800">
+                    {{ sortOrder === 'price_asc' ? 'Precio: Menor a Mayor' : 'Precio: Mayor a Menor' }}
+                    <button @click="sortOrder = ''" class="ml-2 hover:text-indigo-600">
+                      <XMarkIcon class="h-4 w-4" />
+                    </button>
+                  </span>
+                </div>
+              </div>
+
               <!-- Replace with your content -->
               <Products :products="visibleProducts" />
               <!-- <div class="border-4 border-dashed border-gray-200 rounded-lg h-96 lg:h-full" /> -->
               <!-- /End replace -->
-              
+
               <!-- <button class="btn-monsa-xl mx-auto mt-4"
-                      v-if="visibleCount < filteredProducts.length" 
+                      v-if="visibleCount < filteredProducts.length"
                       @click="loadMore">Ver más</button> -->
 
-              <button @click="loadMore" v-if="visibleCount < filteredProducts.length" 
+              <button @click="loadMore" v-if="visibleCount < filteredProducts.length"
                        class="flex items-center justify-center mt-20
                               uppercase bg-[#232323] rounded text-white font-bold border border-transparent py-3 px-8 mx-auto w-[250px]
                               hover:border-[#232323] hover:bg-white hover:text-[#232323]">Ver más</button>
@@ -212,7 +252,7 @@
 <script>
 
 
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import axios from 'axios';
 import {
   Dialog,
@@ -294,7 +334,7 @@ export default {
     families: Array,
     products: Array,
     brands: Array,
-
+    categories: Array,
   },
 
   components: {
@@ -323,28 +363,41 @@ export default {
     const searchTerm = ref('');
     const selectedBrands = ref([]);
     const selectedFamilies = ref([]);
+    const selectedCategories = ref([]);
+    const sortOrder = ref('');
     const productsPerPage = 20;
     const visibleCount = ref(productsPerPage);
     const { products } = props;
 
     const filteredProducts = computed(() => {
-      return products.filter(product => {
+      let filtered = products.filter(product => {
         const matchesBrand = selectedBrands.value.length === 0 || selectedBrands.value.includes(product.brand.nombre);
         const matchesFamily = selectedFamilies.value.length === 0 || selectedFamilies.value.includes(product.family.nombre);
+        const matchesCategory = selectedCategories.value.length === 0 ||
+          (product.categories && product.categories.some(category => selectedCategories.value.includes(category.name)));
         // const matchesSearch = product.search.toLowerCase().includes(searchTerm.value.toLowerCase());
         const matchesSearch = product.search && typeof product.search === 'string' ? product.search.toLowerCase().includes(searchTerm.value.toLowerCase()) : false;
 
-        return matchesBrand && matchesFamily && matchesSearch;
+        return matchesBrand && matchesFamily && matchesCategory && matchesSearch;
       });
+
+      // Apply sorting
+      if (sortOrder.value === 'price_asc') {
+        filtered.sort((a, b) => parseFloat(a.precio) - parseFloat(b.precio));
+      } else if (sortOrder.value === 'price_desc') {
+        filtered.sort((a, b) => parseFloat(b.precio) - parseFloat(a.precio));
+      }
+
+      return filtered;
     });
-    
+
     const visibleProducts = computed(() => {
       return filteredProducts.value.slice(0, visibleCount.value);
     });
 
     const loadMore = () => {
       visibleCount.value += productsPerPage;
-    };    
+    };
 
 
     const handleBrandChange = (brandName, isChecked) => {
@@ -353,6 +406,7 @@ export default {
       } else {
         selectedBrands.value = selectedBrands.value.filter(b => b !== brandName);
       }
+      visibleCount.value = productsPerPage; // Reset pagination
     };
 
     const handleFamilyChange = (familyName, isChecked) => {
@@ -361,23 +415,83 @@ export default {
       } else {
         selectedFamilies.value = selectedFamilies.value.filter(f => f !== familyName);
       }
+      visibleCount.value = productsPerPage; // Reset pagination
     };
 
+    const handleCategoryChange = (categoryName, isChecked) => {
+      if (isChecked) {
+        selectedCategories.value.push(categoryName);
+      } else {
+        selectedCategories.value = selectedCategories.value.filter(c => c !== categoryName);
+      }
+      visibleCount.value = productsPerPage; // Reset pagination
+    };
+
+    const hasActiveFilters = computed(() => {
+      return searchTerm.value || selectedCategories.value.length > 0 || selectedBrands.value.length > 0 || selectedFamilies.value.length > 0 || sortOrder.value;
+    });
+
+    const clearAllFilters = () => {
+      searchTerm.value = '';
+      selectedCategories.value = [];
+      selectedBrands.value = [];
+      selectedFamilies.value = [];
+      sortOrder.value = '';
+      visibleCount.value = productsPerPage; // Reset pagination
+    };
+
+    const clearSearch = () => {
+      searchTerm.value = '';
+    };
+
+    const removeCategoryFilter = (category) => {
+      selectedCategories.value = selectedCategories.value.filter(c => c !== category);
+      visibleCount.value = productsPerPage; // Reset pagination
+    };
+
+    const removeBrandFilter = (brand) => {
+      selectedBrands.value = selectedBrands.value.filter(b => b !== brand);
+      visibleCount.value = productsPerPage; // Reset pagination
+    };
+
+    const removeFamilyFilter = (family) => {
+      selectedFamilies.value = selectedFamilies.value.filter(f => f !== family);
+      visibleCount.value = productsPerPage; // Reset pagination
+    };
+
+    // Watch searchTerm to reset pagination when searching
+    watch(searchTerm, () => {
+      visibleCount.value = productsPerPage;
+    });
+
+    // Watch sortOrder to reset pagination when sorting
+    watch(sortOrder, () => {
+      visibleCount.value = productsPerPage;
+    });
 
     return {
       mobileFiltersOpen,
-      visibleProducts, 
+      visibleProducts,
       sortOptions,
       subCategories,
       filters,
       filteredProducts,
       handleBrandChange,
       handleFamilyChange,
+      handleCategoryChange,
       selectedBrands,
       selectedFamilies,
+      selectedCategories,
       searchTerm,
+      sortOrder,
       loadMore,
-      visibleCount
+      visibleCount,
+      hasActiveFilters,
+      clearAllFilters,
+      clearSearch,
+      removeCategoryFilter,
+      removeBrandFilter,
+      removeFamilyFilter
 
       // products,
     }
@@ -388,7 +502,7 @@ export default {
   },
 
   methods: {
-   
+
   },
 
 }

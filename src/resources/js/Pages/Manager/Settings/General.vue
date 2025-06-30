@@ -49,12 +49,29 @@
                             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ejecturar</button>
                     </div>
 
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
+                                        <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
                         <div>
                             Importar detalles de productos<br>
                             <input @change="handleFileChange" accept=".xlsx" type="file" name="file" id="file" ref="inputfile" autocomplete="off"
                                 class="mt-2 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block" />
-                           
+
+                            <!-- Descripción del formato del template -->
+                            <div class="mt-3 p-3 bg-gray-50 rounded-md">
+                                <h4 class="text-sm font-medium text-gray-800 mb-2">Formato del Template:</h4>
+                                <div class="text-sm text-gray-600 space-y-1">
+                                    <div><strong>Columna A:</strong> sku (obligatorio)</div>
+                                    <div><strong>Columna B:</strong> activo (SI/NO)</div>
+                                    <div><strong>Columna C:</strong> stock_disponible (número)</div>
+                                    <div><strong>Columna D:</strong> promo_active (SI/NO)</div>
+                                    <div><strong>Columna E:</strong> promo_price (número)</div>
+                                    <div><strong>Columna F:</strong> promo_text (texto)</div>
+                                    <div><strong>Columna G:</strong> categorias (nombres separados por punto y coma)</div>
+                                </div>
+                                <div class="mt-2 text-xs text-gray-500">
+                                    <strong>Ejemplo categorías:</strong> Cascos; Protección; Motocicletas
+                                </div>
+                            </div>
+
                         </div>
                         <div>
                             <a :href="route('products.download.template')"
@@ -67,7 +84,7 @@
                     <div v-if="result" class="flex justify-between items-center border-t border-gray-100 pt-3 mt-4">
                         <div>
                             Resultado de la importación<br>
-                            <div > 
+                            <div >
                                 <p>Total de filas: {{ result.rows }}</p>
                                 <p>Total de filas exitosas: {{ result.rowsSuccess }}</p>
                                 <p>Total de filas con errores: {{ result.rowsError }}</p>
@@ -79,7 +96,7 @@
         </div>
 
         <SettingsTable  />
-      
+
     </div>
 </template>
 
